@@ -1,0 +1,12 @@
+.env*
+!.env.example
+__pycache__/
+.venv/
+salidas_html/
+dist/
+servidor_inventario_mcp.py
+ultimo_lote.txt
+requests.jsonl
+.DS_Store
+.claude/
+_dev/trad/

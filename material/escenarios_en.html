@@ -1,0 +1,125 @@
+<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="text-scale" content="scale">
+<meta name="color-scheme" content="light dark">
+<meta name="referrer" content="no-referrer">
+<script>try{document.querySelector('meta[name="color-scheme"]').content=localStorage.getItem('ccarf_esquema')||'light dark'}catch(e){}</script>
+
+<style>@font-face{font-family:'Atkinson Hyperlegible Next';font-style:italic;font-weight:400;font-display:swap;src:url('fuentes/atkinson-hyperlegible-next-italic-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:italic;font-weight:400;font-display:swap;src:url('fuentes/atkinson-hyperlegible-next-italic-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:400 700;font-display:swap;src:url('fuentes/atkinson-hyperlegible-next-normal-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:400 700;font-display:swap;src:url('fuentes/atkinson-hyperlegible-next-normal-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}@font-face{font-family:'Recursive';font-style:normal;font-weight:400 700;font-display:swap;src:url('fuentes/recursive-normal-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Recursive';font-style:normal;font-weight:400 700;font-display:swap;src:url('fuentes/recursive-normal-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}</style><title>CCAR-F · Exam scenarios</title><style>
+:root{
+  color-scheme:light dark;
+  &:has(> head > meta[name="color-scheme"][content="dark"]){color-scheme:dark}
+  &:has(> head > meta[name="color-scheme"][content="light"]){color-scheme:light}
+
+  /* Superficies: grafito azulado en oscuro, gris frío en claro */
+  --fondo:light-dark(#f4f5f7,#14161b);
+  --superficie:light-dark(#ffffff,#1b1e25);
+  --superficie-2:light-dark(#eceef2,#232730);
+  --borde:light-dark(#d3d7de,#323744);
+  --borde-suave:light-dark(#e3e6eb,#262a34);
+  --texto:light-dark(#1a1c22,#ebe8e2);
+  --texto-2:light-dark(#545966,#a6a9b3);
+  --texto-3:light-dark(#62676f,#9a9ea9);
+  --borde-control:light-dark(#959ba6,#5c6271);
+
+  /* Acento: rosa mexicano (La Tiendita) */
+  --acento:light-dark(#c4006a,#ff5aa8);
+  --acento-suave:light-dark(#fde7f2,#3a1a2b);
+  --sobre-acento:light-dark(#ffffff,#24000f);
+  --enlace:light-dark(#a3005a,#ff8cc6);
+
+  /* Significado: solo para ✅ / ❌ 🎓 trampa / 🔧 producto */
+  --bien:light-dark(#17724a,#5fd39c);
+  --bien-suave:light-dark(#e3f4ec,#173226);
+  --trampa:light-dark(#b3311b,#ff7d68);
+  --trampa-suave:light-dark(#fbe9e5,#3a1d19);
+  --producto:light-dark(#835600,#f0bf4c);
+  --producto-suave:light-dark(#fbf1d9,#352b14);
+
+  --tinta:light-dark(#2f5d8f,#8fb5e6);
+  --codigo-fondo:light-dark(#eceef2,#262a33);
+  --resaltado:light-dark(#fff0bf,#3b3420);
+  --terminal:#0f1115;
+  --terminal-texto:#d9d9d9;
+  --velo:rgb(10 12 16 / .5);
+
+  --letra:'Atkinson Hyperlegible Next',system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+  --mono:'Recursive',ui-monospace,Menlo,Consolas,'DejaVu Sans Mono',monospace;
+
+  accent-color:var(--acento);
+  scrollbar-color:var(--texto-3) transparent;
+}
+body{font-family:var(--letra);font-size-adjust:from-font}
+code,pre,kbd,samp,textarea{font-family:var(--mono)}
+:focus-visible{outline:2px solid var(--acento);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important;scroll-behavior:auto !important}}
+
+*{box-sizing:border-box}
+body{margin:0 auto;max-width:62rem;padding:2rem 1.75rem 5.5rem;background:var(--fondo);color:var(--texto);font-size:1.0625rem;line-height:1.6}
+a{color:var(--enlace)} h1{font-size:1.85rem;line-height:1.25;margin:0 0 .5rem} h2{font-size:1.45rem;margin:2.5rem 0 .6rem;
+  padding-top:.9rem;border-top:3px solid var(--acento)} h3{font-size:1.2rem;margin:1.5rem 0 .4rem}
+p,li{max-width:76ch} .ayuda{color:var(--texto-2);font-size:.95rem}
+code{background:var(--codigo-fondo);padding:.05em .35em;border-radius:.3em;font-size:.88em}
+table{border-collapse:collapse;width:100%;margin:.6rem 0;font-size:.95rem}
+th,td{border:1px solid var(--borde);padding:.5rem .75rem;vertical-align:top;text-align:left}
+th{background:var(--superficie-2);position:sticky;top:0} tr:nth-child(even) td{background:var(--superficie)}
+.tarjeta{background:var(--superficie);border:1px solid var(--borde);border-radius:.75rem;padding:.9rem 1.1rem;margin:.9rem 0}
+.boton{display:inline-block;padding:.35rem .75rem;border:1px solid var(--borde);border-radius:.5rem;text-decoration:none;color:var(--texto);
+  font-size:.94rem;margin:.25rem .4rem .25rem 0;background:var(--superficie);cursor:pointer;font-family:inherit}
+.boton:hover{border-color:var(--acento)} .boton.activo{border-color:var(--acento);background:var(--acento-suave)}
+.chip{font-size:.8rem;font-weight:600;color:var(--trampa);background:var(--trampa-suave);border-radius:999px;padding:.05rem .55rem;margin-left:.3rem}
+.idea{background:var(--acento-suave);border-left:4px solid var(--acento);border-radius:0 .5rem .5rem 0;padding:.75rem 1rem;font-size:1.15rem;margin:.6rem 0 1.1rem}
+.mal{color:var(--trampa)} .bien{color:var(--bien)}
+abbr.termino{text-decoration:underline dotted var(--tinta);text-underline-offset:3px;cursor:help}
+details summary{cursor:pointer}
+input.buscar{width:100%;font:inherit;font-size:1.0625rem;padding:.6rem .9rem;background:var(--superficie);color:var(--texto);
+  border:1px solid var(--borde);border-radius:.6rem}
+.tapado tr:not(.visto) td.resp{color:transparent;background:var(--codigo-fondo);cursor:pointer}
+.tapado tr:not(.visto) td.resp *{color:transparent;background:transparent;text-decoration:none}
+.tapado tr:not(.visto) .tit{color:transparent;background:var(--codigo-fondo);border-radius:.25em}
+.tabla{overflow-x:auto}
+.mapa{overflow-x:auto;background:#1b1c18;border-radius:.6rem;padding:.6rem;margin-top:.6rem}
+.mapa svg{min-width:40rem;width:100%;height:auto}
+.tarjeta.principal{border:2px solid var(--acento)}
+.boton.principal{background:var(--acento);color:var(--sobre-acento);border-color:var(--acento);font-weight:700}
+.terminal:empty::before{content:attr(data-vacio);color:#8a8f99;font-family:var(--letra)}
+.terminal{color-scheme:dark;background:var(--terminal);color:var(--terminal-texto);border-radius:.6rem;padding:.9rem;min-height:12rem;
+  overflow:auto;white-space:pre;font-family:var(--mono);font-size:.85rem;line-height:1.45}
+@media print{:root{color-scheme:light !important} body{background:#fff;color:#000;max-width:none;padding:0 12px;font-size:12.5px}
+  #ccZoom,.no-imprimir{display:none !important} th{background:#eee;position:static} td,th{border-color:#999}
+  tr:nth-child(even) td{background:#f6f6f6} h2{border-color:#999;break-before:auto} a{color:#000}
+  .tapado td.resp,.tapado .tit{color:#000 !important;background:none !important}}
+</style></head><body><p class='ayuda no-imprimir'><a href='../EMPIEZA_AQUI_en.html'>← Start here</a></p><div class='tapado'><h1>The 6 exam scenarios</h1><p class='ayuda'>According to prep sites, the exam's questions are based on these scenarios and each exam picks 4 of the 6 at random. The names don't come from the official guide; which demos go with each one is our own choice. The demos are listed in the suggested practice order. Click a demo to see its example.</p><table><tr><th style='width:26%'>Scenario</th><th>What gets asked</th><th style='width:30%'>Demos</th></tr><tr><td><b>1. Customer Support Resolution Agent</b></td><td>Multi-turn conversation, tools for account lookups, when to escalate to a person, rules that must always hold.</td><td><a class='boton' href='../ejemplos_html/en/dominio1/index.html'>1.1</a><a class='boton' href='../ejemplos_html/en/dominio1/index.html'>1.4</a><a class='boton' href='../ejemplos_html/en/dominio5/index.html'>5.2</a><a class='boton' href='../ejemplos_html/en/dominio1/index.html'>1.5</a><a class='boton' href='../ejemplos_html/en/dominio2/index.html'>2.1</a><a class='boton' href='../ejemplos_html/en/dominio2/index.html'>2.2</a><a class='boton' href='../ejemplos_html/en/dominio5/index.html'>5.1</a></td></tr><tr><td><b>2. Code Generation with Claude Code</b></td><td>CLAUDE.md, skills and slash commands, path rules, plan mode, iterating with examples and tests.</td><td><a class='boton' href='../ejemplos_html/en/dominio3/index.html'>3.1</a><a class='boton' href='../ejemplos_html/en/dominio3/index.html'>3.2</a><a class='boton' href='../ejemplos_html/en/dominio3/index.html'>3.3</a><a class='boton' href='../ejemplos_html/en/dominio3/index.html'>3.4</a><a class='boton' href='../ejemplos_html/en/dominio3/index.html'>3.5</a><a class='boton' href='../ejemplos_html/en/dominio2/index.html'>2.5</a></td></tr><tr><td><b>3. Multi-Agent Research System</b></td><td>Splitting the work, isolating each subagent, combining results with sources and handling a subagent that fails.</td><td><a class='boton' href='../ejemplos_html/en/dominio1/index.html'>1.2</a><a class='boton' href='../ejemplos_html/en/dominio1/index.html'>1.3</a><a class='boton' href='../ejemplos_html/en/dominio1/index.html'>1.6</a><a class='boton' href='../ejemplos_html/en/dominio2/index.html'>2.2</a><a class='boton' href='../ejemplos_html/en/dominio2/index.html'>2.3</a><a class='boton' href='../ejemplos_html/en/dominio5/index.html'>5.3</a><a class='boton' href='../ejemplos_html/en/dominio5/index.html'>5.6</a></td></tr><tr><td><b>4. Developer Productivity with Claude</b></td><td>Configuring Claude Code and MCP, memory across sessions, team vs personal settings, exploring a large codebase.</td><td><a class='boton' href='../ejemplos_html/en/dominio1/index.html'>1.7</a><a class='boton' href='../ejemplos_html/en/dominio2/index.html'>2.4</a><a class='boton' href='../ejemplos_html/en/dominio2/index.html'>2.5</a><a class='boton' href='../ejemplos_html/en/dominio3/index.html'>3.1</a><a class='boton' href='../ejemplos_html/en/dominio5/index.html'>5.4</a></td></tr><tr><td><b>5. Claude Code for CI/CD</b></td><td>Non-interactive mode (-p), JSON output with a schema, PR comments, review criteria and independent review.</td><td><a class='boton' href='../ejemplos_html/en/dominio3/index.html'>3.6</a><a class='boton' href='../ejemplos_html/en/dominio4/index.html'>4.1</a><a class='boton' href='../ejemplos_html/en/dominio4/index.html'>4.6</a><a class='boton' href='../ejemplos_html/en/dominio1/index.html'>1.6</a><a class='boton' href='../ejemplos_html/en/dominio4/index.html'>4.5</a></td></tr><tr><td><b>6. Structured Data Extraction</b></td><td>JSON schema, validate and retry, few-shot examples, documents that don&#x27;t fit and confidence-based human review.</td><td><a class='boton' href='../ejemplos_html/en/dominio4/index.html'>4.2</a><a class='boton' href='../ejemplos_html/en/dominio4/index.html'>4.3</a><a class='boton' href='../ejemplos_html/en/dominio4/index.html'>4.4</a><a class='boton' href='../ejemplos_html/en/dominio4/index.html'>4.5</a><a class='boton' href='../ejemplos_html/en/dominio5/index.html'>5.5</a><a class='boton' href='../ejemplos_html/en/dominio2/index.html'>2.3</a></td></tr></table><h2>Practice each scenario</h2><p class='ayuda'>Short situations like the exam's. Answer out loud and click (or press Enter) on the answer to see it.</p><h3>1. Customer Support Resolution Agent</h3><div class='tabla'><table><tr><th style='width:55%'>Situation</th><th>Answer</th><th style='width:70px'>Topic</th></tr><tr><td>Your support agent writes “Let me check your order…” and finishes without looking anything up. What do you check in the loop?</td><td class='resp' tabindex='0' role='button' aria-label='See the answer'>Check <abbr class="termino" title="Field in every response that says WHY Claude stopped writing: tool_use, end_turn, max_tokens…  ·  Exam term: stop reason">stop_reason</abbr></td><td>1.1</td></tr><tr><td>A refund over $10,000 must never go out without verifying the customer, and the prompt is sometimes ignored. What do you add?</td><td class='resp' tabindex='0' role='button' aria-label='See the answer'><abbr class="termino" title="A check in your code that blocks a tool until a requirement is met (e.g. verifying the customer).  ·  Exam term: prerequisite gate">Prerequisite gate</abbr> / PreToolUse</td><td>1.4,1.5</td></tr><tr><td>The customer writes “I want to talk to a person”, even though the case is simple. What does the agent do?</td><td class='resp' tabindex='0' role='button' aria-label='See the answer'>Escalate immediately</td><td>5.2</td></tr><tr><td>One tool returns dates like 2026-03-01, another like 01/03/26 and another as a timestamp. Where do you normalize them?</td><td class='resp' tabindex='0' role='button' aria-label='See the answer'>PostToolUse</td><td>1.5</td></tr></table></div><h3>2. Code Generation with Claude Code</h3><div class='tabla'><table><tr><th style='width:55%'>Situation</th><th>Answer</th><th style='width:70px'>Topic</th></tr><tr><td>A new teammate clones the repo and Claude doesn&#x27;t follow the conventions you do see. Where were they?</td><td class='resp' tabindex='0' role='button' aria-label='See the answer'>They were in ~/.claude/ → move them to the project</td><td>3.1</td></tr><tr><td>A skill generates a huge analysis that fills the main conversation. What do you add to the skill?</td><td class='resp' tabindex='0' role='button' aria-label='See the answer'>context: fork</td><td>3.2</td></tr><tr><td>The test conventions apply to files spread across more than 50 folders. How do you load them only when needed?</td><td class='resp' tabindex='0' role='button' aria-label='See the answer'>.claude/rules/ with paths</td><td>3.3</td></tr><tr><td>You&#x27;re asked to migrate authentication and there are several reasonable ways to do it. How do you start?</td><td class='resp' tabindex='0' role='button' aria-label='See the answer'>Plan mode</td><td>3.4</td></tr></table></div><h3>3. Multi-Agent Research System</h3><div class='tabla'><table><tr><th style='width:55%'>Situation</th><th>Answer</th><th style='width:70px'>Topic</th></tr><tr><td>You ask for a report about the store and it only talks about marketing; nobody researched inventory or logistics. Where is the cause?</td><td class='resp' tabindex='0' role='button' aria-label='See the answer'>The <abbr class="termino" title="The agent that splits the work, hands it out to subagents and combines the results.  ·  Exam term: coordinator">coordinator</abbr>&#x27;s decomposition</td><td>1.2</td></tr><tr><td>The final report has good data, but nobody knows which document each fact came from. What do you change in what the subagents return?</td><td class='resp' tabindex='0' role='button' aria-label='See the answer'>Structured metadata (claim + source)</td><td>1.3</td></tr><tr><td>In a 14-file review, the first ones come out fine and the last ones get almost no comments. What do you change?</td><td class='resp' tabindex='0' role='button' aria-label='See the answer'>Multi-pass</td><td>1.6</td></tr><tr><td>The customer has no orders in 2024, but the agent retries the search over and over. What&#x27;s missing from the tool&#x27;s response?</td><td class='resp' tabindex='0' role='button' aria-label='See the answer'>Separate access failure from valid empty</td><td>2.2</td></tr></table></div><h3>4. Developer Productivity with Claude</h3><div class='tabla'><table><tr><th style='width:55%'>Situation</th><th>Answer</th><th style='width:70px'>Topic</th></tr><tr><td>Yesterday the agent analyzed the repo; today someone changed several files. Do you resume or start over?</td><td class='resp' tabindex='0' role='button' aria-label='See the answer'>A lot changed: new session + summary. Little changed: --resume and say what changed</td><td>1.7</td></tr><tr><td>The whole team must have the same <abbr class="termino" title="Standard protocol for connecting external tools and data to Claude.  ·  Exam term: Model Context Protocol">MCP</abbr> server without sharing the token in git. Where and how do you configure it?</td><td class='resp' tabindex='0' role='button' aria-label='See the answer'>.<abbr class="termino" title="Standard protocol for connecting external tools and data to Claude.  ·  Exam term: Model Context Protocol">mcp</abbr>.json + ${TOKEN}</td><td>2.4</td></tr><tr><td>You&#x27;re going to change calcular_total() and need to know where it&#x27;s called from. Which tool do you use?</td><td class='resp' tabindex='0' role='button' aria-label='See the answer'>Grep (not Glob)</td><td>2.5</td></tr><tr><td>“Never push to main” is in the CLAUDE.md and sometimes gets ignored. What do you use to make it mandatory?</td><td class='resp' tabindex='0' role='button' aria-label='See the answer'>settings.json or a <abbr class="termino" title="Code that runs automatically before or after a tool, to always check or block something, without depending on what the model decides.  ·  Exam term: hook">hook</abbr>, not CLAUDE.md</td><td>3.1</td></tr></table></div><h3>5. Claude Code for CI/CD</h3><div class='tabla'><table><tr><th style='width:55%'>Situation</th><th>Answer</th><th style='width:70px'>Topic</th></tr><tr><td>The <abbr class="termino" title="A series of automatic steps (for example: test, review, deploy) that runs without anyone watching it.  ·  Exam term: pipeline">pipeline</abbr> calls Claude Code and the <abbr class="termino" title="A CI pipeline step that runs on a separate machine, with no one to answer questions.  ·  Exam term: job">job</abbr> hangs until the <abbr class="termino" title="Time limit: if something doesn&#x27;t respond before it, it&#x27;s cut off and marked as a failure.  ·  Exam term: timeout">timeout</abbr>. What&#x27;s missing?</td><td class='resp' tabindex='0' role='button' aria-label='See the answer'>claude -p</td><td>3.6</td></tr><tr><td>You told the reviewer to “be conservative” and it keeps reporting unimportant things. What do you change in the prompt?</td><td class='resp' tabindex='0' role='button' aria-label='See the answer'>Criteria: what to report and what to ignore</td><td>4.1</td></tr><tr><td>A 30-file <abbr class="termino" title="A proposal of code changes that the team reviews before joining it (merge).  ·  Exam term: pull request">PR</abbr> gets a good review at the beginning and a sloppy one at the end. How do you split it?</td><td class='resp' tabindex='0' role='button' aria-label='See the answer'>Per file + integration</td><td>4.6</td></tr><tr><td>In a 14-file review, the first ones come out fine and the last ones get almost no comments. What do you change?</td><td class='resp' tabindex='0' role='button' aria-label='See the answer'>Multi-pass</td><td>1.6</td></tr></table></div><h3>6. Structured Data Extraction</h3><div class='tabla'><table><tr><th style='width:55%'>Situation</th><th>Answer</th><th style='width:70px'>Topic</th></tr><tr><td>The extractions come out in a different format each time, especially in ambiguous cases. What do you add?</td><td class='resp' tabindex='0' role='button' aria-label='See the answer'>2–4 few-shot examples</td><td>4.2</td></tr><tr><td>You ask for JSON in the prompt and sometimes it arrives with extra commas or unclosed. How do you guarantee it?</td><td class='resp' tabindex='0' role='button' aria-label='See the answer'><abbr class="termino" title="Block in which Claude ASKS to run a tool. It&#x27;s also the stop_reason when it&#x27;s waiting for that result to continue.  ·  Exam term: tool use">tool_use</abbr> with a schema</td><td>4.3</td></tr><tr><td>The extraction says total 1,250 but the line items add up to 1,205. How do you retry?</td><td class='resp' tabindex='0' role='button' aria-label='See the answer'>Retry with the specific error</td><td>4.4</td></tr><tr><td>Every night 10,000 documents are processed and nobody waits for the result right away. Which API do you use?</td><td class='resp' tabindex='0' role='button' aria-label='See the answer'>Batch API</td><td>4.5</td></tr></table></div></div><script>
+document.querySelectorAll('td.resp').forEach(td => {
+  const ver = () => td.closest('tr').classList.toggle('visto');
+  td.addEventListener('click', ver);
+  td.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); ver(); } });
+});
+</script><div id="ccZoom" title="Tamaño de letra (se recuerda)">
+<button onclick="ccZoom(-1)">A−</button><button onclick="ccZoom(1)">A+</button>
+<button id="ccTemaBtn" onclick="ccTema()" title="Tema claro / oscuro (por defecto, el de tu sistema)" hidden>☀</button></div>
+<style>#ccZoom{position:fixed;top:10px;right:14px;z-index:50;display:flex;gap:4px;font-family:var(--letra,system-ui,sans-serif)}
+#ccZoom button{background:var(--superficie-2,#2d2d2d);color:var(--texto,#f0f0f0);border:1px solid var(--borde,#666);border-radius:7px;
+  padding:4px 10px;font-size:14px;cursor:pointer}
+@media print{#ccZoom{display:none}}</style>
+<script>(function(){
+  if (window.top !== window.self) { document.getElementById('ccZoom').style.display = 'none'; }
+  // Tema: solo en páginas con los colores de tema.py (las corridas HTML son siempre oscuras, como una terminal)
+  var meta = document.querySelector('meta[name="color-scheme"]');
+  var conTema = !!meta && getComputedStyle(document.documentElement).getPropertyValue('--fondo').trim() !== '';
+  function sistema(){ return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+  function guardado(){ try { return localStorage.getItem('ccarf_esquema'); } catch (e) { return null; } }
+  function pintar(){ document.getElementById('ccTemaBtn').textContent = (guardado() || sistema()) === 'dark' ? '☀' : '☾'; }
+  window.ccTema = function(){
+    if (window.top !== window.self) {   // dentro del panel: el tema es del panel completo
+      try { var b = window.top.document.getElementById('tema'); if (b) { b.click(); return; } } catch (e) {}
+    }
+    var destino = (guardado() || sistema()) === 'dark' ? 'light' : 'dark';
+    try { destino === sistema() ? localStorage.removeItem('ccarf_esquema') : localStorage.setItem('ccarf_esquema', destino); } catch (e) {}
+    meta.content = guardado() || 'light dark'; pintar();
+  };
+  if (conTema) { document.getElementById('ccTemaBtn').hidden = false; pintar(); matchMedia('(prefers-color-scheme: dark)').addEventListener('change', pintar); }
+  function leer(){ try { return +(localStorage.getItem('ccarf_escala') || 1); } catch (e) { return 1; } }
+  function guardar(v){ try { localStorage.setItem('ccarf_escala', v); } catch (e) {} }
+  window.ccZoom = function(d){ var v = Math.min(1.6, Math.max(0.8, +(leer() + 0.1 * d).toFixed(2))); guardar(v); document.body.style.zoom = v; };
+  document.body.style.zoom = leer();
+})();</script></body></html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+.r1 {color: #727272; text-decoration-color: #727272}
+.r2 {color: #326e7b; text-decoration-color: #326e7b; font-weight: bold}
+.r3 {color: #9d65ff; text-decoration-color: #9d65ff}
+.r4 {color: #c4c5b5; text-decoration-color: #c4c5b5; background-color: #000087; font-weight: bold}
+.r5 {color: #527618; text-decoration-color: #527618}
+.r6 {color: #fd971f; text-decoration-color: #fd971f}
+.r7 {color: #58d1eb; text-decoration-color: #58d1eb; font-weight: bold}
+.r8 {color: #f4005f; text-decoration-color: #f4005f; font-weight: bold}
+.r9 {color: #f4005f; text-decoration-color: #f4005f}
+.r10 {color: #98e024; text-decoration-color: #98e024; font-weight: bold}
+.r11 {color: #800635; text-decoration-color: #800635; font-weight: bold}
+.r12 {color: #727272; text-decoration-color: #727272; font-weight: bold}
+.r13 {font-style: italic}
+.r14 {font-weight: bold}
+.r15 {color: #98e024; text-decoration-color: #98e024}
+body {
+    color: #d9d9d9;
+    background-color: #0c0c0c;
+}
+</style>
+<style>@font-face{font-family:'Atkinson Hyperlegible Next';font-style:italic;font-weight:400;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-italic-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:italic;font-weight:400;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-italic-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-normal-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-normal-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}@font-face{font-family:'Recursive';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/recursive-normal-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Recursive';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/recursive-normal-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+body{max-width:1100px;margin:0 auto !important;padding:8px 24px 48px;font-family:'Atkinson Hyperlegible Next',Inter,system-ui,sans-serif !important}
+pre,code{font-family:'Recursive',Menlo,'DejaVu Sans Mono',monospace !important}
+.diagrama svg{max-width:100%;height:auto}
+.diagrama{max-width:100% !important;box-sizing:border-box;overflow-x:auto}
+pre{font-size:14px !important;line-height:1.5 !important}
+abbr.termino{text-decoration:underline dotted #8ab4f8;text-underline-offset:3px;cursor:help}
+</style></head>
+<body><div style="font-family:'Atkinson Hyperlegible Next',Inter,'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;color:#e8e8e8;background:#1b1c18;line-height:1.5;border:1px solid #444;border-radius:10px;padding:14px 20px;margin:14px 0;max-width:1000px"><div style="font-size:19px;font-weight:600">Domain 3 · demo 3.5 · 23/11/2026 12:58:46</div><div style="font-size:15px;color:#e6e6e6;margin:6px 0">📝 Recording «✅ TDD». Result: Tests that passed at the end: 8/8 in 2 round(s)</div><div style="font-size:14px;color:#bbb;margin:0 0 6px">💲 2 API calls · 2,925 tokens (1,490 input + 1,435 output) · ≈ $0.0009 USD</div><div style="font-size:14px;color:#bbb;margin:8px 0 6px">Variables of this run (<a style="color:#58a6ff" href="/archivos/salidas_html/dominio3/index.html">browse all runs</a>)</div><table style="font-size:14px;border-collapse:collapse"><tr><td style="padding:3px 16px 3px 0;color:#bbb">MODELO</td><td>&quot;claude-haiku-5-5&quot;</td></tr><tr><td style="padding:3px 16px 3px 0;color:#bbb">D35_MODO</td><td>&quot;tdd&quot;</td></tr><tr><td style="padding:3px 16px 3px 0;color:#bbb">D35_MAX_RONDAS</td><td>3</td></tr><tr><td style="padding:3px 16px 3px 0;color:#bbb">D35_EJECUTAR_CODIGO</td><td>true</td></tr></table></div>
+    <pre style="font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><code style="font-family:inherit"><span class="r1">   Model: claude-haiku-</span><span class="r2">5</span><span class="r1">-</span><span class="r2">5</span>
+<span class="r1">   HTML mode: on → salidas_html/dominio3/</span>
+
+<span class="r3">─────────────────────────── </span><span class="r4"> DEMO </span><span class="r4">3.5</span><span class="r4"> · Iterative refinement: examples and tests </span><span class="r3"> ────────────────────────────</span>
+
+<span class="r1">📖 This demo&#x27;s guide: python lab_dominio3.py guia </span><span class="r2">3.5</span><span class="r1">  ·  more detail: set DETALLE = </span><span class="r5">&quot;completo&quot;</span><span class="r1"> at the top of </span>
+<span class="r1">the file</span>
+<span class="r6">╭───────────────────────────────────────────── 💡 Exam concept ──────────────────────────────────────────────╮</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">│</span>  When the result doesn&#x27;t come out the way you want, the prose description is usually the problem.          <span class="r6">│</span>
+<span class="r6">│</span>    • Concrete input → output examples communicate better than adjectives.                                  <span class="r6">│</span>
+<span class="r6">│</span>    • TDD: write the tests first, ask for the code and share the tests that FAIL to iterate.                <span class="r6">│</span>
+<span class="r6">│</span>    • Interview pattern: for unclear tasks, ask Claude to ask you questions before implementing.            <span class="r6">│</span>
+<span class="r6">│</span>    • Related fixes → in a single message; independent ones → one at a time.                                <span class="r6">│</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+
+<span class="r7">▶ Round </span><span class="r7">1</span>
+
+<span class="r8">→ Call to Claude</span> <span class="r8">(</span><span class="r9">round </span><span class="r8">1</span><span class="r8">)</span> <span class="r1">· </span><span class="r2">1</span><span class="r1"> messages in the history</span>
+<span class="r10">← stop_reason = </span><span class="r10">&#x27;end_turn&#x27;</span>  · says: <span class="r1">“```python</span>
+<span class="r1">import re</span>
+
+<span class="r1">def </span><span class="r11">normalizar_telefono</span><span class="r12">(</span><span class="r1">texto</span><span class="r12">)</span><span class="r1">:</span>
+<span class="r1">    if not </span><span class="r11">isinstance</span><span class="r12">(</span><span class="r1">texto, str</span><span class="r12">)</span><span class="r1">:</span>
+<span class="r1">  …”</span>
+<span class="r13">                      Round 1: test results                       </span>
+┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━┓
+┃<span class="r14"> Input               </span>┃<span class="r14"> Expected           </span>┃<span class="r14"> Got             </span>┃<span class="r14">   </span>┃
+┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━┩
+│ &#x27;664 123 4567&#x27;      │ &#x27;+52 664 123 4567&#x27; │ &#x27;+526641234567&#x27; │ <span class="r9">✘</span> │
+│ &#x27;(664) 123-4567&#x27;    │ &#x27;+52 664 123 4567&#x27; │ &#x27;+526641234567&#x27; │ <span class="r9">✘</span> │
+│ &#x27;6641234567&#x27;        │ &#x27;+52 664 123 4567&#x27; │ &#x27;+526641234567&#x27; │ <span class="r9">✘</span> │
+│ &#x27;+52 664 123 4567&#x27;  │ &#x27;+52 664 123 4567&#x27; │ &#x27;+526641234567&#x27; │ <span class="r9">✘</span> │
+│ &#x27;52 6641234567&#x27;     │ &#x27;+52 664 123 4567&#x27; │ &#x27;+526641234567&#x27; │ <span class="r9">✘</span> │
+│ &#x27;044 664 123 4567&#x27;  │ &#x27;+52 664 123 4567&#x27; │ &#x27;+526641234567&#x27; │ <span class="r9">✘</span> │
+│ &#x27;123&#x27;               │ None               │ None            │ <span class="r15">✔</span> │
+│ &#x27;tel: 55-1234-5678&#x27; │ &#x27;+52 551 234 5678&#x27; │ &#x27;+525512345678&#x27; │ <span class="r9">✘</span> │
+└─────────────────────┴────────────────────┴─────────────────┴───┘
+<span class="r14">Passed </span><span class="r7">1</span><span class="r14">/</span><span class="r7">8</span>
+<span class="r1">   Claude is sent ONLY the tests that failed, with input, got and expected.</span>
+
+<span class="r7">▶ Round </span><span class="r7">2</span>
+
+<span class="r8">→ Call to Claude</span> <span class="r8">(</span><span class="r9">round </span><span class="r8">2</span><span class="r8">)</span> <span class="r1">· </span><span class="r2">3</span><span class="r1"> messages in the history</span>
+<span class="r10">← stop_reason = </span><span class="r10">&#x27;end_turn&#x27;</span>  · says: <span class="r1">“```python</span>
+<span class="r1">import re</span>
+
+<span class="r1">def </span><span class="r11">normalizar_telefono</span><span class="r12">(</span><span class="r1">texto</span><span class="r12">)</span><span class="r1">:</span>
+<span class="r1">    if not </span><span class="r11">isinstance</span><span class="r12">(</span><span class="r1">texto, str</span><span class="r12">)</span><span class="r1">:</span>
+<span class="r1">  …”</span>
+<span class="r13">                        Round 2: test results                        </span>
+┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━┓
+┃<span class="r14"> Input               </span>┃<span class="r14"> Expected           </span>┃<span class="r14"> Got                </span>┃<span class="r14">   </span>┃
+┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━┩
+│ &#x27;664 123 4567&#x27;      │ &#x27;+52 664 123 4567&#x27; │ &#x27;+52 664 123 4567&#x27; │ <span class="r15">✔</span> │
+│ &#x27;(664) 123-4567&#x27;    │ &#x27;+52 664 123 4567&#x27; │ &#x27;+52 664 123 4567&#x27; │ <span class="r15">✔</span> │
+│ &#x27;6641234567&#x27;        │ &#x27;+52 664 123 4567&#x27; │ &#x27;+52 664 123 4567&#x27; │ <span class="r15">✔</span> │
+│ &#x27;+52 664 123 4567&#x27;  │ &#x27;+52 664 123 4567&#x27; │ &#x27;+52 664 123 4567&#x27; │ <span class="r15">✔</span> │
+│ &#x27;52 6641234567&#x27;     │ &#x27;+52 664 123 4567&#x27; │ &#x27;+52 664 123 4567&#x27; │ <span class="r15">✔</span> │
+│ &#x27;044 664 123 4567&#x27;  │ &#x27;+52 664 123 4567&#x27; │ &#x27;+52 664 123 4567&#x27; │ <span class="r15">✔</span> │
+│ &#x27;123&#x27;               │ None               │ None               │ <span class="r15">✔</span> │
+│ &#x27;tel: 55-1234-5678&#x27; │ &#x27;+52 551 234 5678&#x27; │ &#x27;+52 551 234 5678&#x27; │ <span class="r15">✔</span> │
+└─────────────────────┴────────────────────┴────────────────────┴───┘
+<span class="r14">Passed </span><span class="r7">8</span><span class="r14">/</span><span class="r7">8</span>
+<span class="r13">       Progress (tdd)        </span>
+┏━━━━━━━┳━━━━━━━━━━━━━━━━━━━┓
+┃<span class="r14"> Round </span>┃<span class="r14"> Tests that passed </span>┃
+┡━━━━━━━╇━━━━━━━━━━━━━━━━━━━┩
+│ 1     │ 1/8               │
+│ 2     │ 8/8               │
+└───────┴───────────────────┘
+<span class="r6">╭────────────────────────────────────────────── 🧪 Experiment ───────────────────────────────────────────────╮</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">│</span>  Run the 3 modes and compare: &#x27;vago&#x27; tends to fail on the edge cases (044, 52 without +, &#x27;123&#x27;);           <span class="r6">│</span>
+<span class="r6">│</span>  &#x27;ejemplos&#x27; gets more right from the first round; &#x27;tdd&#x27; converges by sharing the failures.                 <span class="r6">│</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r3">╭──────────────────────────────────── 📊 Messages API usage in this run ─────────────────────────────────────╮</span>
+<span class="r3">│</span> API calls: 2                                                                                               <span class="r3">│</span>
+<span class="r3">│</span> Input tokens: 1,490                                                                                        <span class="r3">│</span>
+<span class="r3">│</span> Output tokens:  1,435                                                                                      <span class="r3">│</span>
+<span class="r3">│</span> Estimated cost (with the price of each model used): ~$0.0009 USD                                           <span class="r3">│</span>
+<span class="r3">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+</code></pre><div class="diagrama" style="font-family:'Atkinson Hyperlegible Next',Inter,'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;background:#1b1c18;color:#f0f0f0;border:1px solid #444;border-radius:10px;padding:16px 20px;margin:16px 0;max-width:1000px;white-space:normal"><div style="font-size:18px;font-weight:600;color:#f0f0f0;margin-bottom:6px">📊 The flow of this run</div><div style="font-size:15px;line-height:1.55;color:#d0d0d0;margin-bottom:12px;max-width:80ch">Left: what your code sent (or what Claude asked for). Right: how it responded. Automatic diagram: it shows the flow of calls, not the demo's concept.</div><!--tipos:codigo,ok--><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 186" width="1000" height="186" font-family="Atkinson Hyperlegible Next, Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13"><defs><marker id="punta_30535763" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bbbbbb"/></marker></defs><g><line x1="460" y1="45" x2="540" y2="45" stroke="#bbbbbb" stroke-width="1.6" marker-end="url(#punta_30535763)"/><rect x="464" y="22" width="73" height="18" rx="4" fill="#1b1c18"/><text x="500" y="35" fill="#d0d0d0" font-size="11.5" text-anchor="middle">respuesta</text></g><g><line x1="460" y1="141" x2="540" y2="141" stroke="#bbbbbb" stroke-width="1.6" marker-end="url(#punta_30535763)"/><rect x="464" y="118" width="73" height="18" rx="4" fill="#1b1c18"/><text x="500" y="131" fill="#d0d0d0" font-size="11.5" text-anchor="middle">respuesta</text></g><g><rect x="60" y="20" width="400" height="50" rx="9" fill="#2d2d2d" stroke="#9e9e9e" stroke-width="1.6"/><text x="260" y="41" fill="#f0f0f0" text-anchor="middle" font-weight="600">Call 1 · ronda 1</text><text x="260" y="58" fill="#f0f0f0" text-anchor="middle">1 message · max_tokens 1200</text></g><g><rect x="540" y="20" width="400" height="50" rx="9" fill="#1e3d2a" stroke="#3fb950" stroke-width="1.6"/><text x="740" y="41" fill="#f0f0f0" text-anchor="middle" font-weight="600">Claude · stop_reason = end_turn</text><text x="740" y="58" fill="#f0f0f0" text-anchor="middle">responde con texto</text></g><g><rect x="60" y="116" width="400" height="50" rx="9" fill="#2d2d2d" stroke="#9e9e9e" stroke-width="1.6"/><text x="260" y="137" fill="#f0f0f0" text-anchor="middle" font-weight="600">Call 2 · ronda 2</text><text x="260" y="154" fill="#f0f0f0" text-anchor="middle">3 messages · max_tokens 1200</text></g><g><rect x="540" y="116" width="400" height="50" rx="9" fill="#1e3d2a" stroke="#3fb950" stroke-width="1.6"/><text x="740" y="137" fill="#f0f0f0" text-anchor="middle" font-weight="600">Claude · stop_reason = end_turn</text><text x="740" y="154" fill="#f0f0f0" text-anchor="middle">responde con texto</text></g></svg><div style="font-size:12px;color:#c8c8c8;margin-top:8px"><span style="display:inline-flex;align-items:center;gap:5px;margin-right:14px"><span style="width:14px;height:14px;border-radius:4px;background:#2d2d2d;border:1.5px solid #9e9e9e;display:inline-block"></span>Tu código o una tool</span><span style="display:inline-flex;align-items:center;gap:5px;margin-right:14px"><span style="width:14px;height:14px;border-radius:4px;background:#1e3d2a;border:1.5px solid #3fb950;display:inline-block"></span>Salió bien / permitido / cubierto</span></div><div style="font-size:15.5px;line-height:1.55;color:#f3f3f3;background:#26331f;border-left:4px solid #3fb950;border-radius:6px;padding:10px 14px;margin-top:12px">👉 Tests that passed at the end: 8/8 in 2 round(s)</div></div><pre style="font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><code style="font-family:inherit">
+</code></pre>
+<div style="font-family:'Atkinson Hyperlegible Next',Inter,'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;color:#e8e8e8;background:#1b1c18;border:1px solid #444;border-radius:10px;padding:14px 20px;margin:16px 0;max-width:1000px;line-height:1.5"><div style="font-size:18px;font-weight:600">🔍 What was sent to Claude</div><div style="font-size:14.5px;color:#c8c8c8;margin:4px 0 8px">Each call carries the complete history: the API remembers nothing between calls. Open one to see the system prompt, tools and messages exactly as they traveled.</div><details style='margin:6px 0'><summary style='cursor:pointer'>Call 1 · ronda 1 · 1 messages · max_tokens 1200</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;ronda 1&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 1200,
+  &quot;system&quot;: &quot;Responde SOLO con un bloque ```python``` que contenga la función. Sin explicaciones.&quot;,
+  &quot;tools&quot;: [],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Escribe una función Python normalizar_telefono(texto) que normalice teléfonos mexicanos.&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Call 2 · ronda 2 · 3 messages · max_tokens 1200</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;ronda 2&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 1200,
+  &quot;system&quot;: &quot;Responde SOLO con un bloque ```python``` que contenga la función. Sin explicaciones.&quot;,
+  &quot;tools&quot;: [],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Escribe una función Python normalizar_telefono(texto) que normalice teléfonos mexicanos.&quot;
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;assistant&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;thinking&quot;
+        },
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;```python import re def normalizar_telefono(texto): if not isinstance(texto, str): return None digitos = re.sub(r\&quot;\\D\&quot;, \&quot;\&quot;, texto) # Prefijos antiguos de larga distancia para celulares: 044 / 045 if len(digitos) == 13 and digitos[:3] in (\&quot;044\&quot;, \&quot;045\&quot;): digitos = digitos[3:] # Código de país 52, con o sin el \&quot;1\&quot; de celular heredado if len(digitos) == 13 and digitos.startswith(\&quot;521\&quot;): digitos = digi…&quot;
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Estas pruebas fallaron: - normalizar_telefono('664 123 4567') devolvió '+526641234567', se esperaba '+52 664 123 4567' - normalizar_telefono('(664) 123-4567') devolvió '+526641234567', se esperaba '+52 664 123 4567' - normalizar_telefono('6641234567') devolvió '+526641234567', se esperaba '+52 664 123 4567' - normalizar_telefono('+52 664 123 4567') devolvió '+526641234567', se esperaba '+52 664 1…&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details></div><div id="ccZoom" title="Tamaño de letra (se recuerda)">
+<button onclick="ccZoom(-1)">A−</button><button onclick="ccZoom(1)">A+</button>
+<button id="ccTemaBtn" onclick="ccTema()" title="Tema claro / oscuro (por defecto, el de tu sistema)" hidden>☀</button></div>
+<style>#ccZoom{position:fixed;top:10px;right:14px;z-index:50;display:flex;gap:4px;font-family:var(--letra,system-ui,sans-serif)}
+#ccZoom button{background:var(--superficie-2,#2d2d2d);color:var(--texto,#f0f0f0);border:1px solid var(--borde,#666);border-radius:7px;
+  padding:4px 10px;font-size:14px;cursor:pointer}
+@media print{#ccZoom{display:none}}</style>
+<script>(function(){
+  if (window.top !== window.self) { document.getElementById('ccZoom').style.display = 'none'; }
+  // Tema: solo en páginas con los colores de tema.py (las corridas HTML son siempre oscuras, como una terminal)
+  var meta = document.querySelector('meta[name="color-scheme"]');
+  var conTema = !!meta && getComputedStyle(document.documentElement).getPropertyValue('--fondo').trim() !== '';
+  function sistema(){ return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+  function guardado(){ try { return localStorage.getItem('ccarf_esquema'); } catch (e) { return null; } }
+  function pintar(){ document.getElementById('ccTemaBtn').textContent = (guardado() || sistema()) === 'dark' ? '☀' : '☾'; }
+  window.ccTema = function(){
+    if (window.top !== window.self) {   // dentro del panel: el tema es del panel completo
+      try { var b = window.top.document.getElementById('tema'); if (b) { b.click(); return; } } catch (e) {}
+    }
+    var destino = (guardado() || sistema()) === 'dark' ? 'light' : 'dark';
+    try { destino === sistema() ? localStorage.removeItem('ccarf_esquema') : localStorage.setItem('ccarf_esquema', destino); } catch (e) {}
+    meta.content = guardado() || 'light dark'; pintar();
+  };
+  if (conTema) { document.getElementById('ccTemaBtn').hidden = false; pintar(); matchMedia('(prefers-color-scheme: dark)').addEventListener('change', pintar); }
+  function leer(){ try { return +(localStorage.getItem('ccarf_escala') || 1); } catch (e) { return 1; } }
+  function guardar(v){ try { localStorage.setItem('ccarf_escala', v); } catch (e) {} }
+  window.ccZoom = function(d){ var v = Math.min(1.6, Math.max(0.8, +(leer() + 0.1 * d).toFixed(2))); guardar(v); document.body.style.zoom = v; };
+  document.body.style.zoom = leer();
+})();</script></body>
+</html>

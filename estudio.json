@@ -1,0 +1,3691 @@
+{
+ "temas": {
+  "1.1": {
+   "clave": "1.1",
+   "titulo": "Agentic loop y stop_reason",
+   "idea": "un agente es un ciclo en el que Claude pide una tool, tu código la ejecuta y le devuelve el resultado, y eso se repite hasta que stop_reason vale \"end_turn\".",
+   "explicacion": [
+    "1. Tu código manda a la API el historial completo y la lista de tools disponibles.",
+    "2. Claude responde. Si necesita algo, incluye un bloque tool_use (nombre de la tool + argumentos) y stop_reason vale \"tool_use\".",
+    "3. Tu código ejecuta esa función y agrega al historial un mensaje con rol user que lleva un bloque tool_result con el mismo tool_use_id.",
+    "4. Tu código vuelve a llamar a la API con todo el historial. La API no recuerda nada entre llamadas: la memoria es el historial que tú mandas.",
+    "5. Cuando Claude ya no necesita tools, responde con texto y stop_reason vale \"end_turn\". Ahí termina el loop.",
+    "Dos detalles que se olvidan: Claude nunca ejecuta nada, solo lo pide; y si pide dos tools en la misma respuesta, sus dos tool_result regresan juntos en un solo mensaje user.",
+    "El slide “¿Quién elige la siguiente tool?” separa dos estilos. Model-driven: Claude decide qué tool sigue según el contexto; es flexible y es el default. Programmatic: el código fija el orden; se reserva para dinero, seguridad y cumplimiento (se ve en 1.4)."
+   ],
+   "analogia": [
+    "Un chef y su ayudante. El chef (Claude) no toca la estufa: dicta “pásame la sal”. El ayudante (tu código) la trae y dice “aquí está”. El chef decide el siguiente paso con lo que tiene enfrente. El servicio termina cuando el chef dice “plato listo”, no cuando habla en voz alta (“ahora voy a sazonar…”)."
+   ],
+   "tiendita": [
+    "Ana escribe: “Mi pedido #12345 llegó con una taza rota, ¿me reembolsan $450?”. El loop da 3 o 4 vueltas: get_customer (verificar identidad) → lookup_order (el pedido es suyo y cuesta $1,850) → process_refund por $450 → Claude contesta con texto y end_turn."
+   ],
+   "examen": [
+    "El agente se detiene antes de tiempo → revisa que el loop decida por stop_reason y no por el texto. Distractor favorito: “sube el tope de iteraciones”. Ese tope sirve contra loops infinitos, no contra salidas prematuras.",
+    "El agente nunca termina → ahí sí: tope de iteraciones como respaldo.",
+    "Model-driven vs programmatic → el examen prefiere model-driven, salvo cuando algo debe cumplirse siempre."
+   ],
+   "explicar": [
+    "Guion de un minuto: “Claude no hace nada por sí mismo: pide. Nosotros ejecutamos y le contamos qué pasó. Repetimos hasta que nos diga end_turn. Ojo: puede hablar y pedir una tool en la misma respuesta, así que el texto no significa que terminó.”",
+    "Pregunta para lanzar: Claude responde “Déjame revisar tu pedido” y además pide lookup_order. ¿Qué hace tu código? Respuesta: ejecuta la tool y sigue el loop, porque stop_reason es \"tool_use\".",
+    "Para demostrarlo: demo 1.1 del lab con D11_MODO_PARADA = \"hay_texto\"; verás tools pedidas que nunca se ejecutan."
+   ],
+   "autoevaluacion": [
+    "1. ¿Qué valor de stop_reason te dice que debes ejecutar tools? — \"tool_use\".",
+    "2. Tu agente a veces contesta a medias sin procesar el reembolso. Alguien propone subir el tope de 5 a 20 iteraciones. ¿Sirve? — No. El problema es la condición de salida (seguramente revisa el texto). Hay que terminar solo con end_turn.",
+    "3. Claude pidió dos tools en una respuesta. ¿Cómo devuelves los resultados? — Los dos tool_result en un solo mensaje user, cada uno con su tool_use_id."
+   ],
+   "confusiones": [
+    [
+     "“Si la respuesta trae texto, ya terminó”",
+     "Claude suele escribir “Busco tu pedido…” y en la misma respuesta pedir la tool. Es el slide “Bug: el loop termina antes de tiempo”"
+    ],
+    [
+     "“Busco la palabra listo en el texto”",
+     "El lenguaje es ambiguo; la señal oficial es stop_reason"
+    ],
+    [
+     "“Un tope de iteraciones controla el loop”",
+     "Solo es una red de seguridad contra loops infinitos; nunca la condición normal de salida"
+    ],
+    [
+     "“La API recuerda la conversación”",
+     "Es stateless: si no mandas el historial, Claude no sabe qué pasó antes"
+    ],
+    [
+     "“Claude ejecuta la tool”",
+     "Claude la pide; tu código (o el Agent SDK) la ejecuta"
+    ]
+   ],
+   "confusiones_nota": [
+    "Sobre stop_reason: el examen solo usa \"tool_use\" (sigue) y \"end_turn\" (termina). En producción existen más (max_tokens, pause_turn, refusal). La regla práctica: todo lo que no sea end_turn significa “aún no termina, revisa por qué”."
+   ]
+  },
+  "1.2": {
+   "clave": "1.2",
+   "titulo": "Coordinator y subagentes (hub-and-spoke)",
+   "idea": "un coordinator divide el trabajo, se lo pasa a subagentes que no se ven entre sí, junta sus resultados y escribe la síntesis; si al resultado le falta un tema, casi siempre la culpa es de cómo dividió el coordinator.",
+   "explicacion": [
+    "Hub-and-spoke = rueda de bicicleta. El centro (hub) es el coordinator; los rayos (spokes) son los subagentes. Toda la comunicación pasa por el centro: un subagente nunca le habla a otro.",
+    "El slide “El coordinator tiene 4 trabajos” es la lista que evalúa el examen:",
+    "1. Dynamic selection: elige solo los subagentes necesarios. Una pregunta simple no necesita a todos.",
+    "2. Scope partitioning: reparte el alcance sin duplicar (uno ve tarifas, otro facturas).",
+    "3. Iterative refinement: revisa lo que regresó y, si hay huecos, manda búsquedas nuevas.",
+    "4. Centralized routing: todo pasa por él. Así hay un solo lugar para observar, manejar errores y decidir.",
+    "Isolation (slide “el subagent no hereda nada”): el subagente recibe solo su prompt. No ve el historial del coordinator, ni los resultados de otros subagentes, ni sus propias llamadas anteriores. No hay memoria compartida. Todo lo que necesita debe ir escrito en el prompt que le manda el coordinator."
+   ],
+   "analogia": [
+    "Una jefa de proyecto con consultores externos. Cada consultor llega sin saber nada de la empresa: solo lee el brief que ella le da. Si el brief dice “investiga envíos”, nadie va a investigar devoluciones. Si el reporte final no habla de devoluciones, el problema no es el consultor: es el brief."
+   ],
+   "tiendita": [
+    "El slide “Error clásico: decomposition muy estrecha” pregunta “¿Qué nos cuesta?”. El coordinator asigna solo Envíos y Empaques. Comisiones, Devoluciones y Publicidad quedan sin dueño. Cada subagente hace bien su parte, pero el reporte sale incompleto.",
+    "En el lab (demo 1.2) es lo mismo con otro tema: con D12_DESCOMPOSICION = \"estrecha\" el coordinator solo reparte marketing digital, y la tabla de cobertura marca en rojo inventario, logística, precios y atención.",
+    "Cómo se arregla (las dos acciones del slide):",
+    "1. Descomponer cubriendo todo el tema (prompt del coordinator que pida todas las dimensiones, sin sesgarlo con ejemplos de un solo área).",
+    "2. Revisar la cobertura antes de sintetizar y re-delegar lo que falte.",
+    "Lo que no lo arregla: mejores búsquedas, más subagentes o una síntesis más potente.",
+    "Nadie busca lo que nunca se asignó."
+   ],
+   "examen": [
+    "Un reporte final omite temas enteros y los subagentes hicieron bien su trabajo → la descomposición del coordinator fue muy estrecha.",
+    "Un subagente da resultados raros → revisa primero qué contexto le pasó el coordinator.",
+    "Los 4 trabajos del coordinator, con sus nombres en inglés: dynamic selection, scope partitioning, iterative refinement, centralized routing."
+   ],
+   "explicar": [
+    "Guion: “El coordinator es el único que ve el problema completo. Los subagentes son especialistas con anteojeras: solo ven su encargo. Si el resultado sale incompleto, revisen los encargos antes de culpar a los especialistas.”",
+    "Pregunta para lanzar: El reporte de costos de La Tiendita no menciona devoluciones. Los subagentes de envíos y empaques hicieron un gran trabajo. ¿Dónde está el error?",
+    "Respuesta: en la descomposición del coordinator; nadie recibió devoluciones."
+   ],
+   "autoevaluacion": [
+    "1. ¿Qué recibe un subagente cuando lo invocas? — Solo su prompt. Nada del historial del coordinator ni de otros subagentes.",
+    "2. Un subagente se invoca dos veces seguidas. ¿La segunda recuerda la primera? — No. Cada invocación empieza de cero.",
+    "3. Te proponen agregar un sexto subagente “para que no se escape nada”. ¿Arregla una descomposición estrecha? — No. Hay que descomponer cubriendo todo el tema y revisar cobertura; más subagentes sobre las mismas áreas no cubren las que faltan."
+   ],
+   "confusiones": [
+    [
+     "“El subagente ve lo que ya se habló”",
+     "Solo ve su prompt; si algo no va ahí, no existe para él"
+    ],
+    [
+     "“Falta un tema → el subagente buscó mal”",
+     "Primero revisa qué le asignó el coordinator: la causa raíz suele ser la descomposición"
+    ],
+    [
+     "“Pasar todo por todos los subagentes es más seguro”",
+     "Es desperdicio, aunque cachees resultados; el coordinator elige solo los necesarios"
+    ],
+    [
+     "“Los subagentes se pueden coordinar entre ellos”",
+     "No: todo pasa por el coordinator"
+    ]
+   ]
+  },
+  "1.3": {
+   "clave": "1.3",
+   "titulo": "Invocar subagentes y pasarles contexto",
+   "idea": "como el subagente solo ve su prompt, el coordinator tiene que escribirle ahí todo lo que necesita, con sus fuentes y como una meta; y si los subagentes son independientes, se lanzan varios en una sola respuesta para que corran en paralelo.",
+   "explicacion": [
+    "Cómo se lanza un subagente en el Agent SDK (slide “Task tool + AgentDefinition”):",
+    "1. El coordinator necesita la tool Task en allowed_tools. Sin Task no hay subagentes: es un requisito de sí o no.",
+    "2. Cada subagente se define con un AgentDefinition de tres partes: description: el coordinator la lee para decidir cuándo usarlo (igual que la descripción de una tool). prompt: sus instrucciones. tools: solo las de su rol (por ejemplo, solo WebSearch).",
+    "Hoy en Claude Code esa tool se llama Agent; en el examen se llama Task.",
+    "Built-in vs. custom tools (slide de la misma sección): las built-in ya vienen con el SDK y solo escribes su nombre (WebSearch, Read, Bash). Las custom las creas tú con @tool y las expones con create_sdk_mcp_server(name=\"tienda\", ...); Claude las ve como mcp__tienda__lookup_order. Las tools de La Tiendita (get_customer, process_refund) serían custom.",
+    "Las 3 reglas del context passing (slide “Context passing: 3 reglas”):",
+    "• 1. Pasa todo completo. Mal: “Usa lo que encontró web search”. Bien: pegar los resultados completos en el prompt.",
+    "• 2. Contenido + metadatos. Mal: “Las tazas son lo más devuelto”. Bien: el mismo dato + URL + página.",
+    "• 3. Metas, no pasos. Mal: “Busca en el sitio X, luego en Y”. Bien: “3 paqueterías con tarifa y URL”.",
+    "La regla 3 importa porque si el sitio X no tiene nada útil, un subagente con una meta busca en otro lado; uno con un procedimiento fijo se atora.",
+    "Paralelismo. Si el coordinator emite varias llamadas a Task en la misma respuesta, los subagentes corren al mismo tiempo. Si las emite en respuestas separadas, corren uno tras otro. Claude habilita el paralelismo al pedirlas juntas; quien las ejecuta en paralelo es el SDK (o tu código)."
+   ],
+   "analogia": [
+    "Mandar a alguien al súper. “Compra lo de siempre” no sirve: no sabe qué es “lo de siempre” (regla 1). “Trae leche” sin decir cuál, y luego no puedes reclamar a la tienda si salió mala porque no guardó el ticket (regla 2). “Ve al pasillo 3, luego al 5” falla si movieron los productos; “trae leche deslactosada de 1 litro” funciona en cualquier súper (regla 3). Y si mandas a tres personas a tres tiendas a la vez, terminas antes que mandando a una sola a las tres."
+   ],
+   "tiendita": [
+    "En la demo 1.3 del lab, parte A, un subagente lee 3 documentos de proveedores (SRC-0101, SRC-0102, SRC-0201). Si regresa prosa, el sintetizador ya no puede citar las fuentes. Si regresa una lista estructurada (afirmación + fuente_id + fecha), cada dato llega con su origen. En la parte B, el coordinator pide 3 investigaciones en una sola respuesta y la tabla muestra el tiempo total contra la suma de cada una. En la parte C (Agent SDK) el subagente se define con AgentDefinition y el coordinator lo lanza con la tool Agent (Task en el examen); sin Agent/Task en allowed_tools no puede lanzarlo."
+   ],
+   "examen": [
+    "El coordinator no lanza subagentes → falta Task en allowed_tools.",
+    "El reporte final no puede citar fuentes → los subagentes devolvieron contenido sin metadata; pídeles datos estructurados con la fuente.",
+    "La investigación tarda mucho y los subagentes son independientes → varias llamadas a Task en una sola respuesta.",
+    "Un subagente con procedimiento fijo falla cuando una fuente no responde → dale metas y criterios de calidad, no pasos."
+   ],
+   "explicar": [
+    "Guion: “El prompt del subagente es su único mundo. Lo que no esté escrito ahí, no existe.",
+    "Por eso: todo completo, con sus fuentes, y como una meta.”",
+    "Pregunta para lanzar: El coordinator le dice al subagente de análisis “usa lo que encontró web search”. ¿Qué va a pasar? Respuesta: el subagente no sabe qué encontró; hay que pegarle los resultados en el prompt."
+   ],
+   "autoevaluacion": [
+    "1. ¿Qué tool necesita el coordinator para lanzar subagentes en el Agent SDK? — Task (hoy Agent) en allowed_tools.",
+    "2. ¿Para qué sirve la description de un AgentDefinition ? — Para que el coordinator decida cuándo usar ese subagente.",
+    "3. Quieres investigar 3 proveedores lo más rápido posible. ¿Cómo los lanza el coordinator? — Tres llamadas a Task en la misma respuesta."
+   ],
+   "confusiones": [
+    [
+     "“El subagente puede consultar lo que encontró otro”",
+     "No hay memoria compartida: si no va pegado en su prompt, no lo tiene"
+    ],
+    [
+     "“Con el resumen basta”",
+     "Sin la metadata (URL, página, fecha) nadie puede citar después"
+    ],
+    [
+     "“Darle pasos detallados lo hace más confiable”",
+     "Lo hace rígido: con una meta se adapta cuando algo falla"
+    ],
+    [
+     "“Para que corran en paralelo hay que configurar algo especial”",
+     "Basta con que el coordinator emita varias llamadas a Task en la misma respuesta"
+    ]
+   ]
+  },
+  "1.4": {
+   "clave": "1.4",
+   "titulo": "Enforcement y handoff",
+   "idea": "si una sola falla cuesta dinero, seguridad o cumplimiento, la regla se garantiza en código (un gate), no con una instrucción en el prompt; y cuando hay que escalar, la persona recibe un resumen estructurado porque no ve la conversación.",
+   "explicacion": [
+    "Una instrucción en el prompt (“verifica la identidad antes de reembolsar”) se cumple casi siempre. Para el formato o el tono, “casi siempre” está bien. Para un reembolso, no.",
+    "Programmatic enforcement = un if en tu código que se ejecuta antes de la tool y la bloquea si no se cumple una condición. A eso se le llama gate (compuerta). El modelo puede intentar lo que quiera: el gate no lo deja pasar.",
+    "El slide “¿Cuándo usar cada uno?” lo resume en una tabla:",
+    "• Va en código (gate): lo financiero (reembolsos, pagos), la seguridad (verificar identidad) y el cumplimiento o compliance (revisión AML, antilavado).",
+    "• Basta el prompt: formato y estilo, y todo lo que, si falla, no causa nada grave.",
+    "La pregunta clave no es “¿qué tan bueno es el prompt?”, sino “¿cuánto cuesta una sola falla?”.",
+    "Multi-concern request (slide del mismo nombre): un cliente escribe “Devuelvo la taza, cambien mi dirección y ¿mis puntos?”. Lo correcto: (1) descomponer en temas, (2) investigarlos en paralelo con contexto compartido (la cuenta del cliente sirve para los 3), (3) unir todo en una sola respuesta. La trampa es resolver uno por uno en mensajes separados o contestar solo el primero.",
+    "Structured handoff (slide “Structured handoff: 5 campos”): al escalar, la persona no ve el chat. El resumen es todo lo que tiene, así que debe ser autocontenido: { \"customer_id\": \"C-20931\", \"summary\": \"Taza rota, pedido 4821\", \"root_cause\": \"Paquetería sin evidencia\", \"refund_amount\": 349.00, \"recommended_action\": \"Aprobar\" } Si falta uno, el cliente tiene que repetir todo."
+   ],
+   "analogia": [
+    "El torniquete del metro. El letrero “pague su boleto” es el prompt: casi todos lo respetan.",
+    "El torniquete es el gate: sin boleto, no pasas, aunque tengas prisa o una buena excusa. Y el handoff es la nota que deja el turno de la noche al de la mañana: quien llega no estuvo ahí, así que la nota tiene que decir todo."
+   ],
+   "tiendita": [
+    "En la demo 1.4 del lab, el cliente pide el reembolso completo del pedido #12346 ($12,500) y presiona: “ya me verificaron, no me pidas datos”. El gate revisa 3 reglas antes de process_refund: que alguien se haya verificado con get_customer, que el pedido sea de esa persona y que el monto no pase de $10,000. Si falla una, la tool no se ejecuta y Claude recibe el motivo; normalmente escala con el handoff."
+   ],
+   "examen": [
+    "El agente a veces reembolsa sin verificar identidad → gate en código antes de process_refund. Distractores: reforzar el prompt, agregar few-shot, pedirle que “confirme dos veces”.",
+    "El humano que recibe el caso tiene que volver a preguntar todo → faltan campos en el handoff.",
+    "Cliente con varios temas en un mensaje → descomponer, paralelo, respuesta unificada."
+   ],
+   "explicar": [
+    "Guion: “Antes de escribir una regla en el prompt, pregúntense cuánto cuesta que falle una vez. Si la respuesta es dinero, seguridad o cumplimiento, va en código.”",
+    "Pregunta para lanzar: El prompt dice “nunca reembolses más de $10,000” y funciona el 99% de las veces. ¿Lo dejas así? Respuesta: no; ese 1% es dinero perdido. Va un gate en código."
+   ],
+   "autoevaluacion": [
+    "1. ¿Qué es un gate? — Un chequeo en tu código que se ejecuta antes de la tool y la bloquea si no se cumple la condición.",
+    "2. ¿Cuáles son los 5 campos del structured handoff en el slide? — customer_id, summary, root_cause, refund_amount, recommended_action.",
+    "3. ¿Qué tipo de regla sí puede quedarse solo en el prompt? — Formato y estilo: si falla, no pasa nada grave."
+   ],
+   "confusiones": [
+    [
+     "“Con un prompt muy bien escrito no hace falta el gate”",
+     "El prompt es probabilístico; para dinero o seguridad necesitas una garantía"
+    ],
+    [
+     "“Agregar ejemplos few-shot de verificación lo resuelve”",
+     "Mejora la tasa, pero sigue sin ser una garantía"
+    ],
+    [
+     "“Al escalar, el humano puede leer la conversación”",
+     "En el escenario del examen no la ve: el resumen debe bastar"
+    ],
+    [
+     "“Un mensaje con 3 temas se atiende tema por tema”",
+     "Se descompone, se investiga en paralelo y se contesta en una sola respuesta"
+    ]
+   ]
+  },
+  "1.5": {
+   "clave": "1.5",
+   "titulo": "Hooks: PreToolUse y PostToolUse",
+   "idea": "un hook es una función tuya que el Agent SDK ejecuta automáticamente alrededor de cada tool: PreToolUse corre antes y puede bloquearla; PostToolUse corre después y puede limpiar el resultado, pero ya no puede deshacer nada.",
+   "explicacion": [
+    "En 1.4 el gate era un if dentro de tu propio loop. En el Agent SDK no escribes el loop, así que necesitas otra forma de meter código en medio: los hooks.",
+    "La secuencia del slide “PreToolUse y PostToolUse”:",
+    "Claude pide una tool → PreToolUse → la tool se ejecuta → PostToolUse → Claude ve el resultado PreToolUse (antes)",
+    "PostToolUse (después)",
+    "Qué puede hacer Negar la llamada (deny) o cambiar sus argumentos Transformar el resultado antes de que Claude lo vea Para qué sirve Políticas: reembolso > límite, transferencia sin AML, descuento > 20% sin gerente Normalizar datos: un solo formato de fecha y de estatus Lo que no puede Ver el resultado (todavía no existe)",
+    "Deshacer la acción: si el reembolso ya se hizo, el dinero ya salió PreToolUse: políticas que no fallan. El slide muestra un hook antes de process_refund: si amount > 10_000, responde deny con “Escalar a humano”. La tool bloqueada nunca se ejecuta, y Claude recibe el motivo como un tool_result con error. En el SDK real, el hook responde con permissionDecision: \"deny\". (Los montos son ejemplos; la guía oficial usa $500 USD.)",
+    "PostToolUse: un solo formato. Tres tools devuelven la misma fecha de tres formas: 1710489600 (epoch), 2024-03-15T12:00:00Z y 15/03/2024. El hook las convierte todas a ISO antes de que Claude las vea. Lo mismo con estatus: 200, \"active\", \"P\" → \"pending\". Si dejas que el modelo interprete cada vez, a veces voltea día y mes o lee \"P\" como “processed”.",
+    "Hook vs. prompt (slide “¿Qué uso?”). Son dos decisiones:",
+    {
+     "tabla": [
+      [
+       "Necesito…",
+       "Usa"
+      ],
+      [
+       "Que se cumpla el 100%",
+       "Hook"
+      ],
+      [
+       "Una preferencia de estilo",
+       "Prompt"
+      ],
+      [
+       "Impedir algo antes de que pase",
+       "PreToolUse"
+      ],
+      [
+       "Limpiar resultados",
+       "PostToolUse"
+      ]
+     ]
+    },
+    "Primero: ¿necesito garantía? (hook o prompt). Después: ¿cuándo actúo? (Pre o Post)."
+   ],
+   "analogia": [
+    "PreToolUse es el guardia en la puerta del banco: revisa antes de que entres y puede no dejarte pasar. PostToolUse es el traductor que recibe un documento en tres idiomas y te lo entrega en uno solo: muy útil, pero si el documento decía “ya se transfirió el dinero”, traducirlo no lo regresa."
+   ],
+   "tiendita": [
+    "En la demo 1.5 del lab, el agente revisa el envío del pedido #12346 y luego intenta reembolsar $12,500:",
+    "1. check_shipping devuelve datos crudos: \"DMG\", \"30-10-2026\", una fecha en epoch.",
+    "2. PostToolUse los convierte en \"dañado en tránsito\" y fechas ISO. Claude solo ve la versión limpia.",
+    "3. process_refund por $12,500 dispara PreToolUse, que ve que pasa de $10,000 y responde deny.",
+    "4. La tool no corre. Claude recibe el motivo y le explica al cliente que se escalará.",
+    "Los hooks se configuran en ClaudeAgentOptions(hooks=...): hooks = { \"PreToolUse\": [HookMatcher(matcher=\"mcp__tiendita__process_refund\", hooks=[hook_pre_reembolso])], \"PostToolUse\": [HookMatcher(matcher=\"mcp__tiendita__check_shipping\", hooks=[hook_post_envio])], } matcher dice a qué tool aplica (nombre o regex; None = todas). Experimentos: con D15_ACTIVAR_PRETOOLUSE = False el reembolso sí se ejecuta; con D15_ACTIVAR_POSTTOOLUSE = False Claude ve \"DMG\" tal cual y tiene que adivinar."
+   ],
+   "examen": [
+    "Hooks = garantía determinista; prompt = probabilística.",
+    "Datos de varias fuentes con formatos distintos → PostToolUse para normalizar antes de que el agente los procese.",
+    "Acción que viola una política → PreToolUse para bloquear y redirigir a escalamiento.",
+    "Trampa frecuente: “bloquear con PostToolUse”."
+   ],
+   "explicar": [
+    "Guion: “Hagan dos preguntas. ¿Necesito que se cumpla siempre? Entonces hook. ¿Quiero impedir algo o limpiar algo? Impedir es antes, limpiar es después.”",
+    "Pregunta para lanzar: Quieres que el agente nunca borre archivos fuera de /tmp. ¿Pre o Post? Respuesta: PreToolUse; en Post el archivo ya está borrado."
+   ],
+   "autoevaluacion": [
+    "1. ¿Qué pasa con la tool cuando PreToolUse responde deny? — No se ejecuta; Claude recibe el motivo como tool_result con error.",
+    "2. Tres APIs devuelven fechas en formatos distintos. ¿Qué hook usas? — PostToolUse, para unificarlas antes de que Claude las vea.",
+    "3. ¿Dónde se configuran los hooks en el Agent SDK? — En ClaudeAgentOptions(hooks= {...}), con un HookMatcher por evento y tool."
+   ],
+   "confusiones": [
+    [
+     "“Puedo bloquear un reembolso con PostToolUse”",
+     "Cuando corre, la acción ya pasó. Bloquear es trabajo de PreToolUse"
+    ],
+    [
+     "“Puedo normalizar el resultado con PreToolUse”",
+     "PreToolUse no ve el resultado: todavía no existe"
+    ],
+    [
+     "“El hook le pide a Claude que no lo haga”",
+     "No le pide nada: el SDK no ejecuta la tool, sin importar lo que Claude quiera"
+    ],
+    [
+     "“Los hooks y el gate de 1.4 son cosas distintas”",
+     "Es la misma idea (código determinista); el hook es cómo se hace cuando el loop lo corre el SDK"
+    ]
+   ]
+  },
+  "1.6": {
+   "clave": "1.6",
+   "titulo": "Descomposición de tareas",
+   "idea": "si conoces los pasos de antemano, usa prompt chaining (pasos fijos, uno por llamada); si el plan depende de lo que vayas encontrando, usa descomposición dinámica; y si son muchos elementos, revísalos uno por uno y luego haz una pasada solo de integración.",
+   "explicacion": [
+    "Dos patrones (slide del mismo nombre):",
+    {
+     "tabla": [
+      [
+       "",
+       "Prompt chaining",
+       "Dynamic decomposition"
+      ],
+      [
+       "Forma",
+       "Paso 1 → Paso 2 → Paso 3, siempre igual",
+       "Meta → hallazgo inesperado → nuevo plan"
+      ],
+      [
+       "Ejemplo",
+       "Revisar 40 fichas de producto",
+       "¿Por qué no cuadra el inventario?"
+      ],
+      [
+       "Ventaja",
+       "Consistente y fácil de depurar",
+       "Se adapta"
+      ],
+      [
+       "Desventaja",
+       "Rígido",
+       "Menos predecible"
+      ]
+     ]
+    },
+    "La pregunta del slide “¿Conoces los pasos de antemano?”:",
+    "Sí → prompt chaining: code review de varios archivos, extraer datos de documentos, revisar fichas.",
+    "No → dinámica: explorar código legacy, depurar un sistema desconocido, investigar un descuadre.",
+    "Elige por la tarea, no por lo que suena más sofisticado. El examen pone trampas en los dos sentidos.",
+    "Attention dilution (slide del mismo nombre): si metes 14 archivos en una sola revisión, la atención se reparte. Los primeros reciben revisión detallada; los últimos se leen por encima y se escapan bugs obvios. Otro síntoma: el mismo patrón se critica en un archivo y se aprueba en otro. Es un problema de estructura, no de capacidad: no lo arregla un modelo más grande ni más contexto.",
+    "La solución: multi-pass (slide del mismo nombre): for f in files: review(f) integrate(results) # pasada local: bugs de cada archivo # pasada de integración: consistencia entre archivos Cada archivo recibe toda la atención en su pasada. Luego una pasada aparte revisa solo las relaciones entre archivos (flujo de datos, patrones consistentes). La trampa: dividir en lotes sin pasada de integración, porque se pierden los problemas que cruzan lotes."
+   ],
+   "analogia": [
+    "Prompt chaining es una receta de cocina: los pasos ya están escritos. La descomposición dinámica es un detective: cada pista cambia la siguiente pregunta. Y la attention dilution es corregir 40 exámenes de corrido: los primeros los revisas con lupa y los últimos casi los apruebas sin leer. Mejor corregir cada uno con calma y al final comparar si calificaste igual a todos."
+   ],
+   "tiendita": [
+    "La demo 1.6 del lab tiene dos partes:",
+    "Parte A (prompt chaining): una reseña de manteles pasa por 3 llamadas. (1) Extraer datos a JSON (pedido, producto, problema, fecha_limite, sentimiento); (2) clasificar urgencia viendo solo ese JSON; (3) redactar la respuesta. Detalle: fecha_limite acepta null, así el modelo no inventa una fecha cuando no la hay.",
+    "Parte B (multi-pass): 3 archivos con un bug que cruza archivos. checkout.py llama a calcular_total(pedido, incluir_iva=True), pero en carrito.py esa función solo recibe pedido y ya incluye IVA. Las pasadas locales no pueden confirmarlo; la de integración sí, porque ve los dos.",
+    "Con honestidad: con 3 archivos pequeños, una sola pasada probablemente también lo encuentra. El problema aparece a escala (14 archivos o más). Para verlo, agrega archivos a ARCHIVOS_TIENDITA y compara D16_MODO_REVISION = \"una_pasada\" contra \"multipass\"."
+   ],
+   "examen": [
+    "Revisión de muchos archivos con calidad dispareja → multi-pass: pasadas locales + una de integración.",
+    "Flujo predecible (extraer, clasificar, responder) → prompt chaining.",
+    "Investigación abierta (descuadre, sistema desconocido) → descomposición dinámica.",
+    "Distractores: modelo más grande, ventana de contexto más grande, lotes sin integración."
+   ],
+   "explicar": [
+    "Guion: “Antes de elegir patrón, pregúntense: ¿ya sé los pasos? Si sí, encadénenlos. Si no, dejen que el agente replanee. Y si son muchos elementos, nunca todos juntos.”",
+    "Pregunta para lanzar: Un PR toca 20 archivos y la revisión automática aprueba en el archivo 18 un patrón que criticó en el 2. ¿Qué cambias? Respuesta: multi-pass; una pasada por archivo y una de integración."
+   ],
+   "autoevaluacion": [
+    "1. ¿Qué patrón usas para investigar por qué no cuadra el inventario? — Descomposición dinámica: no conoces los pasos de antemano.",
+    "2. ¿Qué dos síntomas tiene la attention dilution? — Los últimos archivos se revisan por encima, y el mismo patrón se critica en uno y se aprueba en otro.",
+    "3. ¿Qué revisa la pasada de integración? — Solo las relaciones entre archivos: flujo de datos y consistencia."
+   ],
+   "confusiones": [
+    [
+     "“La descomposición dinámica siempre es mejor porque es más inteligente”",
+     "Para una tarea con pasos conocidos, es menos predecible sin ganar nada"
+    ],
+    [
+     "“Si la revisión se salta bugs, uso un modelo más grande”",
+     "Es un problema de estructura: hay que dividir en pasadas"
+    ],
+    [
+     "“Dividir en lotes resuelve la attention dilution”",
+     "Solo si agregas la pasada de integración; sin ella se pierden los bugs entre lotes"
+    ],
+    [
+     "“La pasada de integración vuelve a revisar todo”",
+     "Revisa solo relaciones entre archivos, no los bugs locales"
+    ]
+   ]
+  },
+  "1.7": {
+   "clave": "1.7",
+   "titulo": "Sesiones: resume, fork y contexto obsoleto",
+   "idea": "resume continúa una sesión con todo su historial, fork_session copia ese historial a una rama nueva para probar otro enfoque, y cuando los datos ya cambiaron conviene empezar una sesión nueva con un resumen, porque reanudar también trae los datos viejos.",
+   "explicacion": [
+    "Una sesión es una conversación guardada con su session_id: mensajes, llamadas a tools y sus tool_result. El slide “Tres opciones, tres propósitos”:",
+    "• Continuar: claude --resume <id> (en el SDK, resume=session_id). Restaura todo el historial con sus tool results. Cuándo: nada cambió desde la última vez. Ejemplo: seguir revisando precios al día siguiente.",
+    "• Ramificar: fork_session=True. Copia el historial a una rama nueva; ninguna ve la otra. Cuándo: comparar dos enfoques del mismo análisis. Ejemplo: subir el envío vs. cobrar exprés.",
+    "• Empezar limpio: sesión nueva + resumen. Sin historial: le das un resumen y qué archivos cambiaron. Cuándo: cambiaron archivos o la sesión se saturó. Ejemplo: el dueño corrigió los precios anoche.",
+    "Hoy en el SDK, fork_session va junto con resume: resume elige la sesión y fork_session decide si ramificar. En el examen se presentan como opciones distintas: resume para continuar, fork para divergir.",
+    "Stale context (contexto obsoleto). Ayer el agente leyó “Taza: $299”; hoy el archivo dice $349. Si reanudas con --resume, el tool_result de ayer sigue en el historial. Aunque le pidas “vuelve a leerlo”, ahora tiene los dos valores y puede contradecirse. La solución: sesión nueva + resumen de lo que sigue válido + releer solo lo que cambió.",
+    "La tabla del slide “¿Qué opción uso?”:",
+    "• Nada cambió → --resume.",
+    "• Cambió poco y casi todo sigue válido → --resume + avisar qué cambió.",
+    "• Comparar dos enfoques → fork_session.",
+    "• Cambiaron archivos clave → sesión nueva + resumen.",
+    "• Sesión larga y saturada → sesión nueva + resumen.",
+    "Trampa: fork_session no limpia el contexto obsoleto; lo hereda, porque copia el historial tal cual."
+   ],
+   "analogia": [
+    "Resume es retomar un libro donde lo dejaste. Fork es fotocopiar tu cuaderno de apuntes para probar dos soluciones distintas sin borrar la original. Empezar limpio es cuando el profesor cambió el temario: en vez de tachar tus apuntes viejos, empiezas un cuaderno nuevo con un resumen de lo que sigue valiendo."
+   ],
+   "tiendita": [
+    "La demo 1.7 del lab tiene dos partes:",
+    "Parte A (Agent SDK): (1) sesión original: “la taza cuesta $299”; (2) resume: mismo session_id, recuerda $299; (3) resume + fork_session=True: session_id nuevo, y en esa rama la taza pasa a $349; (4) resume a la original: sigue en $299. La tabla final muestra que 1, 2 y 4 tienen el mismo id y 3 es distinto.",
+    "Parte B (contexto obsoleto): Claude ya leyó precios.txt (taza = $299) y después el archivo cambió a $349. Con D17_ESTRATEGIA = \"resume\", al pedirle todos los precios que conoce, lista los dos. Con \"nueva_sesion\" (resumen + releer lo que cambió), el $299 ya no existe."
+   ],
+   "examen": [
+    "Cambiaron archivos que el agente ya había analizado → sesión nueva + resumen estructurado + re-análisis dirigido.",
+    "Quieres comparar dos estrategias desde el mismo punto → fork_session.",
+    "Retomar al día siguiente sin cambios → --resume.",
+    "Trampa: usar fork para “limpiar” contexto."
+   ],
+   "explicar": [
+    "Guion: “Pregúntense: ¿lo que el agente ya vio sigue siendo cierto? Si sí, resume. Si quiero probar otro camino, fork. Si ya no es cierto, sesión nueva con resumen.”",
+    "Pregunta para lanzar: Ayer el agente analizó 10 archivos. Hoy cambiaron 6. ¿Qué haces?",
+    "Respuesta: sesión nueva con un resumen de lo que sigue válido y re-análisis de esos 6."
+   ],
+   "autoevaluacion": [
+    "1. ¿Qué restaura --resume ? — Todo el historial de la sesión, incluidos los tool results anteriores.",
+    "2. Después de un fork, ¿la sesión original cambia? — No. La rama tiene un session_id nuevo y ninguna ve la otra.",
+    "3. Cambió un solo archivo poco importante y el resto sigue válido. ¿Qué haces? — --resume y le avisas al agente qué archivo cambió."
+   ],
+   "confusiones": [
+    [
+     "“Si reanudo y le digo que relea el archivo, queda corregido”",
+     "El dato viejo sigue en el historial junto al nuevo"
+    ],
+    [
+     "“fork_session sirve para empezar limpio”",
+     "Copia el historial completo, incluido lo obsoleto"
+    ],
+    [
+     "“Al hacer fork se modifica la sesión original”",
+     "No: la original queda intacta; la rama tiene otro id"
+    ],
+    [
+     "“Siempre conviene empezar de cero”",
+     "Si casi todo sigue válido, --resume + avisar qué cambió es más barato y conserva el trabajo"
+    ]
+   ]
+  },
+  "2.1": {
+   "clave": "2.1",
+   "titulo": "Diseño de tools: descripciones y límites",
+   "idea": "si Claude elige la tool equivocada, casi siempre es porque dos descripciones se parecen; el primer arreglo es reescribirlas con propósito, entradas, ejemplos, casos frontera y un límite explícito (“NO la uses para X, usa Y”).",
+   "explicacion": [
+    "Misrouting = Claude elige la tool equivocada. El slide lo muestra con la pregunta “¿Dónde está mi pedido #12345?”. Hay dos tools: get_customer (“Retrieves customer information”) y lookup_order (“Retrieves order details”). Las dos encajan con la pregunta, así que a veces elige get_customer. Es la Sample Question 2 de la guía oficial.",
+    "Una buena descripción tiene 5 partes (slide del mismo nombre):",
+    "1. Purpose: qué hace, sin ambigüedad.",
+    "2. Inputs: tipos, formatos, obligatorios vs. opcionales.",
+    "3. Example queries: casos concretos (“¿dónde está mi pedido?”).",
+    "4. Edge cases y límites: qué NO hace y qué pasa con entradas raras.",
+    "5. Boundaries: cuándo usar ESTA tool y no la parecida. Es la que más arregla el misrouting.",
+    "El slide “Antes y después”:",
+    "• Antes (mínima): “Retrieves order details”.",
+    "• Después (production-grade): “Busca un pedido por número (#NNNNN) o tracking ID. Devuelve estatus y si aplica reembolso. NO la uses para verificar identidad: usa get_customer.”",
+    "Y get_customer lleva el límite al revés: “NO la uses para pedidos: usa lookup_order”. Las dos tools se apuntan entre sí.",
+    "Splitting y renaming (slide “Tool splitting y renaming”):",
+    "Splitting: una tool genérica (manage_order, “Handles order requests”) se divide en varias con un solo trabajo: cancel_order (pedidos no enviados), start_return (pedidos ya entregados), change_address (pedidos no enviados). Cada una tiene un contrato de entrada y salida claro.",
+    "Renaming: nombres vagos como get_info / get_details se cambian por get_customer / lookup_order. Arregla el traslape sin tocar la implementación, siempre con una descripción nueva.",
+    "Cuidado con el system prompt (slide “el system prompt puede ganarle a la description”).",
+    "“Siempre revisa los datos del cliente antes de continuar” hace que Claude llame get_customer incluso para preguntas de pedidos, aunque las descripciones estén bien.",
+    "Mejor: “Antes de un reembolso, confirma la identidad del cliente”. Aplica solo donde tiene sentido y deja que las descripciones decidan.",
+    "¿Cuál es el primer paso? (slide “Hay misrouting”):",
+    {
+     "tabla": [
+      [
+       "Opción",
+       "Veredicto"
+      ],
+      [
+       "Mejorar las descripciones",
+       "Primero: poco esfuerzo, ataca la causa raíz"
+      ],
+      [
+       "Ejemplos few-shot",
+       "Gasta tokens y trata el síntoma"
+      ],
+      [
+       "Clasificador de routing",
+       "Sobreingeniería; ignora la comprensión del modelo"
+      ],
+      [
+       "Consolidar tools",
+       "Válido a largo plazo, pero mucho más esfuerzo"
+      ]
+     ]
+    },
+    "Excepción: si el agente tiene demasiadas tools (por ejemplo 18), mejorar descripciones no basta: hay que reducirlas (2.3)."
+   ],
+   "analogia": [
+    "Dos cajones etiquetados “cosas” y “objetos”. Cualquiera se equivoca. Si los etiquetas “cubiertos (para servir usa el cajón de abajo)” y “utensilios para servir”, nadie duda. El system prompt con palabras clave es como un letrero en la cocina que dice “siempre abre el primer cajón”: aunque las etiquetas estén bien, la gente lo obedece."
+   ],
+   "tiendita": [
+    "En la demo 2.1 del lab, 6 consultas pasan por 4 tools (get_customer, lookup_order, get_shipping_rates, search_products), primero con descripciones mínimas y luego completas. La tabla final cuenta aciertos. Los casos frontera son los que cambian:",
+    "“¿Cuánto me cobraron de envío en el pedido #12347?” → con mínimas suele irse a get_shipping_rates por la palabra “envío”. Lo correcto es lookup_order: es un pedido ya hecho.",
+    "“Mi pedido no llega, mi correo es…” → con mínimas suele irse a lookup_order por “pedido”. Lo correcto es get_customer: no hay número de pedido.",
+    "Con D21_CONFLICTO_EN_SYSTEM = True se agrega una frase con palabras clave al system prompt para ver cómo le gana a las descripciones. Los resultados varían entre corridas; eso también es parte de la lección."
+   ],
+   "examen": [
+    "Claude confunde dos tools parecidas → mejorar descripciones (con límites explícitos) es el primer paso.",
+    "Una tool genérica hace demasiado → splitting en tools con un solo trabajo.",
+    "Claude elige una tool “sin razón” aunque las descripciones están bien → revisa el system prompt.",
+    "Patrón general: el arreglo barato y de mayor impacto primero."
+   ],
+   "explicar": [
+    "Guion: “Claude elige tools como nosotros elegimos cajones: por la etiqueta. Si dos etiquetas se parecen, se equivoca. La solución es escribir mejores etiquetas, y que cada una diga para qué NO es.”",
+    "Pregunta para lanzar: Claude usa get_customer cuando le preguntan por un pedido.",
+    "¿Agregas 10 ejemplos few-shot o reescribes las descripciones? Respuesta: reescribir las descripciones, con un límite que apunte a la otra tool."
+   ],
+   "autoevaluacion": [
+    "1. ¿Qué tres cosas lee Claude para elegir una tool? — name, description e input_schema.",
+    "2. ¿Cuál de las 5 partes de una descripción ataca más el misrouting? — Boundaries: “NO la uses para X, usa Y”.",
+    "3. ¿Cuándo mejorar descripciones no basta? — Cuando el agente tiene demasiadas tools: hay que reducirlas (2.3)."
+   ],
+   "confusiones": [
+    [
+     "“Claude sabe qué hace la tool porque ve el código”",
+     "Solo ve name, description e input_schema"
+    ],
+    [
+     "“Lo primero es agregar ejemplos few-shot”",
+     "Tratan el síntoma y gastan tokens; primero las descripciones"
+    ],
+    [
+     "“Con buenas descripciones ya no importa el system prompt”",
+     "Una frase con palabras clave puede ganarles"
+    ],
+    [
+     "“Renombrar requiere reescribir la función”",
+     "Solo cambia la interfaz (nombre + descripción)"
+    ]
+   ]
+  },
+  "2.2": {
+   "clave": "2.2",
+   "titulo": "Errores estructurados",
+   "idea": "cuando una tool falla debe decir que falló (isError: true), de qué tipo es el error y si sirve reintentar; y un resultado vacío válido (“revisé y no hay nada”) nunca debe verse igual que una falla (“no pude revisar”).",
+   "explicacion": [
+    "Dos tipos de error en MCP (slide del mismo nombre):",
+    "• Protocol error: la petición está mal formada (tool que no existe, schema inválido). Se ve como un error JSON-RPC (\"code\": -32602, \"message\": \"Unknown tool\"). Lo resuelves tú, en el schema o en el cliente; Claude no ve un resultado.",
+    "• Tool execution error: la tool sí corrió, pero falló (timeout, dato malo, regla de negocio). Se ve como un resultado normal con \"isError\": true y un texto. Claude lo lee y decide qué hacer.",
+    "El error estructurado es del segundo tipo. isError: true le dice al modelo “esto falló” para que razone cómo recuperarse en vez de tomarlo como éxito.",
+    "Las 4 categorías de error (los nombres vienen de la guía del examen, no del spec de MCP; apréndelos tal cual):",
+    "• transient: el inventario no responde (timeout). isRetryable: true. El agente reintenta con espera.",
+    "• validation: pedido “4821” sin el formato #NNNNN. isRetryable: false. El agente corrige el input.",
+    "• business: un reembolso de $12,000 pasa el límite. isRetryable: false. El agente busca un camino alterno o escala.",
+    "• permission: pide datos financieros sin acceso. isRetryable: false. El agente escala o usa otras credenciales.",
+    "Solo transient es reintentable. Las otras tres necesitan cambiar algo antes: el input, el camino o quién llama.",
+    "Cómo se ve: la metadata va en structuredContent y son exactamente 3 campos: errorCategory, isRetryable y description."
+   ],
+   "analogia": [
+    "Le preguntas a un empleado si hay tazas rojas. “No hay” y “no pude entrar a la bodega” son respuestas muy distintas, aunque las dos terminen sin taza. Si dice “no hay” cuando en realidad la bodega estaba cerrada, pierdes una venta. Y si solo dice “falló”, no sabes si volver a preguntar en cinco minutos, pedir otra cosa o llamar al gerente."
+   ],
+   "tiendita": [
+    "En la demo 2.2 del lab, una sola tool (buscar_pedidos_cliente) pasa por 5 escenarios, primero con errores genéricos y luego estructurados:",
+    {
+     "tabla": [
+      [
+       "Escenario",
+       "Genérico devuelve",
+       "Estructurado devuelve"
+      ],
+      [
+       "`caido` (timeout la 1.ª vez)",
+       "`{\"pedidos\": []}` sin error",
+       "`transient`, `isRetryable: true`"
+      ],
+      [
+       "`sin_pedidos` (válido)",
+       "`{\"pedidos\": []}`",
+       "éxito, `total: 0`"
+      ],
+      [
+       "`email_invalido`",
+       "“Operation failed”",
+       "`validation`"
+      ],
+      [
+       "`sin_permiso`",
+       "“Operation failed”",
+       "`permission`"
+      ],
+      [
+       "`historico` (2019)",
+       "“Operation failed”",
+       "`business` + cómo solicitarlos"
+      ]
+     ]
+    },
+    "El momento clave es caido con el formato genérico: Claude le dice al cliente que no tiene pedidos, cuando en realidad el sistema estaba caído. Con el estructurado reintenta y en el segundo intento los obtiene. Experimento: D22_FALLAS_TRANSITORIAS = 3 para ver cuántas veces reintenta."
+   ],
+   "examen": [
+    "El agente dice “no hay resultados” cuando el sistema estaba caído → distinguir access failure de valid empty result.",
+    "El agente reintenta una y otra vez un input mal formado → categoría validation, isRetryable: false.",
+    "Un subagente falla en 2 de 5 fuentes → propaga resultados parciales + qué falló; no oculta ni detiene todo."
+   ],
+   "explicar": [
+    "Guion: “Un error tiene que contestar dos preguntas: ¿sirve repetir exactamente lo mismo?",
+    "Y si no, ¿qué hago en su lugar? Y nunca, nunca disfracen una falla de resultado vacío.”",
+    "Pregunta para lanzar: El inventario dio timeout y la tool devolvió []. ¿Qué le va a decir Claude al cliente? Respuesta: que no hay producto, aunque sí lo haya. Hay que devolver transient con isRetryable: true."
+   ],
+   "autoevaluacion": [
+    "1. ¿Cuáles son los 3 campos del error estructurado? — errorCategory, isRetryable y description.",
+    "2. ¿Cuál de las 4 categorías es reintentable? — Solo transient.",
+    "3. Un cliente sin pedidos: ¿ isError: true o false ? — false: la consulta funcionó y devolvió 0 resultados."
+   ],
+   "confusiones": [
+    [
+     "“Si falla, devuelvo lista vacía y listo”",
+     "Claude lo toma como éxito y dice algo falso"
+    ],
+    [
+     "“Un resultado vacío es un error”",
+     "Si la consulta funcionó, es un éxito con 0 resultados"
+    ],
+    [
+     "“validation es reintentable”",
+     "El ID mal formado falla igual cada vez: hay que corregir el input"
+    ],
+    [
+     "“isRetryable: false = rendirse”",
+     "Significa no repetir esa llamada; puede corregir, tomar otro camino o escalar"
+    ],
+    [
+     "“El subagente debe subir cada error al coordinator”",
+     "Primero reintenta lo transitorio; sube solo lo que no pudo resolver, con lo que intentó"
+    ]
+   ]
+  },
+  "2.3": {
+   "clave": "2.3",
+   "titulo": "Distribución de tools y tool_choice",
+   "idea": "cada agente debe tener solo las pocas tools de su rol, porque más tools (o tools fuera de rol) empeoran la selección; y tool_choice controla si Claude puede responder con texto (auto), debe usar alguna tool (any) o debe usar una en particular (forced).",
+   "explicacion": [
+    "Tool overload (slide “más tools, peor selección”): un agente con 18 tools elige peor solo por la cantidad; cada agente con 4–5 tools de su rol elige bien. No es solo cantidad, también relevancia: si el subagente de síntesis tiene tools de búsqueda, se pone a buscar en vez de escribir. (18 vs. 4–5 es una ilustración de la guía, no un límite exacto; la documentación actual habla de ~30–50 tools.)",
+    "¿Qué arreglo aplico? (tabla de decisión del slide):",
+    {
+     "tabla": [
+      [
+       "Si ves…",
+       "Haz esto"
+      ],
+      [
+       "Pocas tools, pero dos se parecen",
+       "Mejora las descripciones (2.1)"
+      ],
+      [
+       "Trabajos distintos: consultar, transformar, exportar",
+       "Reparte por rol en sets pequeños"
+      ],
+      [
+       "Muchas variaciones del mismo trabajo",
+       "Consolida en una tool con parámetro"
+      ],
+      [
+       "Una tool puede hacer más de lo necesario",
+       "Restríngela (constrain)"
+      ]
+     ]
+    },
+    "La fila que más se olvida es la primera: con pocas tools, mejorar descripciones basta.",
+    "Consolidar vs. restringir (no compiten; un sistema puede usar las dos):",
+    {
+     "tabla": [
+      [
+       "Consolidar",
+       "Restringir (constrain)"
+      ],
+      [
+       "19 tools de transformación → `transform_data(transform_type=\"csv_to_json\", data=...)` con un enum",
+       "`fetch_url` → `load_document`, que solo acepta URLs de documentos"
+      ],
+      [
+       "Reduce entre cuántas tools elige",
+       "Reduce qué puede alcanzar cada tool: menos mal uso y menos riesgo"
+      ]
+     ]
+    },
+    "Scoped cross-role tool (Sample Question 9). El subagente de síntesis manda cada verificación al coordinator; el 85% son simples, y eso cuesta 2–3 vueltas extra y ~40% más latencia. Solución: darle a síntesis una tool acotada verify_fact para los casos simples (1 afirmación, 1 fuente). Los complejos siguen por el coordinator. El schema es el alcance: claim es un solo string (no un arreglo), source_id tiene patrón ^SRC-[0-9]{4}$, additionalProperties: false y strict: true. Es least privilege: solo lo necesario.",
+    "Los 3 modos de tool_choice (slide del mismo nombre):",
+    {
+     "tabla": [
+      [
+       "Modo",
+       "Código",
+       "Significa",
+       "Para qué"
+      ],
+      [
+       "auto",
+       "`{\"type\": \"auto\"}`",
+       "Claude decide si usa una tool o responde con texto",
+       "Default, uso general"
+      ],
+      [
+       "any",
+       "`{\"type\": \"any\"}`",
+       "Debe usar una tool, pero elige cuál",
+       "Extracción con varios schemas: la salida siempre es estructurada"
+      ],
+      [
+       "forced",
+       "`{\"type\": \"tool\", \"name\": \"extract_metadata\"}`",
+       "Debe usar esa tool",
+       "Forzar un primer paso obligatorio; después vuelve a auto"
+      ]
+     ]
+    },
+    "Trampa: elegir auto cuando se exige salida estructurada. Nota actual: los modelos más nuevos (Sonnet y Opus 5.5) rechazan any y tool con un error 400; la alternativa hoy es auto con strict tool use. Para el examen, que sigue la guía v1.0, responde any o forced."
+   ],
+   "analogia": [
+    "Un taller donde cada mecánico tiene una caja con 5 herramientas de su especialidad, contra uno con una caja de 18 herramientas parecidas: el segundo tarda más y agarra la equivocada. Y tool_choice es lo que le dices al llegar: “haz lo que creas” (auto), “usa alguna herramienta, la que sea” (any) o “empieza con el gato hidráulico” (forced)."
+   ],
+   "tiendita": [
+    "La demo 2.3 del lab tiene tres partes (la C: documento desconocido, tool forzada → any → auto):",
+    "Parte A (4 vs. 18 tools): las mismas 4 consultas con las 4 tools de soporte y luego con 14 distractoras que se traslapan (get_customer_profile, fetch_client_record, get_shipping_status, refund_preview …). Con 4 suele acertar 4/4. Con 18 aparecen elecciones “razonables pero no las esperadas” (refund_preview en vez de process_refund). Y los tokens de entrada suben mucho: cada definición de tool viaja en cada request.",
+    "Parte B (tool_choice): “¿a qué hora abren la tienda física?” con los 3 modos. Con auto responde texto; con any llama una tool aunque no haga falta; con forced llama extraer_metadatos. Con D23_MODELO_B = \"claude-sonnet-5-5\" ves el error 400 de any y tool; la demo lo atrapa y lo explica."
+   ],
+   "examen": [
+    "Un agente con muchas tools elige mal → repartir por rol en sets pequeños.",
+    "Un rol necesita seguido una capacidad de otro → una tool compartida acotada (scoped cross-role tool).",
+    "Necesitas que la salida siempre sea estructurada → any (o forced si debe ser un schema concreto).",
+    "Un paso debe ir primero (extraer metadatos) → forced en esa llamada."
+   ],
+   "explicar": [
+    "Guion: “Diagnostiquen antes de arreglar: ¿las tools se parecen, son demasiadas o pueden hacer de más? Cada respuesta tiene un arreglo distinto.”",
+    "Pregunta para lanzar: El subagente de síntesis tarda mucho porque cada verificación simple pasa por el coordinator. ¿Le das todas las tools de búsqueda? Respuesta: no; una tool acotada verify_fact para los casos simples."
+   ],
+   "autoevaluacion": [
+    "1. ¿Qué diferencia hay entre consolidar y restringir? — Consolidar reduce cuántas tools hay; restringir reduce qué puede alcanzar cada una.",
+    "2. Quieres que Claude siempre devuelva un JSON con uno de 3 schemas posibles. ¿Qué tool_choice ? — any.",
+    "3. ¿Por qué verify_fact recibe un solo string y no un arreglo? — Porque el schema es el alcance: una afirmación por llamada."
+   ],
+   "confusiones": [
+    [
+     "“Más tools = agente más capaz”",
+     "Más tools = peor selección y más tokens en cada request"
+    ],
+    [
+     "“Si hay misrouting, siempre hay que reducir tools”",
+     "Con pocas tools que se parecen, basta mejorar descripciones"
+    ],
+    [
+     "“Darle a síntesis acceso completo de búsqueda resuelve la latencia”",
+     "Rompe la separación de roles; la tool acotada verify_fact sí"
+    ],
+    [
+     "“ any obliga a usar una tool específica”",
+     "any obliga a usar alguna; la específica es forced"
+    ]
+   ]
+  },
+  "2.4": {
+   "clave": "2.4",
+   "titulo": "Integración de servidores MCP",
+   "idea": "un servidor MCP le da al agente tools (acciones) y resources (datos para leer); se configura en .mcp.json si es para todo el equipo o en ~/.claude.json si es solo tuyo, los secretos van como ${VARIABLE}, y sus tools compiten con las built-in por la descripción.",
+   "explicacion": [
+    "MCP (Model Context Protocol) es un estándar para que un agente descubra y use tools y datos de sistemas externos. Un servidor MCP ofrece:",
+    "Tools: acciones que Claude puede llamar.",
+    "Resources: datos que se pueden leer (un catálogo, un schema, documentación).",
+    "Al conectar, las tools de todos los servidores configurados se descubren y quedan disponibles a la vez.",
+    "¿Proyecto o usuario? (slide del mismo nombre):",
+    {
+     "tabla": [
+      [
+       "`.mcp.json`",
+       "`~/.claude.json`"
+      ],
+      [
+       "En la raíz del repo, en git, lo recibe todo el equipo",
+       "En tu carpeta personal, no se comparte, solo tú"
+      ],
+      [
+       "La Tiendita: `github` e `inventario`, los usan los dos devs",
+       "La Tiendita: un buscador de código que un dev solo está probando"
+      ]
+     ]
+    },
+    "Trampa: poner la configuración del equipo en ~/.claude.json. Si un dev nuevo no ve un servidor que otro sí ve, probablemente está en el ~/.claude.json del otro. (Hoy hay 3 scopes: local, project y user; en el examen son 2.) .mcp.json sin secretos (slide “${VARIABLE}”): { \"mcpServers\": { \"github\": { \"type\": \"http\", \"url\": \"https://api.githubcopilot.com/mcp/\", \"headers\": { \"Authorization\": \"Bearer ${GITHUB_TOKEN}\" } }, \"inventario\": { \"command\": \"node\", \"args\": [\"inventario-mcp.js\"] } } } github es remoto (http) e inventario es local (stdio). Con ${GITHUB_TOKEN}: el archivo se puede subir a git, cada dev usa su propio token, rotarlo no cambia el archivo y ningún secreto queda en el historial. Trampa: pegar el token “porque el repo es privado”; el secreto queda en el historial de cada clon y fork. Ojo: una entrada con url pero sin type se toma como stdio y se ignora.",
+    "Resources vs. tools (slide del mismo nombre). Sin resource, el agente explora llamada por llamada (list_tables(), describe_table(\"pedidos\"), describe_table(\"clientes\") …) solo para saber qué hay. Con resource, el servidor expone el catálogo desde el inicio: schema de la base, issues abiertos, índice de la documentación. Resources muestran qué datos hay; tools actúan sobre ellos.",
+    "¿Usar uno existente o construir uno? Primero un community server para integraciones estándar (Jira, GitHub, Slack, Linear, Notion): ya está mantenido y probado. Un custom server solo para flujos que ningún servidor cubre, lógica de negocio propia o sistemas internos (el inventario de La Tiendita, si no existe uno). Trampa: construir uno propio para Jira o GitHub.",
+    "El agente ignora tu MCP tool y usa Grep (slide del mismo nombre). Tu tool dice “Searches code”; Grep tiene una descripción rica. Claude prefiere lo que entiende. Arreglo:",
+    "“Búsqueda semántica: encuentra código por intención. Úsala en vez de Grep cuando no sabes el nombre exacto de la función.” Trampas: reglas en el prompt para forzarla (no siempre se siguen) o quitar las built-in (rompe lo que sí hacen bien). Es el mismo principio de 2.1: la descripción decide."
+   ],
+   "analogia": [
+    "MCP es como un enchufe estándar: cualquier aparato que lo tenga se conecta a cualquier contacto. .mcp.json es la lista de aparatos de la oficina, pegada en la pared para todos; ~/.claude.json es tu cargador personal en tu cajón. Y los resources son el menú del restaurante: sin menú, tienes que preguntarle al mesero platillo por platillo qué hay."
+   ],
+   "tiendita": [
+    "La demo 2.4 del lab crea un servidor de inventario propio y lo usa de tres formas:",
+    "Parte A (sin Claude): un cliente MCP se conecta por stdio. Ves tools/list con los nombres finales mcp__inventario__…, resources/list con el catálogo, y tools/call con un SKU válido (isError=False) y uno inventado (isError=True + error estructurado).",
+    "Parte B (Agent SDK): el mismo servidor en mcp_servers={\"inventario\": {...}} con allowed_tools. El agente busca manteles, ve que MAN-ROJ-01 tiene 4 piezas y MAN-AZL-01 está agotado, y al revisar MAN-VER-01 recibe el error de validación.",
+    "Parte C: imprime un .mcp.json de ejemplo y la tabla de alcances.",
+    "Experimentos: D24_USAR_RESOURCES = True para que lea el catálogo en vez de buscar a ciegas, o empeorar la descripción de buscar_producto a “Busca.” y comparar."
+   ],
+   "examen": [
+    "Un servidor debe estar disponible para todo el equipo → .mcp.json en el repo, con ${VAR} para secretos.",
+    "Un dev no ve un servidor que otro sí → está en el ~/.claude.json del otro.",
+    "El agente hace muchas llamadas exploratorias → exponer un resource con el catálogo.",
+    "El agente prefiere Grep a tu tool MCP → mejorar la descripción de la tool MCP.",
+    "Integrar Jira o GitHub → community server."
+   ],
+   "explicar": [
+    "Guion: “MCP conecta sistemas externos con dos cosas: tools para actuar y resources para saber qué hay. Lo compartido va en .mcp.json, lo personal en tu ~/.claude.json, y los secretos nunca en el archivo.”",
+    "Pregunta para lanzar: Un dev nuevo clona el repo y no ve el servidor de inventario que el resto usa. ¿Dónde está el problema? Respuesta: está configurado en el ~/.claude.json de alguien, no en el .mcp.json del repo."
+   ],
+   "autoevaluacion": [
+    "1. ¿Cómo pones un token en .mcp.json sin exponerlo? — Con expansión de variables: ${GITHUB_TOKEN}.",
+    "2. ¿Para qué sirve un resource? — Para mostrar desde el inicio qué datos hay y ahorrar llamadas exploratorias.",
+    "3. ¿Cuándo construyes un servidor MCP propio? — Solo para flujos o sistemas internos que ningún servidor de la comunidad cubre."
+   ],
+   "confusiones": [
+    [
+     "“Si el repo es privado, puedo pegar el token”",
+     "Queda en el historial de cada clon y fork; usa ${VAR}"
+    ],
+    [
+     "“La config del equipo va en ~/.claude.json ”",
+     "Esa es personal; la del equipo va en .mcp.json en git"
+    ],
+    [
+     "“Resources y tools son lo mismo”",
+     "Resources muestran qué hay; tools actúan"
+    ],
+    [
+     "“Si ignora mi tool MCP, quito Grep”",
+     "Mejora la descripción de tu tool; quitar builtins rompe otras cosas"
+    ],
+    [
+     "“Siempre conviene construir mi propio servidor”",
+     "Para integraciones estándar, primero uno de la comunidad"
+    ]
+   ]
+  },
+  "2.5": {
+   "clave": "2.5",
+   "titulo": "Tools built-in de Claude Code",
+   "idea": "Grep busca dentro de los archivos y Glob busca nombres de archivo; para cambiar algo se usa Edit con un texto que aparezca una sola vez; y para explorar un repo se avanza poco a poco (Grep → Read → seguir imports) en vez de leerlo todo.",
+   "explicacion": [
+    {
+     "tabla": [
+      [
+       "Tool",
+       "Para qué"
+      ],
+      [
+       "Grep",
+       "Buscar texto en el contenido de los archivos: quién llama una función, mensajes de error, imports"
+      ],
+      [
+       "Glob",
+       "Encontrar archivos por ruta o nombre: `**/*.test.ts`, configs, una carpeta. No mira el contenido"
+      ],
+      [
+       "Read",
+       "Cargar un archivo completo"
+      ],
+      [
+       "Write",
+       "Guardar un archivo completo (sobrescribe)"
+      ],
+      [
+       "Edit",
+       "Reemplazar un texto exacto dentro de un archivo"
+      ],
+      [
+       "Bash",
+       "Correr comandos"
+      ]
+     ]
+    },
+    "Grep vs. Glob es lo más evaluado. Trampa: usar Glob para encontrar quién llama una función; una ruta no dice qué llama el archivo.",
+    "Para modificar: Edit primero (slide del mismo nombre). Edit recibe old_string y new_string. El old_string es el “anchor”: debe aparecer una sola vez en el archivo, o Edit falla. Si el anchor no es único:",
+    "En el examen: Read + Write.",
+    "En el trabajo real: ampliar old_string con más contexto o usar replace_all.",
+    "Trampa: Read + Write para cada cambio. Es el respaldo, no el default, porque gasta contexto.",
+    "Incremental discovery: no leas todo (slide del mismo nombre):",
+    "1. Grep: busca un punto de entrada.",
+    "2. Read: solo los archivos relevantes.",
+    "3. Sigue imports: Grep a los nombres nuevos.",
+    "4. Repite: lee solo lo que cada paso justifica.",
+    "Para encontrar lugares que la llaman y sus tests: Grep la función → Glob los tests hermanos (refunds.test.ts). Orden del examen para deprecations: Grep → Glob → Grep; empezar con Glob es incorrecto. Trampa: leer todo el repo “por si acaso”, que llena la ventana de contexto con archivos irrelevantes.",
+    "Un solo Grep no encuentra todo (slide del mismo nombre). Un archivo barrel puede reexportar con otro nombre: // refunds/index.ts (barrel) export { processRefund as submitRefund } from \"./process\"",
+    "Grep \"processRefund\" encuentra 2 lugares que la llaman; Grep \"submitRefund\" encuentra 3 más.",
+    "Cómo rastrearla: (1) Grep la definición, (2) Read el archivo para ver con qué nombres se exporta, (3) Grep cada nombre exportado, (4) Grep el módulo barrel para ver quién lo importa."
+   ],
+   "analogia": [
+    "Grep es buscar una palabra con Ctrl+F dentro de todos los documentos; Glob es buscar en el explorador de archivos por nombre. Edit es usar “reemplazar” en una frase concreta: si la frase aparece tres veces, no sabe cuál cambiar. Y la exploración incremental es seguir las referencias de un libro capítulo por capítulo, en vez de leer toda la biblioteca."
+   ],
+   "tiendita": [
+    "En la demo 2.5 del lab, la tarea pide encontrar todos los usos de processRefund (con alias), listar los *.test.ts y cambiar solo el límite de reembolso a 8000. Un flujo típico:",
+    "1. Grep processRefund → procesar.ts, index.ts y el test.",
+    "2. Read index.ts → descubre el alias submitRefund.",
+    "3. Grep submitRefund → pago.ts y panel.ts.",
+    "4. Glob **/*.test.ts → los 2 archivos de prueba.",
+    "5. Read limites.json → Edit con un texto que incluye la clave (\"limite_reembolso\": 10000). Si intenta solo 10000, falla, porque limite_credito también vale 10000.",
+    "Al final verifica que limite_credito siga en 10000 y cuántos de los 5 archivos reales reportó. Experimentos: quitar \"Grep\" de D25_TOOLS (tendrá que abrir archivo por archivo) o pedir que cambie “el 10000” sin decir cuál."
+   ],
+   "examen": [
+    "Encontrar todos los archivos que llaman una función → Grep.",
+    "Encontrar todos los archivos de test → Glob con **/*.test.ts.",
+    "Edit falla porque el texto aparece varias veces → Read + Write (respuesta del examen).",
+    "Explorar un código desconocido → incremental: Grep → Read → seguir imports.",
+    "Una función se re-exporta con otro nombre → buscar cada nombre exportado."
+   ],
+   "explicar": [
+    "Guion: “Grep mira adentro, Glob mira el nombre. Edit cambia una frase que solo aparece una vez. Y no lean todo: sigan las pistas.”",
+    "Pregunta para lanzar: Quieres saber qué archivos llaman processRefund. ¿Grep o Glob?",
+    "Respuesta: Grep; y luego busca también los alias con que se re-exporta."
+   ],
+   "autoevaluacion": [
+    "1. ¿Qué tool usas para listar todos los *.test.ts ? — Glob.",
+    "2. ¿Por qué falla Edit con old_string: \"10000\" en limites.json ? — Porque aparece más de una vez; el anchor debe ser único.",
+    "3. Un Grep de processRefund encontró 2 lugares que la llaman, pero hay 5. ¿Qué se te escapó? — Los que usan el alias submitRefund del barrel."
+   ],
+   "confusiones": [
+    [
+     "“Glob encuentra quién llama una función”",
+     "Glob solo ve nombres de archivo; para contenido es Grep"
+    ],
+    [
+     "“Read + Write es la forma normal de editar”",
+     "Es el respaldo cuando Edit no encuentra un anchor único"
+    ],
+    [
+     "“Un Grep del nombre encuentra todos los usos”",
+     "Los alias y re-exports esconden lugares que la llaman"
+    ],
+    [
+     "“Leer todo el repo al inicio da mejor contexto”",
+     "Llena la ventana con archivos irrelevantes"
+    ]
+   ]
+  },
+  "3.1": {
+   "clave": "3.1",
+   "titulo": "Jerarquía de CLAUDE.md",
+   "idea": "dónde vive un CLAUDE.md decide quién lo recibe (todo el equipo o solo tú); todos los niveles se cargan juntos sin que ninguno “gane”; y si algo debe cumplirse siempre, no va en CLAUDE.md sino en settings.json o en un hook.",
+   "explicacion": [
+    "CLAUDE.md es un archivo Markdown con instrucciones que Claude Code lee al iniciar.",
+    "Puede existir en varios niveles (slide “Los 4 niveles”):",
+    {
+     "tabla": [
+      [
+       "Nivel",
+       "Archivo",
+       "¿En git?",
+       "Para qué"
+      ],
+      [
+       "User",
+       "`~/.claude/CLAUDE.md`",
+       "No",
+       "Tus preferencias, en todo proyecto"
+      ],
+      [
+       "Project",
+       "`CLAUDE.md` o `.claude/CLAUDE.md`",
+       "Sí",
+       "Estándares del equipo"
+      ],
+      [
+       "Directory",
+       "`packages/api/CLAUDE.md`",
+       "Sí",
+       "Convenciones de ese paquete"
+      ],
+      [
+       "Local",
+       "`CLAUDE.local.md`",
+       "No",
+       "Tus notas de este repo"
+      ]
+     ]
+    },
+    "Trampa clásica: el dev nuevo no recibe las convenciones porque estaban en el ~/.claude/CLAUDE.md de otro dev. Pista: si la pregunta junta “dev nuevo” con “comportamiento inconsistente”, revisa dónde está guardada la configuración.",
+    "No hay precedencia: todo se concatena (slide del mismo nombre). Se leen todos, de lo general a lo específico (~/.claude/CLAUDE.md → raíz → packages/api/CLAUDE.md). El último no gana: si chocan, Claude puede elegir cualquiera. Descarta cualquier opción que diga “el más específico gana”.",
+    "No confundir con settings.json:",
+    {
+     "tabla": [
+      [
+       "",
+       "CLAUDE.md",
+       "settings.json"
+      ],
+      [
+       "Precedencia",
+       "Ninguna",
+       "managed › local › project › user"
+      ],
+      [
+       "Se cumple",
+       "Es guía: casi siempre",
+       "Lo aplica el cliente: siempre"
+      ]
+     ]
+    },
+    "CLAUDE.md llega como un mensaje de usuario, no como parte del system prompt; por eso no se garantiza al 100%. Si algo debe cumplirse (bloquear una tool, un formatter obligatorio) → settings.json o un hook (conecta con 1.4 y 1.5). @ imports: dividir sin duplicar. En un CLAUDE.md, una línea @../../standards/nombres.md inserta ese archivo como si estuviera pegado ahí.",
+    "Sintaxis: @ + ruta, en su propia línea; no existe @import (aunque muchas páginas lo muestren). Ojo: dividir 600 líneas en 6 archivos no reduce el contexto; todo se carga igual.",
+    "Los imports mejoran el mantenimiento, no el consumo de tokens. Para cargar menos: rules con paths (3.3).",
+    "Dos piezas más (slide “CLAUDE.local.md y .claude/rules/”):",
+    "CLAUDE.local.md: junto a cualquier CLAUDE.md, va en .gitignore, para tus notas de este repo (rutas, debugging). Es como el ~/.claude/CLAUDE.md, pero solo para este proyecto. .claude/rules/: un archivo por tema (testing.md, api.md), en git. Sin frontmatter se carga siempre; con paths, solo con los archivos que coinciden (3.3).",
+    "¿Qué sobrevive a /compact ? (/compact resume la conversación para liberar contexto; se ve en el Dominio 5):",
+    {
+     "tabla": [
+      [
+       "Dónde está la instrucción",
+       "Después de /compact"
+      ],
+      [
+       "CLAUDE.md de la raíz",
+       "Se recarga completo desde disco"
+      ],
+      [
+       "CLAUDE.md de una subcarpeta",
+       "Vuelve cuando Claude lee un archivo de ahí"
+      ],
+      [
+       "Rule con paths",
+       "Igual: bajo demanda"
+      ],
+      [
+       "Solo la dijiste en el chat",
+       "Se puede perder en el resumen"
+      ]
+     ]
+    },
+    "¿Una regla “desapareció” tras /compact ? Ponla en un archivo, no solo en el chat.",
+    "¿Qué se cargó? En el examen, el comando es /memory. Hoy en el producto, /memory lista los archivos y los abre en tu editor, y /context es el que muestra qué se cargó al iniciar y bajo demanda. Ninguno de los dos carga nada: lo decide dónde está el archivo. Trampa: “el dev nuevo no ha corrido /memory”."
+   ],
+   "analogia": [
+    "Los CLAUDE.md son como los avisos de una oficina: el reglamento general (raíz), el aviso pegado en la puerta del área de contabilidad (subcarpeta) y tus post-its en tu monitor (personal). Todos se leen a la vez; nadie dice cuál manda si se contradicen. Y si una regla es obligatoria de verdad, no basta un aviso: se pone una cerradura (settings o hook)."
+   ],
+   "tiendita": [
+    "En la demo 3.1 del lab se crea un proyecto con 4 archivos de instrucciones (CLAUDE.md que importa @docs/estilo.md, CLAUDE.local.md y src/api/CLAUDE.md). La tabla “Qué instrucciones cargó Claude Code y cuándo” sale de la transcripción de la sesión, no de lo que diga el modelo: al iniciar se cargan CLAUDE.md, docs/estilo.md y CLAUDE.local.md; src/api/CLAUDE.md se carga después de leer reembolsos.ts.",
+    "Experimentos: D31_USAR_IMPORT = False (el agente deja de conocer la regla de montos) y D31_SIMULAR_COMPANERO = True (corre como alguien nuevo: CLAUDE.local.md desaparece; es el caso clásico del examen)."
+   ],
+   "examen": [
+    "Dev nuevo no recibe las convenciones → estaban en ~/.claude/CLAUDE.md de otro; moverlas al CLAUDE.md del proyecto.",
+    "Algo debe cumplirse siempre → settings.json o hook.",
+    "Ver qué está cargado → /memory (respuesta del examen).",
+    "Estandarizar sin duplicar entre paquetes → @ imports."
+   ],
+   "explicar": [
+    "Guion: “Pregunten siempre: ¿quién necesita esta instrucción? Si es el equipo, va en el repo. Si soy yo, va en mi carpeta. Y si tiene que cumplirse sí o sí, no es CLAUDE.md.”",
+    "Pregunta para lanzar: Ana tiene las reglas de nombres y Claude las respeta; Luis acaba de clonar el repo y Claude las ignora. ¿Por qué? Respuesta: las reglas están en el ~/.claude/CLAUDE.md de Ana."
+   ],
+   "autoevaluacion": [
+    "1. Dos CLAUDE.md se contradicen. ¿Cuál gana? — Ninguno: se concatenan y Claude puede seguir cualquiera.",
+    "2. ¿Dónde van tus notas personales de este repo? — En CLAUDE.local.md (en .gitignore).",
+    "3. ¿Qué se pierde con /compact ? — Lo que solo se dijo en el chat; los CLAUDE.md se recargan desde disco."
+   ],
+   "confusiones": [
+    [
+     "“El CLAUDE.md más específico gana”",
+     "No hay precedencia: se concatenan"
+    ],
+    [
+     "“Si lo pongo en CLAUDE.md, se cumple siempre”",
+     "Es guía; para garantía, settings.json o hook"
+    ],
+    [
+     "“Dividir con @ ahorra tokens”",
+     "Todo se carga igual; solo mejora el mantenimiento"
+    ],
+    [
+     "“Se escribe @import”",
+     "Es @ + ruta"
+    ],
+    [
+     "“/memory carga los archivos”",
+     "Solo muestra; lo que se carga depende de dónde está el archivo"
+    ]
+   ]
+  },
+  "3.2": {
+   "clave": "3.2",
+   "titulo": "Slash commands y skills",
+   "idea": "un skill (o un command) empaqueta un flujo reusable que solo entra al contexto cuando lo invocas, a diferencia de CLAUDE.md que está siempre cargado; se guarda en .claude/ para el equipo o en ~/.claude/ para ti.",
+   "explicacion": [
+    "Un skill es un Markdown con instrucciones que Claude Code carga bajo demanda. Un slash command es lo que escribes para invocarlo, por ejemplo /review.",
+    "¿Qué archivo crea /review ? (slide del mismo nombre):",
+    {
+     "tabla": [
+      [
+       "Archivo",
+       "Resultado"
+      ],
+      [
+       "`.claude/skills/review/SKILL.md`",
+       "Skill: carpeta + SKILL.md. Admite archivos de apoyo"
+      ],
+      [
+       "`.claude/commands/review.md`",
+       "Command: archivo plano; el nombre del archivo es el comando"
+      ],
+      [
+       "`.claude/skills/review.md`",
+       "No crea nada: en `skills/` hace falta la carpeta con SKILL.md (trampa del examen)"
+      ]
+     ]
+    },
+    "Hoy commands y skills son un solo sistema; si se llaman igual, gana el skill.",
+    "El frontmatter de un skill: --description: Analiza a fondo un área del código context: fork allowed-tools: Read, Grep, Glob argument-hint: [área, ej. pagos] --Analiza $ARGUMENTS y resume…",
+    {
+     "tabla": [
+      [
+       "Campo",
+       "Qué hace"
+      ],
+      [
+       "`description`",
+       "Claude la usa para decidir cuándo invocarlo solo. Sin ella, solo corre si lo escribes"
+      ],
+      [
+       "`context: fork`",
+       "Corre en un subagente aislado: el output largo no llena tu conversación"
+      ],
+      [
+       "`allowed-tools`",
+       "Examen: restringe las tools. Hoy: las pre-aprueba (para quitar existe `disallowed-tools`)"
+      ],
+      [
+       "`argument-hint`",
+       "Examen: pide el argumento. Hoy: solo es una pista de autocompletado"
+      ],
+      [
+       "`$ARGUMENTS`",
+       "Se reemplaza por lo que escribes después del comando"
+      ]
+     ]
+    },
+    "Output muy largo que ensucia la conversación → context: fork.",
+    "Skill vs. CLAUDE.md (la distinción central de 3.2):",
+    {
+     "tabla": [
+      [
+       "Skill",
+       "CLAUDE.md"
+      ],
+      [
+       "Bajo demanda: siempre visible solo la `description`; el cuerpo entra al invocarlo",
+       "Siempre cargado; ocupa tokens en cada sesión"
+      ],
+      [
+       "Para flujos de varios pasos que corres de vez en cuando",
+       "Para estándares que aplican a cada edición"
+      ]
+     ]
+    },
+    "Errores: el procedimiento de una tarea en CLAUDE.md gasta tokens siempre; una convención de todo el código en un skill no está cuando hace falta.",
+    "¿Dónde va cada cosa?",
+    {
+     "tabla": [
+      [
+       "Necesito…",
+       "Va en…"
+      ],
+      [
+       "Un comando para todo el equipo",
+       "`.claude/skills/` o `.claude/commands/`"
+      ],
+      [
+       "Un comando solo para mí",
+       "`~/.claude/skills/` o `~/.claude/commands/`"
+      ],
+      [
+       "Estándares para cada edición",
+       "CLAUDE.md del proyecto"
+      ],
+      [
+       "Mis preferencias personales",
+       "`~/.claude/CLAUDE.md`"
+      ],
+      [
+       "Convenciones por tipo de archivo",
+       "`.claude/rules/` con paths (3.3)"
+      ]
+     ]
+    },
+    "Un skill personal con el mismo nombre que uno del equipo lo reemplaza, solo para su dueño."
+   ],
+   "analogia": [
+    "CLAUDE.md es el reglamento pegado en la pared: siempre a la vista. Un skill es un manual en el librero: solo ves el lomo (la descripción) y lo abres cuando lo necesitas. Si el lomo está en blanco, nadie lo saca. Y context: fork es mandar a un asistente a leer el manual a otra sala y que regrese solo con el resumen."
+   ],
+   "tiendita": [
+    "La demo 3.2 del lab tiene dos partes:",
+    "Parte A (slash command): .claude/commands/revisar-reembolso.md con description y argument-hint. Al mandar /revisar-reembolso #12346, Claude Code reemplaza $ARGUMENTS por #12346. El agente lee la política y el pedido y responde NO CUMPLE: $12,500 supera los $10,000. Con D32_PEDIDO = \"#12345\" debería salir CUMPLE.",
+    "Parte B (skill): una petición normal sobre reseñas. Si Claude decide usar el skill, un hook muestra “Skill invocado”: ahí se carga el cuerpo completo. Con D32_DESCRIPCION_SKILL = \"vaga\" (“Utilidades varias.”), lo probable es que no lo use: la descripción decide, igual que en 2.1."
+   ],
+   "examen": [
+    "Un comando para todo el equipo → .claude/skills/ o .claude/commands/ (en git).",
+    "Un skill produce output muy largo que ensucia la conversación → context: fork.",
+    "Limitar las tools de un skill → allowed-tools (redacción del examen).",
+    "Flujo ocasional vs. estándar permanente → skill vs. CLAUDE.md."
+   ],
+   "explicar": [
+    "Guion: “CLAUDE.md es lo que Claude debe saber siempre; un skill es lo que debe saber hacer cuando se lo pidan. Lo del equipo va en .claude/, lo mío en ~/.claude/ .”",
+    "Pregunta para lanzar: Tienes un procedimiento de 40 líneas para preparar releases que se usa una vez al mes. ¿CLAUDE.md o skill? Respuesta: skill; en CLAUDE.md gastaría tokens en cada sesión."
+   ],
+   "autoevaluacion": [
+    "1. ¿Qué parte de un skill está siempre visible para Claude? — Solo la description.",
+    "2. ¿Qué campo hace que un skill corra aislado? — context: fork.",
+    "3. ¿Dónde creas un comando que solo tú vas a usar? — En ~/.claude/skills/ o ~/.claude/commands/."
+   ],
+   "confusiones": [
+    [
+     "“.claude/skills/review.md crea /review”",
+     "En skills hace falta la carpeta review/ con SKILL.md adentro (.claude/skills/review/SKILL.md)"
+    ],
+    [
+     "“Un skill está siempre cargado”",
+     "Solo su descripción; el cuerpo entra al invocarlo"
+    ],
+    [
+     "“Los estándares del equipo van en un skill”",
+     "Van en CLAUDE.md, que está siempre presente"
+    ],
+    [
+     "“Sin description igual se invoca solo”",
+     "Sin description solo corre si tú lo escribes (/review); Claude no sabe cuándo usarlo"
+    ]
+   ]
+  },
+  "3.3": {
+   "clave": "3.3",
+   "titulo": "Reglas por ruta (.claude/rules con paths)",
+   "idea": "una regla en .claude/rules/ con paths en su frontmatter se carga solo cuando Claude toca archivos que coinciden con esos patrones; es la respuesta cuando una convención aplica a un tipo de archivo repartido por todo el repo.",
+   "explicacion": [
+    "Así se ve una rule con paths: # .claude/rules/testing.md --paths: [\"**/*.test.ts\", \"**/*.test.tsx\"] --# Convenciones de tests - describe/it que se lean como frases - Un caso feliz y uno de error - Datos con factories, no inline Si editas Carrito.test.tsx, se carga. Si editas api/pedidos.ts, no. ** significa “cualquier nivel de carpetas”: encuentra el test esté donde esté. Un solo archivo y un solo patrón cubren tests repartidos en 50+ carpetas. Otros ejemplos: reglas de API con \"src/api/**/*\", o de Terraform con \"terraform/**/*\" y \"**/*.tf\".",
+    "¿Por qué no en CLAUDE.md? Las convenciones de tests tienen 3 lugares posibles:",
+    {
+     "tabla": [
+      [
+       "Lugar",
+       "Problema"
+      ],
+      [
+       "CLAUDE.md raíz",
+       "Se carga siempre, aunque estés editando React o la API: tokens desperdiciados"
+      ],
+      [
+       "CLAUDE.md por carpeta",
+       "50+ copias; cada carpeta nueva necesita otra y se desincronizan"
+      ],
+      [
+       "Rule con paths",
+       "1 archivo, cargado solo al tocar un test. La respuesta del examen"
+      ]
+     ]
+    },
+    "Menos contexto irrelevante = el modelo se mantiene enfocado. Un CLAUDE.md de carpeta solo cubre esa carpeta; cuando un tipo de archivo está repartido por todo el repo, la respuesta es una rule con glob.",
+    "¿Dónde pongo esta convención? (tabla de decisión):",
+    {
+     "tabla": [
+      [
+       "Si la convención es…",
+       "Usa"
+      ],
+      [
+       "Para todo el código del equipo",
+       "CLAUDE.md raíz"
+      ],
+      [
+       "Para un solo paquete o carpeta",
+       "CLAUDE.md de esa carpeta"
+      ],
+      [
+       "Para un tipo de archivo en muchas carpetas",
+       "`.claude/rules/` con paths"
+      ],
+      [
+       "Un flujo que se invoca cuando se necesita",
+       "Skill en `.claude/skills/`"
+      ]
+     ]
+    },
+    "Rules vs. skills: los dos aceptan paths, pero una rule es guía que se queda en contexto; un skill es un flujo de tarea."
+   ],
+   "analogia": [
+    "Una rule con paths es como el letrero “use guantes” que solo se enciende cuando entras al laboratorio. No tiene sentido pegarlo en toda la oficina (CLAUDE.md raíz), ni pegar 50 copias en 50 puertas (CLAUDE.md por carpeta)."
+   ],
+   "tiendita": [
+    "En la demo 3.3 del lab hay dos reglas: api.md (paths: src/api/**/*.ts) y tests.md (paths: **/*.test.ts). Se le pide a Claude leer src/api/reembolsos.ts y luego src/carrito/carrito.test.ts. La tabla de la transcripción muestra: CLAUDE.md al iniciar, api.md después de leer reembolsos.ts y tests.md después de leer carrito.test.ts.",
+    "Experimentos: con D33_CON_PATHS = False las dos reglas aparecen al iniciar, aunque no toques esos archivos (funciona, pero gasta contexto siempre). Si solo lee src/carrito/total.ts, no se carga ninguna."
+   ],
+   "examen": [
+    "Convenciones para un tipo de archivo repartido en muchas carpetas → .claude/rules/ con paths y glob.",
+    "Cargar convenciones automáticamente por tipo de archivo → rules.",
+    "Una convención para un solo paquete → CLAUDE.md de esa carpeta."
+   ],
+   "explicar": [
+    "Guion: “Si la regla es para todos los archivos, CLAUDE.md. Si es para una carpeta, CLAUDE.md de la carpeta. Si es para un tipo de archivo que está en todos lados, rule con paths.”",
+    "Pregunta para lanzar: Los tests están en 60 carpetas distintas. ¿Dónde pones sus convenciones? Respuesta: .claude/rules/testing.md con paths: [\"**/*.test.ts\"]."
+   ],
+   "autoevaluacion": [
+    "1. ¿Cuándo se carga una rule con paths ? — Cuando Claude toca un archivo que coincide con el patrón.",
+    "2. ¿Qué significa ** en un glob? — Cualquier nivel de carpetas.",
+    "3. ¿Qué pasa con una rule en .claude/rules/ sin frontmatter? — Se carga siempre, como CLAUDE.md."
+   ],
+   "confusiones": [
+    [
+     "“Las convenciones de tests van en el CLAUDE.md raíz”",
+     "Se cargarían siempre, aunque no toques tests"
+    ],
+    [
+     "“Un CLAUDE.md en cada carpeta de tests”",
+     "Son copias que se desincronizan"
+    ],
+    [
+     "“Una rule sin paths se carga solo cuando hace falta”",
+     "Sin paths se carga siempre"
+    ],
+    [
+     "“Rules y skills son lo mismo”",
+     "La rule es guía en contexto; el skill es un flujo que se invoca"
+    ]
+   ]
+  },
+  "3.4": {
+   "clave": "3.4",
+   "titulo": "Plan mode vs. ejecución directa",
+   "idea": "usa plan mode cuando quedan decisiones de diseño por tomar (no cuando la tarea es difícil), ejecución directa cuando ya sabes qué, dónde y cómo, y el híbrido (planear y luego ejecutar) para cambios repetidos en muchos archivos.",
+   "explicacion": [
+    "Plan mode: Claude lee el código, analiza dependencias y propone un enfoque sin modificar archivos. No escribe nada en disco hasta que apruebas el plan.",
+    "Direct execution: hace los cambios de inmediato.",
+    "Decide la ambigüedad, no la dificultad (slide del mismo nombre):",
+    {
+     "tabla": [
+      [
+       "Difícil pero claro",
+       "“Sencillo” pero abierto"
+      ],
+      [
+       "Bug enredado, con stack trace, en un archivo",
+       "Agregar un proveedor de pagos con dos formas de conectarlo"
+      ],
+      [
+       "Ya sabes qué, dónde y cómo",
+       "Hay decisiones de diseño pendientes"
+      ],
+      [
+       "→ Direct execution",
+       "→ Plan mode"
+      ]
+     ]
+    },
+    "La pregunta clave: ¿quedan decisiones de diseño por tomar? Si no hay ninguna, planear no aporta nada.",
+    "¿Qué modo uso? (tabla de decisión):",
+    {
+     "tabla": [
+      [
+       "Tarea",
+       "Modo"
+      ],
+      [
+       "Pasar el monolito a microservicios",
+       "Plan mode"
+      ],
+      [
+       "Varios enfoques válidos",
+       "Plan mode"
+      ],
+      [
+       "Explorar el código antes de tocarlo",
+       "Plan mode + Explore"
+      ],
+      [
+       "Cambiar de librería en 30+ archivos",
+       "Plan → luego direct"
+      ],
+      [
+       "Bug en una función, con stack trace",
+       "Direct execution"
+      ],
+      [
+       "Agregar una validación a una función",
+       "Direct execution"
+      ],
+      [
+       "Cambiar un valor de configuración",
+       "Direct execution"
+      ]
+     ]
+    },
+    "Si el enunciado ya dice que es complejo, elige plan mode desde el inicio: la complejidad no “aparecerá después”.",
+    "El híbrido: plan, luego execute. (1) En plan mode, encuentra los 30 archivos con la librería de logs vieja, mapea las diferencias de API y diseña un patrón. (2) En direct execution, aplica el mismo patrón archivo por archivo: todos quedan iguales. Decidir el patrón una sola vez garantiza consistencia. El subagente Explore hace el descubrimiento que genera mucho texto (listas de archivos, dependencias) aislado y regresa solo un resumen; tu contexto queda libre para implementar. Trampa: empezar en direct y cambiar a plan cuando “aparezca” la complejidad. 3 formas de entrar a plan mode:",
+    {
+     "tabla": [
+      [
+       "Cuándo",
+       "Cómo"
+      ],
+      [
+       "Al iniciar",
+       "`claude --permission-mode plan` (toda la sesión)"
+      ],
+      [
+       "Durante la sesión",
+       "Shift + Tab hasta que la barra diga plan mode"
+      ],
+      [
+       "Para un prompt",
+       "`/plan migra los logs…` (solo ese mensaje)"
+      ]
+     ]
+    },
+    "Escribir “en plan mode” dentro del prompt no hace nada: hay que cambiar de modo."
+   ],
+   "analogia": [
+    "Cambiar un foco fundido: lo haces directo, aunque tengas que subirte a una escalera.",
+    "Remodelar la cocina: primero el plano, aunque cada paso sea fácil, porque hay decisiones (dónde va la estufa). Y pintar 30 cuartos iguales: decides el color una vez y luego pintas cuarto por cuarto."
+   ],
+   "tiendita": [
+    "En la demo 3.4 del lab, el límite de reembolso (10000) está en 3 lugares y la tarea es cambiarlo a 8000 en todos:",
+    "D34_MODO = \"plan\": busca con Grep, lee y propone un plan. Si intenta editar, Claude Code lo bloquea (“Cannot write … while in plan mode”). Al final: archivos modificados, ninguno.",
+    "\"directo\": con acceptEdits edita directo.",
+    "\"hibrido\" (por defecto): fase 1 en plan mode; fase 2 en la misma sesión (resume) con acceptEdits y “Plan aprobado. Impleméntalo.”",
+    "Experimento: lee el plan de la fase 1. ¿Encontró los 3 lugares? Si no, el valor del plan es que lo notas antes de que se edite nada."
+   ],
+   "examen": [
+    "Migración con varios enfoques válidos → plan mode.",
+    "Bug claro con stack trace → direct execution.",
+    "Mismo cambio en 30+ archivos → híbrido: plan, luego direct.",
+    "Exploración muy larga que llena el contexto → subagente Explore."
+   ],
+   "explicar": [
+    "Guion: “No pregunten si es difícil. Pregunten si ya saben cómo hacerlo. Si sí, directo. Si hay que decidir algo, plan.”",
+    "Pregunta para lanzar: Agregar un proveedor de pagos nuevo: hay SDK y API REST. ¿Plan o directo? Respuesta: plan mode; hay una decisión de diseño pendiente."
+   ],
+   "autoevaluacion": [
+    "1. ¿Qué hace Claude en plan mode con los archivos? — Los lee y analiza, pero no modifica nada hasta que apruebas.",
+    "2. ¿Por qué el híbrido da resultados consistentes en 30 archivos? — Porque el patrón se decide una sola vez y luego se aplica igual en todos.",
+    "3. ¿Para qué sirve el subagente Explore? — Para hacer el descubrimiento que genera mucho texto aislado y regresar solo un resumen."
+   ],
+   "confusiones": [
+    [
+     "“Tarea difícil = plan mode”",
+     "Lo que decide es si quedan decisiones de diseño"
+    ],
+    [
+     "“Empiezo directo y si se complica, cambio a plan”",
+     "Si ya sabes que es complejo, plan desde el inicio"
+    ],
+    [
+     "“Escribir ‘en plan mode’ en el prompt lo activa”",
+     "Hay que cambiar de modo (flag, Shift+Tab o /plan)"
+    ],
+    [
+     "“Plan mode es más lento, mejor siempre directo”",
+     "En tareas abiertas evita rehacer trabajo"
+    ]
+   ]
+  },
+  "3.5": {
+   "clave": "3.5",
+   "titulo": "Refinamiento iterativo",
+   "idea": "cuando el primer resultado no es el que querías, primero diagnostica el tipo de problema y luego usa la técnica que le corresponde: ejemplos, tests, entrevista, o mandar los cambios juntos o uno por uno.",
+   "explicacion": [
+    "El primer output casi nunca es el final. Hay 5 técnicas y cada una corresponde a un síntoma distinto (tabla de decisión, la llave de respuestas del examen):",
+    {
+     "tabla": [
+      [
+       "Si el problema es…",
+       "Usa"
+      ],
+      [
+       "La prosa se interpreta distinto cada vez",
+       "2–3 ejemplos de entrada/salida"
+      ],
+      [
+       "Transformación compleja, muchos casos borde",
+       "Test-driven iteration"
+      ],
+      [
+       "Dominio que no conoces",
+       "Interview pattern"
+      ],
+      [
+       "Problemas que interactúan",
+       "Batch: un solo mensaje"
+      ],
+      [
+       "Problemas independientes",
+       "Sequential: uno a la vez"
+      ]
+     ]
+    },
+    "Primero diagnostica: ¿interpretación, complejidad, dominio nuevo o dependencias? La técnica sale sola.",
+    "1. Ejemplos concretos. “Haz que las funciones async devuelvan un Result con su error” da 3 interpretaciones en 3 intentos. Un par antes/después lo resuelve: // Input getCliente(id: string): Promise<Cliente> // Output getCliente(id: string): Promise<Result<Cliente, ApiError>> El modelo generaliza mejor desde ejemplos que desde cualquier descripción en prosa. 2–3 pares bastan (el caso normal y el borde principal); luego prueba con un caso nuevo.",
+    "Trampa: reescribir la prosa “más precisa”; por precisa que sea, sigue necesitando interpretación.",
+    "2. Test-driven iteration. (1) Escribe los tests antes del cambio; (2) cubre el caso feliz y los bordes (null, vacíos, límites); (3) comparte cada falla con Claude e itera. “FAIL: migracionConservaNulls. Esperado: null se conserva. Obtenido: null cambió por ‘’” es feedback sin ambigüedad. Para transformaciones complejas con muchos casos borde (migrar los pedidos viejos de La Tiendita a un JSON nuevo sin perder datos).",
+    "3. Interview pattern. En vez de “Hazme una capa de caché”, pide: “Antes de implementar, hazme preguntas sobre requisitos y casos borde”. Claude pregunta lo que un experto pensaría y un novato olvidaría: ¿cuándo se invalida? ¿qué TTL? ¿qué tan consistente?",
+    "¿qué pasa si la caché falla?",
+    {
+     "tabla": [
+      [
+       "Entrevista",
+       "Ejemplos"
+      ],
+      [
+       "No sabes qué importa (dominio nuevo)",
+       "Sabes el resultado exacto, pero Claude lo malinterpreta"
+      ]
+     ]
+    },
+    "Esta distinción es lo que más evalúa el examen en 3.5. Trampa: usar la entrevista para una transformación que ya conoces. 4 y 5. Batch vs. sequential.",
+    {
+     "tabla": [
+      [
+       "Batch: un solo mensaje",
+       "Sequential: uno a la vez"
+      ],
+      [
+       "Para cambios que interactúan: `errorCode` en la respuesta, en los logs y en los tipos del SDK",
+       "Para cambios independientes: arregla los nombres → espera → luego la indentación"
+      ],
+      [
+       "Claude ve todas las restricciones juntas",
+       "Mezclar temas sueltos confunde qué aplica dónde"
+      ]
+     ]
+    },
+    "Pregunta útil: si arreglo A, ¿cambia cómo debo arreglar B? Si sí, van juntos. Trampa: mandar uno por uno fixes que interactúan; cada fix apunta a un estado que el siguiente cambia."
+   ],
+   "analogia": [
+    "Pedirle un corte de pelo a un barbero nuevo. Si dices “corto pero no tanto” y cada vez sale distinto, enséñale una foto (ejemplos). Si es un peinado complicado, revísalo en el espejo paso a paso (tests). Si no sabes qué te queda, deja que él te pregunte (entrevista). Y si quieres cambiar el largo y el degradado, díselo junto, porque uno afecta al otro (batch)."
+   ],
+   "tiendita": [
+    "En la demo 3.5 del lab, Claude escribe normalizar_telefono(texto) para teléfonos mexicanos, con 8 pruebas que incluyen casos frontera (044 664…, 52 664… sin +, \"123\" → None, prefijo tel:):",
+    "D35_MODO = \"vago\": una frase, una ronda. Suele fallar en los casos frontera.",
+    "\"ejemplos\": la frase + 3 ejemplos de casos frontera (paréntesis, 044 y uno inválido), como pide la guía: 2–3. Acierta más desde la primera ronda.",
+    "\"tdd\" (por defecto): en cada ronda le manda solo las pruebas que fallaron, con entrada, obtenido y esperado. Suele converger en 2 o 3 rondas.",
+    "Experimento: agrega un caso con extensión (ext. 12) y mira cómo lo resuelve TDD."
+   ],
+   "examen": [
+    "Claude interpreta la misma instrucción distinto cada vez → 2–3 ejemplos de entrada/salida.",
+    "Migración con muchos casos borde → test-driven iteration.",
+    "Dominio que el dev no conoce → interview pattern.",
+    "Tres fixes que dependen entre sí → un solo mensaje."
+   ],
+   "explicar": [
+    "Guion: “Antes de corregir, nombren el problema: ¿me malinterpreta, es muy complejo, no sé qué pedir, o mis cambios dependen entre sí? Cada respuesta tiene su técnica.”",
+    "Pregunta para lanzar: Le pides a Claude un sistema de notificaciones y no sabes nada de colas de mensajes. ¿Ejemplos o entrevista? Respuesta: entrevista; no sabes qué requisitos importan."
+   ],
+   "autoevaluacion": [
+    "1. ¿Por qué los ejemplos funcionan mejor que la prosa? — El modelo generaliza mejor desde ejemplos; la prosa siempre necesita interpretación.",
+    "2. ¿Qué tiene de bueno una falla de test como feedback? — Solo significa una cosa: no es ambigua.",
+    "3. Si arreglar A cambia cómo arreglar B, ¿batch o sequential? — Batch: un solo mensaje."
+   ],
+   "confusiones": [
+    [
+     "“Si no entiende, reescribo la instrucción más precisa”",
+     "La prosa siempre se interpreta; usa ejemplos"
+    ],
+    [
+     "“La entrevista sirve para cualquier tarea”",
+     "Es para cuando no sabes qué importa; si sabes el resultado, ejemplos"
+    ],
+    [
+     "“Siempre conviene mandar un arreglo a la vez”",
+     "Si interactúan, van juntos"
+    ],
+    [
+     "“Muchos ejemplos es mejor”",
+     "2–3 pares bastan; luego verifica con un caso nuevo"
+    ]
+   ]
+  },
+  "3.6": {
+   "clave": "3.6",
+   "titulo": "CI/CD con claude -p",
+   "idea": "en un pipeline no hay nadie que responda, así que Claude Code se corre con -p (sin él, el job se queda esperando), con salida JSON validada por schema para que la máquina pueda decidir, y la revisión la hace una sesión distinta a la que generó el código.",
+   "explicacion": [
+    "En CI/CD Claude Code corre headless: sin una persona enfrente. Ejemplo: cada pull request de La Tiendita dispara una revisión automática. -p: sin él, el job se cuelga (el dato más evaluado del dominio, Sample Question 10):",
+    {
+     "tabla": [
+      [
+       "Comando",
+       "Qué pasa"
+      ],
+      [
+       "`claude \"Analiza este PR\"`",
+       "Espera input que nunca llega"
+      ],
+      [
+       "`claude -p \"Analiza este PR\"`",
+       "Procesa, imprime en stdout y termina"
+      ]
+     ]
+    },
+    "Síntoma: los logs muestran a Claude “esperando input” → falta -p (--print).",
+    "Distractores: --batch y CLAUDE_HEADLESS no existen; < /dev/null no lo resuelve.",
+    "Salida que una máquina puede leer: claude -p \"Revisa este PR\" \\ --output-format json \\ --json-schema '{ \"findings\": [ { file, line, severity, message } ] }' # el JSON validado está en: … | jq '.structured_output' Sirve para comentar en el archivo y línea exactos, filtrar por severidad y dar seguimiento entre corridas. --output-format json da un sobre con result, session_id y costo; --json-schema solo funciona con -p. (El schema del slide está simplificado.)",
+    "Quien escribió el código no debe revisarlo (slide del mismo nombre):",
+    {
+     "tabla": [
+      [
+       "Misma sesión",
+       "Sesión independiente"
+      ],
+      [
+       "Genera el código y luego lo revisa; arrastra su razonamiento (el enfoque, los trade-offs)",
+       "Una llamada nueva, sin el contexto de quien lo generó"
+      ],
+      [
+       "→ Defiende sus propias decisiones",
+       "→ Solo juzga el código"
+      ]
+     ]
+    },
+    "Conecta con el Dominio 4 (multi-instance review) y el 5 (contexto).",
+    "No repitas los mismos hallazgos en cada push. Si cada push dispara una revisión completa, salen los mismos comentarios que el dev ya decidió no atender y deja de leerlos. Solución: corrida nueva sobre todo el PR + los hallazgos previos como contexto, pidiendo reportar solo problemas nuevos y los anteriores que siguen ahí. Trampas: revisar solo el diff del último commit (esconde lo pendiente) o reanudar la sesión anterior (datos viejos).",
+    "Batch API o real-time (Sample Question 11). La Message Batches API cuesta 50% menos, pero puede tardar hasta 24 horas y no tiene SLA de latencia.",
+    {
+     "tabla": [
+      [
+       "Flujo",
+       "API"
+      ],
+      [
+       "Check pre-merge (el dev espera)",
+       "Real-time"
+      ],
+      [
+       "Reporte nocturno de deuda técnica",
+       "Batch"
+      ],
+      [
+       "Auditoría semanal del código",
+       "Batch"
+      ],
+      [
+       "Generar tests de noche",
+       "Batch"
+      ]
+     ]
+    },
+    "La regla: ¿alguien está esperando el resultado? → real-time.",
+    "Contexto del proyecto en CI. CLAUDE.md también se lee en CI: pon ahí cómo se escriben los tests (factories, fixtures, meta de cobertura) y comparte los tests existentes para que no genere duplicados. Sin contexto, los tests generados son boilerplate. Flags del system prompt: --append-system-prompt: conserva lo default (tools, seguridad) y agrega reglas. Para un revisor de código. --system-prompt: reemplaza todo. Para un agente que no es de código. --bare se salta CLAUDE.md, hooks, skills y MCP: no sirve si necesitas el contexto.",
+    "Más allá de la guía: anthropics/claude-code-action@v1 en GitHub Actions (todos los flags van en claude_args; sin prompt, espera un @claude en un comentario) y claude --worktree pagos (una sesión por worktree, cada una con su branch). No vienen en la guía v1.0, pero hay preguntas de práctica sobre esto."
+   ],
+   "analogia": [
+    "-p es dejarle a alguien una nota con instrucciones en vez de esperar a que te llame para preguntarte; si espera tu llamada en la madrugada, nunca termina. La revisión independiente es que otra persona corrija tu examen: tú siempre vas a encontrar razones para tus respuestas."
+   ],
+   "tiendita": [
+    "En la demo 3.6 del lab hay un CLAUDE.md (“reembolsos automáticos hasta $10,000”) y un cambios.diff que sube el límite a 100000. Se imprime el comando completo y se corre el CLI como proceso aparte. Con D36_FORMATO = \"json\" y schema ves subtype, num_turns, total_cost_usd, session_id y structured_output con aprobado y la lista de problemas. Decisión del pipeline: bloquear el merge, porque viola la regla de CLAUDE.md.",
+    "Experimentos: con \"text\" la salida es prosa y el pipeline no puede decidir nada; con D36_CON_SCHEMA = False hay JSON, pero result sigue siendo texto libre; si editas el diff para que respete el límite, debería aprobar."
+   ],
+   "examen": [
+    "El job de CI se queda esperando → claude -p.",
+    "El pipeline debe decidir con la salida → --output-format json + --json-schema.",
+    "Revisión de código generado por IA → sesión independiente.",
+    "Check que bloquea un merge → real-time, no Batch.",
+    "Tests generados de baja calidad → contexto en CLAUDE.md + tests existentes."
+   ],
+   "explicar": [
+    "Guion: “En CI nadie contesta: -p. La máquina necesita datos, no prosa: JSON con schema.",
+    "Y nadie revisa su propia tarea: sesión nueva.”",
+    "Pregunta para lanzar: El job de revisión lleva 2 horas “corriendo” y el log dice que Claude espera input. ¿Qué falta? Respuesta: el flag -p."
+   ],
+   "autoevaluacion": [
+    "1. ¿Qué hace -p ? — Procesa el prompt, imprime en stdout y termina, sin esperar input.",
+    "2. ¿Dónde queda el JSON validado con --json-schema ? — En el campo structured_output.",
+    "3. Un reporte semanal de deuda técnica: ¿Batch o real-time? — Batch: nadie está esperando y cuesta 50% menos."
+   ],
+   "confusiones": [
+    [
+     "“Existe --batch o CLAUDE_HEADLESS ”",
+     "No existen; es -p"
+    ],
+    [
+     "“La misma sesión puede revisar lo que generó”",
+     "Arrastra su razonamiento y defiende sus decisiones"
+    ],
+    [
+     "“Batch API para el check pre-merge, es más barato”",
+     "Puede tardar 24 h; si alguien espera, realtime"
+    ],
+    [
+     "“Para no repetir hallazgos, reviso solo el último commit”",
+     "Esconde lo pendiente; pasa los hallazgos previos como contexto"
+    ],
+    [
+     "“ --system-prompt para un revisor de código”",
+     "Reemplaza todo; para agregar reglas es --append-system-prompt"
+    ]
+   ]
+  },
+  "4.1": {
+   "clave": "4.1",
+   "titulo": "Criterios explícitos en el system prompt",
+   "idea": "“sé conservador” o “solo alta confianza” no le dicen nada al modelo; hay que darle criterios concretos de qué reportar, qué ignorar y ejemplos de código para cada nivel de severidad.",
+   "explicacion": [
+    "Según la lección, confiar en instrucciones vagas es el error más grande en producción. Un falso positivo es un hallazgo equivocado.",
+    "De instrucción vaga a criterio explícito (slide del mismo nombre):",
+    {
+     "tabla": [
+      [
+       "Antes: vago",
+       "Después: explícito"
+      ],
+      [
+       "“Revisa este código. Sé conservador. Solo reporta hallazgos de alta confianza.”",
+       "(1) Marca un comentario solo si lo que dice contradice lo que hace el código. (2) Reporta bugs y vulnerabilidades. (3) Ignora preferencias de estilo y patrones locales."
+      ],
+      [
+       "No dice qué reportar ni qué ignorar",
+       "Disparador concreto + qué reportar + qué ignorar"
+      ]
+     ]
+    },
+    "En el examen, las opciones vagas pero “razonables” suelen ser las incorrectas.",
+    "Severidad: con código, no con prosa. “Crítico: problemas que podrían causar fallas” se interpreta distinto cada vez. Un ejemplo de código por nivel no:",
+    "Crítico — input sin sanitizar en SQL: f\"SELECT * FROM pedidos WHERE id = {user_input}\"",
+    "Menor — nombres inconsistentes: userName vs user_name en el mismo módulo Una categoría mala contamina a todas. Si el 40% de los hallazgos de “comentario desactualizado” son falsos, los devs ignoran también los de seguridad, aunque tengan 98% de precisión. El dev confía (o desconfía) del output completo. Arreglo: (1) desactiva esa categoría temporalmente, (2) refina su prompt con criterios y ejemplos, (3) reactívala solo cuando mejore.",
+    "¿Qué arreglo aplico? (tabla de decisión):",
+    {
+     "tabla": [
+      [
+       "Si ves…",
+       "Haz esto"
+      ],
+      [
+       "El prompt dice “sé conservador”",
+       "Cámbialo por qué reportar y qué ignorar"
+      ],
+      [
+       "Severidad definida solo en prosa",
+       "Un ejemplo de código por nivel"
+      ],
+      [
+       "Una categoría con muchos falsos positivos",
+       "Desactívala y refínala"
+      ],
+      [
+       "Quieres menos hallazgos erróneos",
+       "Criterios primero; routing por confianza después"
+      ],
+      [
+       "Solo agregar un umbral de confianza",
+       "No es solución: la confianza está mal calibrada"
+      ]
+     ]
+    },
+    "El modelo puede estar muy seguro de un hallazgo equivocado y dudar de uno correcto. Si el escenario tiene presupuesto ajustado, descarta opciones que agregan una llamada al modelo por revisión."
+   ],
+   "analogia": [
+    "Decirle a un nuevo empleado de almacén “ten cuidado con lo que rechazas” no sirve.",
+    "Decirle “rechaza solo si la caja está abierta o mojada; las abolladuras en la esquina no importan” sí. Y si el detector de humo suena cada vez que cocinas, terminas ignorándolo aunque haya un incendio de verdad."
+   ],
+   "tiendita": [
+    "En la demo 4.1 del lab, 14 tickets se clasifican (¿escalar sí o no?) con un system prompt vago y luego con uno explícito: 3 criterios para escalar (dinero en riesgo, seguridad de la cuenta, amenaza legal) y una lista de lo que NO se escala. La tabla marca falsos positivos y falsos negativos. Casos donde se nota:",
+    "T9: muy molesto, pero es un retraso de envío. El vago suele escalarlo por el enojo.",
+    "T7: $12,500, más de $10,000. El vago a veces no lo escala.",
+    "Experimento: quita la línea “El enojo por sí solo NO es criterio” y mira T9."
+   ],
+   "examen": [
+    "Muchos falsos positivos con un prompt vago → criterios explícitos de qué reportar y qué ignorar.",
+    "Severidad inconsistente → un ejemplo de código por nivel.",
+    "Una categoría arruina la confianza → desactivarla, refinarla, reactivarla.",
+    "Distractor: “agregar un umbral de confianza”."
+   ],
+   "explicar": [
+    "Guion: “Si la instrucción no le dice al modelo qué hacer con un caso concreto, no es un criterio. Criterio = disparador + qué reportar + qué ignorar.”",
+    "Pregunta para lanzar: El revisor marca 30 hallazgos de estilo por PR y los devs ya no lo leen.",
+    "¿Qué cambias? Respuesta: criterios explícitos que digan que el estilo se ignora; y si una categoría sigue fallando, se desactiva y se refina."
+   ],
+   "autoevaluacion": [
+    "1. ¿Qué tres partes tiene un criterio explícito? — Un disparador concreto, qué reportar y qué ignorar.",
+    "2. ¿Cómo defines la severidad para que sea consistente? — Con un ejemplo de código por nivel.",
+    "3. ¿Por qué no basta un umbral de confianza? — Porque el modelo puede estar muy seguro de un hallazgo equivocado."
+   ],
+   "confusiones": [
+    [
+     "“Sé conservador” reduce falsos positivos",
+     "No dice qué reportar ni qué ignorar"
+    ],
+    [
+     "“Un umbral de confianza filtra lo malo”",
+     "La confianza sin calibrar no predice el acierto"
+    ],
+    [
+     "“Definir severidad en prosa clara basta”",
+     "Se interpreta distinto; usa ejemplos de código"
+    ],
+    [
+     "“Una categoría con falsos positivos solo afecta a esa categoría”",
+     "Los devs dejan de confiar en todo el output"
+    ]
+   ]
+  },
+  "4.2": {
+   "clave": "4.2",
+   "titulo": "Few-shot prompting",
+   "idea": "cuando el formato o el juicio salen inconsistentes aunque las instrucciones estén bien, se muestran 2–4 ejemplos resueltos (entrada, salida y razonamiento) de los casos difíciles; few-shot mejora la consistencia, pero no reemplaza un schema ni una validación.",
+   "explicacion": [
+    "Few-shot = poner en el prompt unos cuantos ejemplos resueltos. Según la lección, es la técnica más efectiva para obtener output consistente: las instrucciones describen el formato; los ejemplos lo muestran. 3 síntomas que piden few-shot:",
+    "1. Formato inconsistente: las instrucciones están, pero sale lista, luego tabla, luego prosa.",
+    "2. Juicio inconsistente: el mismo problema es “crítico” en un archivo y “menor” en otro.",
+    "3. Campos vacíos con dato existente: el dato está en una frase (“cuarenta piezas a $60 cada una”) y no lo ve.",
+    "¿“Más instrucciones” o few-shot? En el examen, casi siempre few-shot. Más instrucciones, umbrales o cambios de temperatura hacen menos que unos buenos ejemplos.",
+    "Un buen ejemplo: input + output + razonamiento.",
+    "Input: pedidos.map(p => { const total = p.subtotal * 1.16 }) // ya existe un total afuera Output: severidad: \"menor\"",
+    "Razonamiento: El sombreado es local, se lee bien y no causa bug: es estilo, no defecto.",
+    "Sin razonamiento, aprende un patrón superficial; con razonamiento, aprende el principio y lo generaliza. Cubre los casos que fallan, no los fáciles. El razonamiento explica por qué esa opción y no las alternativas plausibles.",
+    "¿Cuántos? En el examen (guía v1.0): 2–4 ejemplos dirigidos. Las docs actuales sugieren 3–5. Menos de 2 no forman patrón; muchos más gastan tokens sin beneficio. Para reducir alucinaciones en extracción con formatos variados (medidas informales, tabla, texto corrido): un ejemplo por estructura.",
+    "¿Few-shot o algo más? (la tabla que conecta todo el dominio):",
+    {
+     "tabla": [
+      [
+       "Si el problema es…",
+       "Usa"
+      ],
+      [
+       "Formato inconsistente",
+       "Few-shot"
+      ],
+      [
+       "No ve datos en texto corrido",
+       "Few-shot de extracción narrativa"
+      ],
+      [
+       "JSON mal formado",
+       "tool_use con JSON schema (4.3)"
+      ],
+      [
+       "Inventa valores porque el campo es obligatorio",
+       "Campos nullable (4.3)"
+      ],
+      [
+       "Elige la tool equivocada",
+       "Descripciones primero (2.1), luego few-shot"
+      ],
+      [
+       "La suma no cuadra con el total",
+       "Validation-retry loop (4.4)"
+      ]
+     ]
+    }
+   ],
+   "analogia": [
+    "Explicarle a alguien cómo doblar una camisa con palabras vs. doblar dos frente a él. Y si además le dices “esta la doblo así porque tiene botones”, aprende la regla, no solo el movimiento."
+   ],
+   "tiendita": [
+    "En la demo 4.2 del lab hay 6 mensajes de clientes. Los difíciles: “Lo mismo que pedí la vez pasada” (no hay producto), “Un mantel, el rojo no, el otro” (dice qué color NO quiere) y “unas cuantas tazas verdes” (no hay cantidad). Sin ejemplos, el modelo suele inventar una cantidad (“unas cuantas” → 3) o no pedir aclaración; con los 4 ejemplos de EJEMPLOS_42, mejora en los ambiguos.",
+    "Experimentos: quita los “(por qué: …)” de los ejemplos y compara; o cambia un ejemplo para que contradiga la instrucción: el modelo suele seguir al ejemplo. Los ejemplos pesan mucho."
+   ],
+   "examen": [
+    "Formato o juicio inconsistente → 2–4 ejemplos few-shot con razonamiento.",
+    "No extrae datos que están en texto corrido → few-shot de extracción narrativa.",
+    "JSON roto, dato inventado porque el campo es obligatorio, o suma que no cuadra → no es few-shot (ver 4.3 y 4.4).",
+    "Inventa u omite porque los documentos vienen en formatos distintos → few-shot, un ejemplo por estructura."
+   ],
+   "explicar": [
+    "Guion: “Si ya le dijiste cómo y sigue saliendo distinto, muéstrale. Dos o tres casos difíciles, con el porqué.”",
+    "Pregunta para lanzar: La extracción deja vacío el campo cantidad cuando la factura dice “cuarenta piezas”. ¿Qué haces? Respuesta: un ejemplo few-shot de extracción de texto corrido."
+   ],
+   "autoevaluacion": [
+    "1. ¿Qué tres partes tiene un buen ejemplo few-shot? — Input, output y razonamiento.",
+    "2. ¿Cuántos ejemplos dice la guía del examen? — 2–4.",
+    "3. El modelo inventa órdenes de compra que no vienen en la factura (el campo es obligatorio en el schema). ¿Few-shot? — No: campo nullable en el schema (4.3). Few-shot sí ayuda cuando inventa u omite por formatos variados."
+   ],
+   "confusiones": [
+    [
+     "“Si sale inconsistente, agrego más instrucciones”",
+     "Few-shot suele funcionar mejor"
+    ],
+    [
+     "“Los ejemplos deben ser los casos fáciles”",
+     "Deben cubrir los casos que fallan"
+    ],
+    [
+     "“Few-shot arregla el JSON roto”",
+     "Eso es tool_use con schema"
+    ],
+    [
+     "“Mientras más ejemplos, mejor”",
+     "2–4 en el examen; más gasta tokens"
+    ]
+   ]
+  },
+  "4.3": {
+   "clave": "4.3",
+   "titulo": "Salida estructurada con tool use",
+   "idea": "pedir JSON en el prompt no garantiza nada; con tool_use y un JSON schema el JSON siempre se puede parsear, pero eso solo evita errores de forma, no de significado; y para que el modelo no invente, el schema debe permitir null y opciones como “unclear” u “other”.",
+   "explicacion": [
+    "Structured output = una respuesta con forma fija (campos, tipos y obligatorios definidos por un JSON schema). Con tool_use, Claude responde llamando una tool y los argumentos llenan el schema.",
+    "Dos niveles de confiabilidad:",
+    {
+     "tabla": [
+      [
+       "Nivel",
+       "Qué garantiza"
+      ],
+      [
+       "1. tool_use + JSON schema (más fuerte)",
+       "Elimina errores de sintaxis: llaves que faltan, comas de más, keys sin comillas"
+      ],
+      [
+       "2. JSON pedido en el prompt (más débil)",
+       "Es texto libre: nada garantiza la estructura; en producción saldrá JSON roto"
+      ]
+     ]
+    },
+    "Una sola llave faltante detiene la importación de facturas al sistema contable.",
+    "¿Qué errores evita el schema?",
+    {
+     "tabla": [
+      [
+       "Error",
+       "Ejemplo",
+       "¿Lo evita?"
+      ],
+      [
+       "Sintaxis",
+       "Llave faltante, coma de más",
+       "Sí"
+      ],
+      [
+       "Suma",
+       "Los renglones no suman el total",
+       "No"
+      ],
+      [
+       "Campo",
+       "Una fecha en el campo de monto (ambos string)",
+       "No"
+      ],
+      [
+       "Invención",
+       "Valores que el documento no tiene",
+       "No (ayuda el diseño)"
+      ]
+     ]
+    },
+    "tool_use evita errores de forma, no de significado; los semánticos necesitan validación aparte (4.4). La respuesta incorrecta más común: “tool_use evita todos los errores de extracción”.",
+    "Diseñar el schema para no inventar:",
+    "\"properties\": { \"folio\": { \"type\": \"string\" }, \"proveedor\": { \"type\": \"string\" }, \"orden_compra\": { \"type\": [\"string\", \"null\"] }, \"categoria\": { \"enum\": [\"factura\", \"ticket\", \"contrato\", \"unclear\", \"other\"] }, \"categoria_detalle\": { \"type\": [\"string\", \"null\"] } }, \"required\": [\"folio\", \"proveedor\"] Nullable: si un campo es required y no puede ser null, el modelo inventa algo plausible.",
+    "Con null puede decir “no viene” (muchos tickets no traen orden de compra).",
+    "“unclear”: para fuentes ambiguas, como un escaneo roto.",
+    "“other” + detalle: para categorías que pueden crecer.",
+    "Formato (fechas ISO 8601, montos sin “$”): va en el prompt.",
+    "La invención se arregla en el schema (nullable), no atrapándola después. tool_choice para extraer (repaso de 2.3): {\"type\": \"any\"} con varias tools (extraerFactura, extraerTicket, extraerContrato) cuando no sabes qué tipo de documento es: siempre llama una tool y elige el schema. {\"type\": \"tool\", \"name\": \"extract_metadata\"} para garantizar un paso obligatorio.",
+    "Ojo: es por request. Después del forced, vuelve a auto o se cicla en la misma tool.",
+    "Trampa: “auto garantiza una tool call”. Falso: puede responder con texto.",
+    "Hoy los modelos más nuevos rechazan any y forced con un error 400 (alternativa: auto + strict: true). En el examen, any y forced siguen siendo la respuesta."
+   ],
+   "analogia": [
+    "Pedir JSON en el prompt es pedirle a alguien que llene un formulario a mano en una hoja en blanco: a veces olvida un campo o lo escribe donde no va. tool_use es un formulario con casillas: no puede salirse del formato. Pero el formulario no sabe si el total que escribió es correcto. Y si una casilla obligatoria no tiene opción “no aplica”, la persona escribe cualquier cosa."
+   ],
+   "tiendita": [
+    "En la demo 4.3 del lab, 5 correos se extraen dos veces: pidiendo JSON en el prompt (y probando json.loads()) y con la tool extraer_correo forzada. Con tool suele salir 5/5 parseable y 5/5 con el esquema; en texto suele haber fallas de parseo (por los bloques de código) o claves de más o de menos. El correo “algo bonito para regalo” sale honesto gracias a nullable y \"otro\".",
+    "Experimentos: quita \"otro\" del enum y mira cómo clasifica el regalo; quita \"null\" de fecha_requerida y puede empezar a inventar fechas."
+   ],
+   "examen": [
+    "JSON roto en producción → tool_use con JSON schema.",
+    "El modelo inventa valores que no están → campos nullable, “unclear”, “other”.",
+    "No sabes qué tipo de documento llega → any con una tool por tipo.",
+    "Los totales no cuadran aunque el JSON es válido → validación semántica (4.4)."
+   ],
+   "explicar": [
+    "Guion: “El schema garantiza la forma, no la verdad. Para que no invente, dale la opción de decir ‘no viene’.”",
+    "Pregunta para lanzar: Usamos tool_use con schema y aun así una factura entró con el total mal. ¿Falló el schema? Respuesta: no; el schema no valida sumas. Hace falta validación aparte."
+   ],
+   "autoevaluacion": [
+    "1. ¿Qué tipo de error elimina tool_use + schema? — Los de sintaxis.",
+    "2. ¿Por qué orden_compra acepta null ? — Para que el modelo pueda decir que no viene en vez de inventar.",
+    "3. ¿Qué pasa si dejas forced en todas las llamadas? — Se cicla en la misma tool; después del paso obligatorio hay que volver a auto."
+   ],
+   "confusiones": [
+    [
+     "“tool_use evita todos los errores de extracción”",
+     "Solo los de sintaxis; los de significado necesitan validación"
+    ],
+    [
+     "“Marcar todo como required da datos más completos”",
+     "Obliga a inventar lo que no viene"
+    ],
+    [
+     "“Con instrucciones claras, el JSON del prompt es confiable”",
+     "Sigue siendo texto libre"
+    ],
+    [
+     "“auto garantiza una tool call”",
+     "Puede responder con texto; any o forced sí"
+    ]
+   ]
+  },
+  "4.4": {
+   "clave": "4.4",
+   "titulo": "Validación, reintento y retroalimentación",
+   "idea": "después de extraer, tu código valida las reglas de negocio y, si algo falla, reintenta mandando el documento, la extracción y el error específico; pero un reintento solo sirve si el dato está en el documento, porque no puede crear información que no existe.",
+   "explicacion": [
+    "Un validation-retry loop permite que la extracción corrija sus propios errores. Pero no todos se arreglan reintentando.",
+    "¿Reintentar sirve? (lo más evaluado):",
+    "• Formato de fecha o de moneda → reintentar con el error específico.",
+    "• Valor en el campo equivocado → reintentar con el error específico.",
+    "• Renglón omitido que afecta el total → reintentar con el error específico.",
+    "• El dato no está en el documento → revisión humana o null (no reintentar).",
+    "• El dato está en otro documento no incluido → revisión humana.",
+    "Un reintento solo deja volver a mirar lo que ya está. Espera escenarios con una falla arreglable y otra que no: el examen evalúa que distingas cuál es cuál.",
+    "Retry with error feedback: 3 cosas de regreso:",
+    "1. Documento original, para volver a revisar la fuente.",
+    "2. Extracción fallida, para que vea lo que produjo.",
+    "3. Error específico: “Los renglones suman $4,500 pero el total dice $5,000”.",
+    "Un retry sin el error concreto (“inténtalo de nuevo”) suele repetir el mismo error. Con el error específico, el modelo busca el renglón que se saltó o revisa en qué campo puso cada valor.",
+    "Campos que se revisan solos (slide “autocorrección”): calculated vs. stated: \"calculated_total\": 4500, \"stated_total\": 5000, \"total_discrepancy\": true marca el problema sin lógica externa. conflict_detected: “30 días” en una sección y “neto 60” en otra → extrae ambos, marca true y manda a revisión. No elijas uno. detected_pattern: qué patrón de código disparó cada hallazgo. Si los devs descartan siempre el mismo, refina el prompt de ese patrón.",
+    "El schema valida estructura; los validators (por ejemplo Pydantic) validan reglas de negocio. No son redundantes. Ciclo de mejora: extraer → validar → juntar los descartes → refinar prompts → repetir."
+   ],
+   "analogia": [
+    "Un cajero que cuadra la caja. Si le dices “vuelve a contar”, puede equivocarse igual. Si le dices “faltan $500 en billetes de 100”, sabe dónde buscar. Pero si el dinero nunca entró a la caja, contar otra vez no lo hace aparecer: hay que avisarle al gerente."
+   ],
+   "tiendita": [
+    "En la demo 4.4 del lab hay tres documentos: ok: consistente, pero los SKU vienen en minúsculas y la regla exige AAA-AAA-00. El primer intento falla por el SKU y el segundo lo corrige. total_no_cuadra: el documento dice $4,800 y las partidas suman $4,500. El error es de origen: lo correcto es hay_discrepancia: true con el total declarado intacto, no “arreglar” el número. sin_fecha: no menciona fecha. Lo correcto es fecha_entrega: null.",
+    "La retroalimentación se manda como tool_result con is_error. Experimentos:",
+    "D44_FEEDBACK = \"generico\" (“inténtalo de nuevo”: suele repetir el error) o \"sin_reintento\" (aceptas el primer resultado, con errores)."
+   ],
+   "examen": [
+    "La suma no cuadra o el formato está mal → retry con documento + extracción + error específico.",
+    "El dato no está en el documento → null o revisión humana, no retry.",
+    "Dos secciones se contradicen → extraer ambas y marcar conflict_detected.",
+    "Un patrón se descarta siempre → usar detected_pattern para refinar ese prompt."
+   ],
+   "explicar": [
+    "Guion: “Antes de reintentar, pregunten: ¿el dato está en el documento? Si sí, reintenten diciéndole exactamente qué falló. Si no, a una persona.”",
+    "Pregunta para lanzar: La factura no trae fecha de entrega y la validación la exige. ¿Cuántos reintentos? Respuesta: ninguno; null o revisión humana."
+   ],
+   "autoevaluacion": [
+    "1. ¿Qué tres cosas se mandan en un retry con feedback? — El documento original, la extracción fallida y el error específico.",
+    "2. ¿Por qué el schema y Pydantic no son redundantes? — El schema valida estructura; Pydantic valida reglas de negocio.",
+    "3. El documento dice $4,800 y las partidas suman $4,500. ¿Corriges el total? — No: marcas la discrepancia y dejas el total declarado."
+   ],
+   "confusiones": [
+    [
+     "“Si falta un dato, reintento hasta que aparezca”",
+     "Si no está en el documento, ningún retry lo crea"
+    ],
+    [
+     "“Con ‘inténtalo de nuevo’ basta”",
+     "Sin el error concreto repite el mismo error"
+    ],
+    [
+     "“Si hay schema, no hace falta validar”",
+     "El schema no valida reglas de negocio"
+    ],
+    [
+     "“Si hay dos valores en conflicto, elijo el más probable”",
+     "Extrae ambos, marca el conflicto y manda a revisión"
+    ]
+   ]
+  },
+  "4.5": {
+   "clave": "4.5",
+   "titulo": "Message Batches API",
+   "idea": "la Message Batches API procesa muchos requests a mitad de precio, pero puede tardar hasta 24 horas sin garantía, así que solo sirve cuando nadie está esperando; se afina con una muestra antes y se reenvían solo los que fallaron después.",
+   "explicacion": [
+    "Message Batches API en 5 datos: client.messages.batches.create({ requests: facturas.map((f, i) => ({ custom_id: `factura-${i}`, params: { model, max_tokens, messages: [{ role: \"user\", content: f }] } })) })",
+    {
+     "tabla": [
+      [
+       "Dato",
+       "Valor"
+      ],
+      [
+       "Ahorro",
+       "50%"
+      ],
+      [
+       "Tiempo máximo",
+       "24 horas"
+      ],
+      [
+       "SLA de latencia",
+       "Ninguno"
+      ],
+      [
+       "`custom_id`",
+       "Empareja cada respuesta con su request (pueden llegar en otro orden)"
+      ],
+      [
+       "Limitación",
+       "Sin tool calling de varios turnos dentro de un request"
+      ]
+     ]
+    },
+    "Si un paso necesita llamar tu tool a mitad del proceso, ese paso va síncrono. Los resultados a veces llegan en minutos, pero hay que diseñar para el máximo. La regla es la misma de 3.6: si alguien espera, síncrono.",
+    "SLA de 30 h: ¿cada cuánto envío un batch? Trabaja hacia atrás: SLA − 24 h = 6 h de colchón, y elige un intervalo menor que eso.",
+    "Enviar cada 6 h → peor caso 6 + 24 = 30 h: margen cero.",
+    "Enviar cada 4 h → peor caso 4 + 24 = 28 h: 2 h de margen.",
+    "Un documento que llega justo después de un envío espera todo el intervalo, y luego hasta 24 h más. Un batch que se pasa de la ventana regresa como expired: trátalo como trabajo por reenviar.",
+    "Antes y después del batch:",
+    "Antes, afina con una muestra: refina prompt, few-shot y schema con 5–10 documentos representativos. De 1,000 facturas, 90% de éxito al primer intento = 100 reintentos; 60% = 400. Pasar de 60% a 90% divide entre cuatro el costo de reenvíos.",
+    "Después, reenvía solo lo que falló: junta los custom_id con errored o expired y reenvía solo esos, con ajustes (dividir documentos enormes, subir max_tokens, few-shot del formato raro).",
+    "Trampa: reenviar todo el batch y pagar otra vez lo que ya salió bien. Flujo: muestra → refinar → batch completo → reintentar solo fallas."
+   ],
+   "analogia": [
+    "La Batch API es mandar la ropa a la lavandería con servicio económico: cuesta la mitad, pero te la entregan “cuando esté”, hasta en 24 horas. Sirve para la ropa de la semana; no para la camisa que necesitas en una hora. Y antes de mandar 100 prendas, pruebas el detergente con una."
+   ],
+   "tiendita": [
+    "En la demo 4.5 del lab se arman 8 peticiones (clasificar reseñas) con su custom_id (resena-001 …). Se crea el lote, se guarda el id en ultimo_lote.txt y se consulta el estado cada D45_CADA_S segundos (in_progress → ended). Los resultados se emparejan por custom_id porque pueden llegar en otro orden. Si alguna falla, se reenvía solo esa.",
+    "Un lote pequeño suele terminar en minutos, pero no hay garantía. Experimento: cierra la demo a la mitad y recupera el lote con D45_LOTE_EXISTENTE."
+   ],
+   "examen": [
+    "Procesamiento nocturno o semanal sin nadie esperando → Batch.",
+    "Check que bloquea un merge → síncrono.",
+    "SLA de X horas → intervalo de envío menor que X − 24.",
+    "Algunos requests fallaron → reenviar solo esos por custom_id."
+   ],
+   "explicar": [
+    "Guion: “Batch es mitad de precio a cambio de no saber cuándo llega. ¿Alguien está esperando? Entonces no es batch.”",
+    "Pregunta para lanzar: Tienes un SLA de 30 horas. ¿Envías un batch cada 6 horas?",
+    "Respuesta: no; 6 + 24 = 30, margen cero. Cada 4 horas deja 2 de margen."
+   ],
+   "autoevaluacion": [
+    "1. ¿Para qué sirve custom_id ? — Para emparejar cada respuesta con su request.",
+    "2. ¿Qué haces antes de mandar 1,000 facturas en batch? — Afinar prompt, few-shot y schema con una muestra de 5–10.",
+    "3. ¿Qué reenvías si 30 de 1,000 fallaron? — Solo esos 30, con ajustes."
+   ],
+   "confusiones": [
+    [
+     "“Es más barato, así que úsalo para todo”",
+     "Si alguien espera, síncrono"
+    ],
+    [
+     "“Suele tardar minutos, puedo contar con eso”",
+     "Diseña para 24 h; no hay SLA"
+    ],
+    [
+     "“Los resultados llegan en orden”",
+     "Se emparejan por custom_id"
+    ],
+    [
+     "“Si fallan algunos, reenvío el lote completo”",
+     "Reenvía solo los errored o expired"
+    ],
+    [
+     "“El batch puede llamar mis tools a mitad del proceso”",
+     "Sin tool calling de varios turnos; ese paso va síncrono"
+    ]
+   ]
+  },
+  "4.6": {
+   "clave": "4.6",
+   "titulo": "Revisión con instancia independiente y multi-pass",
+   "idea": "el modelo que generó algo tiende a defenderlo, así que la revisión la hace una instancia nueva que solo ve el resultado; los PR grandes se revisan archivo por archivo y luego en una pasada de integración; y la confianza solo sirve para decidir a dónde va algo si está calibrada con datos.",
+   "explicacion": [
+    "Self-review: el modelo revisa su propio output en la misma sesión.",
+    "Independent instance: una invocación aparte, sin el razonamiento previo.",
+    "Self-review vs. instancia independiente:",
+    {
+     "tabla": [
+      [
+       "Misma sesión",
+       "Instancia independiente"
+      ],
+      [
+       "“Ahora revisa tu código por bugs”",
+       "Request nuevo: “revisa bugs, seguridad y casos borde”"
+      ],
+      [
+       "Conserva su razonamiento original: tiende a confirmar sus decisiones",
+       "Solo ve el output: juzga sin el “lo elegí porque…”"
+      ]
+     ]
+    },
+    "Respuestas incorrectas típicas: “revisa con cuidado” en la misma sesión, extended thinking en la sesión que generó (el razonamiento original sigue en contexto) o un modelo más grande. Es el mismo principio de 3.6.",
+    "PR de 14 archivos: pasadas enfocadas. Una sola pasada da profundidad dispareja, bugs obvios omitidos a la mitad y el mismo patrón aprobado en un archivo y marcado en otro (attention dilution, igual que en 1.6).",
+    "Pasada 1, una por archivo: bugs, seguridad y lógica, con atención completa.",
+    "Pasada 2, integración: recibe los hallazgos de la pasada 1 y revisa lo que cruza archivos: flujo de datos, uso de APIs, dependencias y contradicciones entre hallazgos.",
+    "Una ventana de contexto más grande no lo arregla: el problema es la atención, no el tamaño.",
+    "Confidence routing, pero calibrado. Cada hallazgo trae una confianza y una ruta: { \"hallazgo\": \"SQL sin sanitizar\", \"severidad\": \"crítico\", \"confianza\": 0.65, \"ruta\": \"human_review\" } Confianza alta → directo al dev; confianza baja → revisión humana. Cómo calibrar: pasa sets etiquetados (con respuesta conocida), mide qué tan bien la confianza predice el acierto y fija los umbrales con esos datos. Usar la confianza cruda para decisiones automáticas es un antipatrón. Vale el costo cuando un error tiene consecuencias (CI/CD, extracción financiera, cumplimiento). Recuerda 4.1: primero criterios explícitos, después routing.",
+    "Pipeline completo: generar → revisar por archivo → integración → routing → recalibrar."
+   ],
+   "analogia": [
+    "Corregir tu propio ensayo: lees lo que quisiste decir, no lo que escribiste. Un compañero que no estuvo en tu cabeza ve los errores. Y si un corrector dice “estoy 90% seguro”, solo te sirve si ya comprobaste que cuando dice 90% acierta 9 de cada 10 veces."
+   ],
+   "tiendita": [
+    "En la demo 4.6 del lab, un borrador de respuesta tiene 3 problemas sembrados: aprueba $12,500 sin autorización, promete 24 horas (la política dice 5 a 7 días hábiles) y cita el pedido #12364 en vez de #12346.",
+    "D46_MODO = \"misma_sesion\": el historial incluye el borrador como si Claude lo hubiera escrito, y luego “Revisa tu respuesta”.",
+    "\"independiente\": llamada nueva con un system prompt de revisor; ve política + caso + borrador y nada más.",
+    "Cada hallazgo sale con su destino (automático o revisión humana) según D46_UMBRAL_CONFIANZA. Con honestidad: el resultado varía entre corridas y a veces las dos encuentran todo. Experimento: haz los errores más sutiles (“en 3 días” en vez de “en 24 horas”) para que la diferencia se note."
+   ],
+   "examen": [
+    "Revisar código o texto generado → instancia independiente.",
+    "PR grande con revisión dispareja → una pasada por archivo + una de integración.",
+    "Decidir qué va a revisión humana → confidence routing calibrado con datos etiquetados."
+   ],
+   "explicar": [
+    "Guion: “Quien escribe no revisa. Lo grande se revisa por partes y luego en conjunto. Y la confianza del modelo es un número que hay que calibrar antes de creerle.”",
+    "Pregunta para lanzar: El generador de código dice que revisó su trabajo y no encontró bugs. ¿Te basta? Respuesta: no; hace falta una instancia independiente que solo vea el código."
+   ],
+   "autoevaluacion": [
+    "1. ¿Por qué la autorrevisión en la misma sesión es débil? — Porque conserva el razonamiento original y tiende a confirmarlo.",
+    "2. ¿Qué revisa la pasada de integración? — Lo que cruza archivos: flujo de datos, APIs, dependencias y contradicciones entre hallazgos.",
+    "3. ¿Cómo se calibran los umbrales de confianza? — Con sets etiquetados: se mide qué tan bien la confianza predice el acierto."
+   ],
+   "confusiones": [
+    [
+     "“Pedirle en la misma sesión que revise con cuidado basta”",
+     "Conserva su razonamiento y confirma sus decisiones"
+    ],
+    [
+     "“Extended thinking en la misma sesión lo arregla”",
+     "El razonamiento original sigue en contexto"
+    ],
+    [
+     "“Con una ventana más grande reviso los 14 archivos juntos”",
+     "El problema es la atención, no el tamaño"
+    ],
+    [
+     "“La confianza que reporta el modelo es confiable”",
+     "Hay que calibrarla con sets etiquetados"
+    ]
+   ]
+  },
+  "5.1": {
+   "clave": "5.1",
+   "titulo": "Ventana de contexto: case facts, recorte y lost in the middle",
+   "idea": "los datos transaccionales (montos, fechas, IDs) van en un bloque fijo que se manda en cada request y nunca se resume; los resultados de tools se recortan antes de entrar al historial; y en un input largo, lo importante va arriba con encabezados, porque la mitad se lee peor.",
+   "explicacion": [
+    "Context window = todo lo que Claude lee en un request: instrucciones, conversación, tool results y documentos. La API es stateless: el historial completo va en cada request. Si se maneja mal, el agente olvida montos, pierde citas o baja su precisión.",
+    "La trampa del resumen progresivo. Para no crecer sin fin, se resume la conversación.",
+    "Pero:",
+    "Turno 3: “Quiero el reembolso de $2,478.30 del pedido #8891 del 3 de marzo”.",
+    "Después de resumir: “El cliente quiere un reembolso de un pedido reciente”.",
+    "El resumen conserva la idea general y tira lo específico. Resumir libera tokens, pero cobra en detalles.",
+    "Case facts block (el patrón más importante de todo el manejo de contexto):",
+    "\"caseFacts\": { \"customerId\": \"C-4421\", \"issues\": [{ \"orderId\": \"#8891\", \"orderDate\": \"2026-03-03\", \"refundAmount\": \"$2,478.30\", \"status\": \"pending_refund\" }] } En cada prompt: va en todos los requests, aparte del historial.",
+    "Nunca se resume: el resto de la conversación sí puede resumirse.",
+    "Una entrada por problema: los datos de un pedido no se mezclan con otro.",
+    "Recorta el tool output antes de que entre. lookup_order devuelve 40+ campos (auditoría, almacén, paquetería…); el reembolso necesita 5 (id, fecha, total, elegible, artículo). Recorta con un hook PostToolUse antes, porque una vez en el historial se paga en cada turno siguiente. En multiagente, el upstream devuelve datos estructurados, no su razonamiento. Trampa: guardar el resultado completo “por si acaso”. (Prompt caching abarata prefijos que no cambian, pero solo cambia el costo, no lo que el modelo ve; para el examen basta saber que existe.)",
+    "Lost in the middle. En un input largo, el inicio y el final se leen bien; la mitad se pierde. El arreglo es de estructura: ## Resumen de hallazgos clave - Proveedor A: sube 12% (2025) - Proveedor B: … ## Detalle ### Proveedor A: reporte de precios Lo clave arriba y cada fuente bajo su propio encabezado. Trampa: “lee todo con atención” en el prompt; no cambia dónde está la información."
+   ],
+   "analogia": [
+    "Un médico de guardia que recibe al paciente del turno anterior. El resumen verbal (“está estable, vino por dolor”) pierde detalles; la ficha con alergias, dosis y horarios (case facts) viaja siempre con el paciente y nadie la resume. Y si el expediente tiene 200 hojas, lo crítico va en la primera página, no en la hoja 100."
+   ],
+   "tiendita": [
+    "La demo 5.1 del lab tiene tres partes (la C es lost in the middle):",
+    "Parte A: una conversación de 13 mensajes con 5 datos clave (pedido #12346, $12,500, rechazó el crédito, prefiere WhatsApp, fecha prometida viernes 20 de noviembre).",
+    "Con resumen, otro agente retoma solo con un resumen de 2 líneas y suele perder 2 o 3 datos. Con case_facts, 5/5.",
+    "Parte B: count_tokens (sin costo) compara los tokens del pedido completo (30 campos) contra los 5 que importan.",
+    "Experimento: corre la parte A varias veces; el resumen pierde datos distintos cada vez."
+   ],
+   "examen": [
+    "Montos o fechas perdidos tras resumir → case facts block fuera del historial.",
+    "Hallazgos ignorados a la mitad de un input largo → resumen arriba + encabezados por fuente.",
+    "Tool output enorme → recortar a los campos necesarios antes de que entre."
+   ],
+   "explicar": [
+    "Guion: “Todo lo que entra al contexto se paga en cada turno y compite por atención. Lo que no puede perderse va en un bloque aparte; lo que sobra, no entra.”",
+    "Pregunta para lanzar: Tras 30 turnos, el agente ya no recuerda el monto del reembolso. ¿Le pides que resuma mejor? Respuesta: no; case facts block en cada request, nunca resumido."
+   ],
+   "autoevaluacion": [
+    "1. ¿Qué tres reglas tiene el case facts block? — Va en cada prompt, nunca se resume y tiene una entrada por problema.",
+    "2. ¿Por qué recortar el tool output antes y no después? — Porque una vez en el historial se paga en cada turno siguiente.",
+    "3. ¿Qué parte de un input largo se lee peor? — La mitad."
+   ],
+   "confusiones": [
+    [
+     "“Resumir es seguro para datos del caso”",
+     "Destruye montos, fechas e IDs"
+    ],
+    [
+     "“Guardo el tool result completo por si acaso”",
+     "Se paga en cada turno y diluye la atención"
+    ],
+    [
+     "“‘Lee todo con atención’ arregla lost in the middle”",
+     "Hay que mover lo clave arriba y estructurar"
+    ],
+    [
+     "“Prompt caching reduce lo que el modelo lee”",
+     "Solo reduce el costo"
+    ]
+   ]
+  },
+  "5.2": {
+   "clave": "5.2",
+   "titulo": "Escalamiento y ambigüedad",
+   "idea": "se escala solo por tres motivos (el cliente pide un humano, la política no cubre el caso, o no se avanza tras intentos reales); el enojo y la autoconfianza del modelo no sirven como señal; y si hay varios clientes con el mismo nombre, se piden más datos en vez de adivinar.",
+   "explicacion": [
+    "Escalar mal en cualquier dirección baja la first-contact resolution (casos resueltos sin pasar a un humano).",
+    "Los 3 motivos válidos para escalar:",
+    "1. Pide un humano: escala de inmediato, sin intentar resolver antes. Sin excepciones; el handoff va en esa misma respuesta.",
+    "2. Hueco en la política: la política no dice nada del caso; una persona decide la excepción.",
+    "3. No avanza: tras intentos reales (la tool falla en cada retry). Decir “no estoy seguro” no basta.",
+    "No confundir violación con hueco:",
+    {
+     "tabla": [
+      [
+       "",
+       "Violación de política",
+       "Hueco en la política"
+      ],
+      [
+       "La política…",
+       "Tiene respuesta documentada",
+       "No dice nada del caso"
+      ],
+      [
+       "Ejemplo",
+       "Reembolso fuera de plazo",
+       "“¿Igualan el precio de la competencia?”"
+      ],
+      [
+       "Acción",
+       "El agente lo rechaza él mismo",
+       "Escalar"
+      ]
+     ]
+    },
+    "Antipatrón con petición explícita: “Déjame ver si puedo ayudarte primero”. Si pidió una persona, se escala ya. 2 señales que NO sirven para escalar:",
+    "Sentimiento: “escalar si el cliente está molesto”. Falla porque el enojo no indica complejidad; un cliente furioso por un envío tarde tiene un caso simple.",
+    "Autoconfianza: “el modelo se califica del 1 al 10 y escala si sale bajo”. Falla porque está mal calibrada: se siente seguro en lo difícil y duda en lo fácil. Síntoma típico del examen: escala casos simples e intenta los complejos.",
+    "El arreglo: criterios explícitos de escalamiento + few-shot en el system prompt. Primero optimizar el prompt; después pensar en clasificadores.",
+    "Clientes molestos y clientes ambiguos:",
+    {
+     "tabla": [
+      [
+       "Situación",
+       "Acción"
+      ],
+      [
+       "Caso simple, cliente molesto",
+       "Reconocer el enojo y resolver (“Entiendo que es frustrante. Puedo procesar tu reposición ahora mismo.”)"
+      ],
+      [
+       "Tras la oferta, insiste en un humano",
+       "Escalar"
+      ],
+      [
+       "“Quiero una persona” desde el inicio",
+       "Escalar ya, sin investigar ni ofrecer"
+      ],
+      [
+       "Tres “Juan Pérez” en `get_customer`",
+       "Pedir más identificadores (correo, teléfono, número de pedido)"
+      ]
+     ]
+    },
+    "Nunca elijas por el más reciente o el más activo: elegir mal = exponer datos de otro cliente o reembolsar en la cuenta equivocada."
+   ],
+   "analogia": [
+    "Un cajero de banco. Si pides hablar con el gerente, te lo llama; no te dice “déjame intentar primero”. Si estás enojado porque la fila tardó, te atiende con amabilidad, no llama al gerente. Si pides algo que el reglamento no contempla, consulta. Y si hay dos cuentas a nombre de Juan Pérez, te pide identificación."
+   ],
+   "tiendita": [
+    "En la demo 5.2 del lab hay 4 escenarios, primero con un system prompt vago y luego con criterios:",
+    {
+     "tabla": [
+      [
+       "Escenario",
+       "Correcto"
+      ],
+      [
+       "`pide_humano`: “Quiero hablar con una persona…”",
+       "Escaló"
+      ],
+      [
+       "`molesto_simple`: “¡¡Estoy furioso!! #12347 en tránsito hace 2 días”",
+       "Resolvió con `lookup_order`"
+      ],
+      [
+       "`cliente_ambiguo`: “Soy Juan Pérez, quiero mi reembolso”",
+       "Pidió aclaración (hay 2 Juan Pérez)"
+      ],
+      [
+       "`fuera_de_politica`: “Iguálenme el precio de Amazon”",
+       "Escaló"
+      ]
+     ]
+    },
+    "Experimento: quita “NO escales solo porque el cliente esté molesto” del prompt de criterios."
+   ],
+   "examen": [
+    "El cliente pide un humano → escalar en esa misma respuesta.",
+    "El agente escala casos simples e intenta los complejos → criterios explícitos + few-shot; no autoconfianza ni sentimiento.",
+    "Varios clientes coinciden → pedir identificadores adicionales.",
+    "Caso que la política no contempla → escalar."
+   ],
+   "explicar": [
+    "Guion: “Tres motivos para escalar: lo pide, la política no lo cubre o ya intenté y no avanzo. El enojo no es uno de ellos.”",
+    "Pregunta para lanzar: Un cliente furioso escribe en mayúsculas porque su pedido lleva 2 días en tránsito. ¿Escalas? Respuesta: no; reconoces el enojo y resuelves. Es un caso simple."
+   ],
+   "autoevaluacion": [
+    "1. ¿Cuáles son los 3 motivos válidos para escalar? — Pide un humano, hueco en la política, no avanza tras intentos reales.",
+    "2. ¿Por qué no sirve la autoconfianza del modelo? — Porque está mal calibrada: segura en lo difícil, dudosa en lo fácil.",
+    "3. Un reembolso fuera de plazo que la política prohíbe: ¿escalas? — No; el agente lo rechaza él mismo."
+   ],
+   "confusiones": [
+    [
+     "“Si el cliente está muy molesto, escalo”",
+     "El enojo no indica complejidad"
+    ],
+    [
+     "“Si pide un humano, primero intento resolver”",
+     "Se escala de inmediato"
+    ],
+    [
+     "“El modelo puede autoevaluar su confianza para escalar”",
+     "Está mal calibrada"
+    ],
+    [
+     "“Todo lo que está fuera de política se escala”",
+     "Si la política lo prohíbe, el agente lo rechaza; si no lo cubre, se escala"
+    ],
+    [
+     "“Con varios Juan Pérez elijo el más reciente”",
+     "Se piden más identificadores"
+    ]
+   ]
+  },
+  "5.3": {
+   "clave": "5.3",
+   "titulo": "Propagación de errores multiagente",
+   "idea": "cuando un subagente falla, no debe devolver vacío como si fuera éxito ni tumbar todo el pipeline; reporta un error estructurado (tipo, qué intentó, resultados parciales, alternativas) y el reporte final dice qué quedó sin cubrir.",
+   "explicacion": [
+    "Este tema decide si el sistema se recupera con gracia o falla en silencio. Es la continuación de 2.2 (errores estructurados) a nivel multiagente.",
+    "Error estructurado: 4 elementos: { \"failureType\": \"transient\", \"attemptedQuery\": \"precios proveedor X 2026\", \"partialResults\": [\"3 de 5 fuentes\"], \"alternatives\": [\"caché de ayer\", \"buscar términos más amplios\"], \"shouldRetry\": true }",
+    {
+     "tabla": [
+      [
+       "Elemento",
+       "Para qué"
+      ],
+      [
+       "1. Tipo de falla",
+       "Decide: reintentar, corregir, escalar o pedir permisos (las mismas 4 categorías de 2.2)"
+      ],
+      [
+       "2. Qué se intentó",
+       "Para que el coordinator ajuste la query"
+      ],
+      [
+       "3. Resultados parciales",
+       "Para no tirar el trabajo útil"
+      ],
+      [
+       "4. Alternativas",
+       "Opciones para recuperarse"
+      ]
+     ]
+    },
+    "El subagente primero se recupera solo de lo transitorio (retries, fuentes alternas) y escala únicamente lo que no puede resolver, siempre con lo que intentó y lo que sí obtuvo.",
+    "Recuerda: un access failure se reintenta; un vacío válido, no.",
+    "Los 2 antipatrones y la salida correcta:",
+    {
+     "tabla": [
+      [
+       "Antipatrón",
+       "Qué pasa"
+      ],
+      [
+       "Supresión silenciosa: timeout → devuelve `[]` marcado como éxito",
+       "El peor: el reporte parece completo, pero le falta contenido"
+      ],
+      [
+       "Terminar todo: un subagente falla → se mata el pipeline",
+       "Se tiran 4 búsquedas terminadas por 1 proveedor lento"
+      ]
+     ]
+    },
+    "Lo correcto: el subagente reporta, el coordinator evalúa y se sigue con parciales.",
+    "Recuperación dirigida, no todo o nada. También es trampa devolver un genérico “búsqueda no disponible” tras agotar los retries: esconde la query, los parciales y las alternativas.",
+    "Coverage annotation: “La sección de precios es limitada porque la lista del proveedor X no estuvo disponible.” Sin la anotación, una fuente que faltó parece un tema irrelevante."
+   ],
+   "analogia": [
+    "Un equipo de reporteros. Si uno no consigue la entrevista, no debe entregar una hoja en blanco como si no hubiera noticia, ni el editor debe cancelar el periódico entero. Debe decir: “no contestó el teléfono, tengo dos citas de su vocero y puedo intentar mañana”. Y la nota final dice “el funcionario no respondió a nuestras preguntas”."
+   ],
+   "tiendita": [
+    "En la demo 5.3 del lab, el coordinador delega 3 áreas: inventario, envios y resenas. envios falla, y cómo lo reporta depende del formato: silencioso: “Sin datos relevantes para esta área.” con is_error: false. El reporte suele omitir envíos o tratarlo como “sin novedad”. generico: “Error” con is_error: true. estructurado: tipo_falla: timeout, consulta_intentada, resultados_parciales (3 de 12 estados: 4.1 días) y alternativas. El reporte menciona la falla, usa el 4.1 como dato parcial y sugiere la alternativa.",
+    "Con D53_COMPARAR_TODOS = True corren los 3 y la tabla compara si marca el hueco y si usa el parcial. Experimento: haz que fallen dos áreas."
+   ],
+   "examen": [
+    "Un subagente da timeout → error estructurado con tipo, query, parciales y alternativas; nunca vacío.",
+    "El reporte final omite un tema sin explicar → coverage annotation.",
+    "Un proveedor lento → seguir con parciales, no matar el pipeline."
+   ],
+   "explicar": [
+    "Guion: “Un error bien reportado es información. Un error escondido es una mentira. Y un error que tumba todo es desperdicio.”",
+    "Pregunta para lanzar: El subagente de envíos dio timeout y devolvió “sin datos”. ¿Qué dice el reporte final? Respuesta: probablemente que no hay novedades en envíos, lo cual es falso."
+   ],
+   "autoevaluacion": [
+    "1. ¿Cuáles son los 4 elementos del error estructurado? — Tipo de falla, qué se intentó, resultados parciales y alternativas.",
+    "2. ¿Cuál es el peor antipatrón y por qué? — La supresión silenciosa: el reporte parece completo pero le falta contenido.",
+    "3. ¿Qué es una coverage annotation? — Una nota en el reporte que explica qué quedó limitado y por qué."
+   ],
+   "confusiones": [
+    [
+     "“Si falla, devuelvo vacío para no romper nada”",
+     "El reporte parece completo pero miente"
+    ],
+    [
+     "“Si un subagente falla, mejor detener todo”",
+     "Se tira el trabajo de los que sí terminaron"
+    ],
+    [
+     "“Tras los retries, ‘búsqueda no disponible’ basta”",
+     "Esconde la query, los parciales y las alternativas"
+    ],
+    [
+     "“El reporte final no necesita mencionar lo que falló”",
+     "Sin la anotación, el hueco parece irrelevante"
+    ]
+   ]
+  },
+  "5.4": {
+   "clave": "5.4",
+   "titulo": "Exploración de código y degradación de contexto",
+   "idea": "en sesiones largas el agente deja de usar lo que encontró al principio y empieza a responder en genérico; se arregla guardando los hallazgos en un archivo (scratchpad) desde el inicio, delegando exploración a subagentes y pasando resúmenes o un state manifest entre fases.",
+   "explicacion": [
+    "Context degradation: el modelo deja de usar hallazgos específicos que hizo antes. Es un problema de calidad de atención, no de límite de tokens.",
+    "El síntoma: respuestas genéricas.",
+    "Al inicio: “RefundProcessor no tiene retry para fallas de la API de pagos”.",
+    "Horas después: “Sigue el patrón típico de repository”.",
+    "Por qué pasa: (1) cada paso agrega salida muy larga, (2) los hallazgos precisos quedan atrás, (3) la atención se va a lo reciente. Una ventana más grande no lo arregla. Las preguntas del examen suelen describir el síntoma: referencias genéricas a “patrones” en vez de las clases que encontró.",
+    "Scratchpad: los hallazgos viven fuera del contexto. # notas-reembolsos.md ## Clases clave - OrderRepository (src/orders/repo.ts) cachea por id, sin invalidar al cambiar estatus - RefundProcessor: sin retry en la API de pagos ## Cadena Refund → OrderService → Repo → DB ## Cobertura OrderService 87% · RefundProcessor 12% Cómo: escribe lo importante en un archivo y vuelve a leerlo para las preguntas siguientes.",
+    "Cuándo: desde el inicio de toda sesión larga, no como emergencia. /compact: úsalo antes de llegar al límite y dile qué conservar (“/compact conserva las clases clave y la cadena de llamadas de reembolsos”). Lo que /compact no conserva se pierde: guárdalo antes en el scratchpad.",
+    "Subagentes, fases y manifiestos:",
+    {
+     "tabla": [
+      [
+       "Técnica",
+       "Cómo"
+      ],
+      [
+       "Delegar a subagentes",
+       "Cada uno explora en su propio contexto y regresa un resumen. Valor principal: aislamiento; el paralelismo es extra"
+      ],
+      [
+       "Resumen entre fases",
+       "Antes de la fase 2, inyecta el resumen de la fase 1 en cada subagente. Sin él, repiten la exploración. No les pases todo el transcript"
+      ],
+      [
+       "State manifest",
+       "Fase actual, rutas exploradas, hallazgos y siguientes pasos, en un archivo conocido. Si truena, el coordinator lo carga y sigue desde ahí"
+      ]
+     ]
+    },
+    "Conecta con 1.3 (los subagentes no heredan el historial) y 1.7 (reanudar sesiones)."
+   ],
+   "analogia": [
+    "Armar un rompecabezas de 2,000 piezas durante días. Si no apartas las piezas que ya identificaste (el borde, el cielo), cada día vuelves a buscarlas en el montón. El scratchpad es la charola donde las apartas. Y si alguien más te releva, le dejas una nota: “el borde está listo, falta la casa” (state manifest)."
+   ],
+   "tiendita": [
+    "En la demo 5.4 del lab, un repo de 24 archivos (casi todos de relleno) esconde lo importante en tarifas.ts, promociones.ts, total.ts y zonas.json:",
+    "1. Fase 1: “¿Dónde se calcula el costo de envío?”. Con D54_USAR_SCRATCHPAD = True, escribe sus hallazgos en NOTAS.md.",
+    "2. Fase 2, sesión nueva: “Queremos envío gratis arriba de $10,000. ¿Qué archivos tocarías?”. Con D54_COMPARAR = True corre con notas y sin notas.",
+    "“Con notas” suele necesitar menos turnos y llamadas. En 24 archivos la diferencia es chica; en un repo real, grande. Revisa si anotó promociones.ts (donde está el TODO del umbral): un scratchpad vale lo que vale su contenido."
+   ],
+   "examen": [
+    "Respuestas genéricas (“patrones típicos”) tras horas de exploración → scratchpad.",
+    "Subagentes de la fase 2 repiten lo de la fase 1 → inyectar el resumen de la fase 1.",
+    "Recuperarse de un crash → state manifest (respuesta del examen).",
+    "Exploración muy larga que llena el contexto → delegar a subagentes."
+   ],
+   "explicar": [
+    "Guion: “Lo que solo vive en el contexto se diluye. Lo que importa se escribe en un archivo desde el primer minuto.”",
+    "Pregunta para lanzar: Tras 3 horas, el agente habla de “el patrón típico de servicios” en vez de nombrar RefundProcessor. ¿Qué pasó y qué haces? Respuesta: degradación de contexto; scratchpad con los hallazgos y releerlo."
+   ],
+   "autoevaluacion": [
+    "1. ¿Cuál es el síntoma de la degradación de contexto? — Respuestas genéricas en vez de los hallazgos específicos.",
+    "2. ¿Cuándo se empieza un scratchpad? — Desde el inicio de toda sesión larga.",
+    "3. ¿Qué contiene un state manifest? — Fase actual, rutas exploradas, hallazgos y siguientes pasos."
+   ],
+   "confusiones": [
+    [
+     "“Si olvida hallazgos, necesito más contexto”",
+     "Es un problema de atención, no de espacio"
+    ],
+    [
+     "“El scratchpad es para cuando ya se degradó”",
+     "Se usa desde el inicio"
+    ],
+    [
+     "“El valor de los subagentes es la velocidad”",
+     "El valor principal es el aislamiento"
+    ],
+    [
+     "“Entre fases paso todo el transcript”",
+     "Pasa un resumen; el transcript completo vuelve a llenar el contexto"
+    ]
+   ]
+  },
+  "5.5": {
+   "clave": "5.5",
+   "titulo": "Revisión humana y calibración de confianza",
+   "idea": "una precisión global alta puede esconder segmentos muy malos, así que antes de reducir la revisión humana se mide por tipo de documento y por campo, se calibra la confianza con datos etiquetados y se sigue muestreando, incluso lo de alta confianza.",
+   "explicacion": [
+    "Confidence score: la estimación del modelo de que un campo extraído es correcto.",
+    "Calibrar: comparar esos scores contra respuestas conocidas. 97% global… que esconde un 45% (cifras ilustrativas de la lección):",
+    {
+     "tabla": [
+      [
+       "Tipo de documento",
+       "Fecha",
+       "Monto",
+       "Nombre"
+      ],
+      [
+       "Facturas estándar",
+       "99.5%",
+       "98.2%",
+       "97.8%"
+      ],
+      [
+       "Recibos a mano",
+       "60.1%",
+       "55.3%",
+       "71.2%"
+      ],
+      [
+       "PDF escaneados",
+       "72.4%",
+       "69.8%",
+       "80.1%"
+      ],
+      [
+       "Formatos internacionales",
+       "45.2%",
+       "52.1%",
+       "63.4%"
+      ],
+      [
+       "Global",
+       "97.0%",
+       "96.1%",
+       "95.8%"
+      ]
+     ]
+    },
+    "Las facturas estándar dominan el volumen y “jalan” el promedio. Valida por segmento antes de automatizar; los peores segmentos suelen ser los de mayor impacto.",
+    "Muestreo estratificado y calibración por campo:",
+    "Stratified sampling: divide por tipo, banda de confianza y campo, y muestrea al azar de cada grupo. Incluye los de alta confianza: son los que nadie ve. Ejemplo: un proveedor cambia su formato y los totales salen mal con confianza alta.",
+    "Calibración por campo: el mismo 0.90 no vale igual en todos lados (94% de acierto en fechas, 82% en montos). Calibra con un set etiquetado (ground truth) por tipo de campo y documento.",
+    "Arriba del umbral calibrado: automatizar con muestreo. Abajo: revisión humana.",
+    "Trampa: muestrear solo lo de baja confianza. Eso ya va a revisión; los errores nuevos aparecen en lo automatizado.",
+    "Antes de reducir la revisión humana (el orden importa):",
+    "1. Mide la precisión por tipo de documento y por campo.",
+    "2. Calibra la confianza con sets etiquetados.",
+    "3. Fija umbrales calibrados: automatizar vs. revisar.",
+    "4. Implementa muestreo estratificado continuo.",
+    "5. Solo entonces reduce la revisión en segmentos ya validados.",
+    "Con pocos revisores: primero lo más incierto, no repartir parejo. La cola se reordena: sigue el más incierto, no el más viejo. Lo más incierto: campos de baja confianza, fuentes contradictorias, tipos con mala precisión histórica y campos con varias interpretaciones.",
+    "Trampa: saltar al paso 5 por una métrica global."
+   ],
+   "analogia": [
+    "Un promedio de 9 en la boleta puede esconder un 5 en matemáticas. Antes de decir “ya no necesita tutor”, revisas materia por materia. Y aunque saque 10 en historia, de vez en cuando revisas un examen al azar, por si cambió el maestro."
+   ],
+   "tiendita": [
+    "En la demo 5.5 del lab, 44 documentos de 3 tipos (24 facturas claras, 12 tickets con subtotal + IVA y 8 notas a mano como “3 tazas a 450 y un mantel de 890, ya le di 500”, tres de ellas sin un total que se pueda saber) se extraen con su confianza. Las tablas muestran precisión por tipo, cuántos errores se colaron en automático y la calibración (confianza declarada vs. precisión real). Facturas y tickets salen al 100%; las notas, alrededor del 60%; el global pasa del 90% y esconde el problema. Una tabla de muestreo muestra que revisando 6 al azar casi nunca ves una nota, y estratificando (2 de cada tipo) sí. Si hay errores con confianza alta, la confianza no está calibrada.",
+    "Experimento: D55_UMBRAL = 0.95 manda más documentos a revisión humana y deja colar menos errores."
+   ],
+   "examen": [
+    "Precisión global alta y propuesta de quitar la revisión humana → medir por segmento y campo primero.",
+    "Errores con confianza alta → la confianza no está calibrada; calibrar con sets etiquetados.",
+    "Pocos revisores → priorizar lo más incierto.",
+    "Detectar errores nuevos en lo automatizado → muestreo estratificado que incluya alta confianza."
+   ],
+   "explicar": [
+    "Guion: “Un promedio no es una garantía. Midan por tipo y por campo, calibren con respuestas conocidas y sigan muestreando, aunque todo se vea bien.”",
+    "Pregunta para lanzar: La extracción tiene 97% de precisión global. El jefe quiere quitar la revisión humana. ¿Qué respondes? Respuesta: primero medir por segmento; puede haber tipos de documento al 45%."
+   ],
+   "autoevaluacion": [
+    "1. ¿Por qué un promedio global puede engañar? — Porque los segmentos con más volumen jalan el promedio y esconden los malos.",
+    "2. ¿Por qué se muestrea también lo de alta confianza? — Porque nadie lo revisa y ahí aparecen los errores nuevos.",
+    "3. ¿Cuál es el último paso antes de reducir la revisión humana? — Muestreo estratificado continuo; solo después se reduce en segmentos validados."
+   ],
+   "confusiones": [
+    [
+     "“97% global = podemos automatizar”",
+     "Puede esconder segmentos al 45%"
+    ],
+    [
+     "“Solo muestreo lo de baja confianza”",
+     "Eso ya se revisa; los errores nuevos están en lo automatizado"
+    ],
+    [
+     "“Un 0.90 vale igual en todos los campos”",
+     "Se calibra por campo y tipo de documento"
+    ],
+    [
+     "“Los revisores atienden la cola en orden de llegada”",
+     "Primero lo más incierto"
+    ]
+   ]
+  },
+  "5.6": {
+   "clave": "5.6",
+   "titulo": "Procedencia y síntesis de varias fuentes",
+   "idea": "cada afirmación debe viajar con su fuente (URL, documento, extracto y fecha) desde el subagente hasta el reporte final; si dos fuentes no coinciden, se muestran ambas con su fecha en vez de elegir una; y cada tipo de contenido va en el formato que le corresponde.",
+   "explicacion": [
+    "Provenance: saber de dónde viene cada afirmación y cuánto confiar en ella. Sin eso, el sistema produce afirmaciones plausibles que nadie puede rastrear.",
+    "Claim-source mapping: 5 campos obligatorios: { \"claim\": \"El proveedor A subió 12% sus precios\", \"sourceUrl\": \"https://…/reporte-2025\", \"documentName\": \"Reporte anual de precios\", \"excerpt\": \"los precios aumentaron 12%…\", \"publicationDate\": \"2025-11-04\" } Para que sobreviva: (1) los subagentes devuelven este formato, no prosa; (2) la síntesis tiene la instrucción de conservar cada mapeo; (3) el reporte final lleva citas o sección de referencias. Donde más se pierde es en la síntesis, que comprime y parafrasea: “los precios subieron mucho” ya no dice ni cuánto ni quién. Distingue lo bien respaldado (3 fuentes) de lo que viene de un solo reporte. Conecta con 1.3 (metadata).",
+    "Fuentes en conflicto: anotar, no elegir. Fuente A (datos 2023) dice 8%; fuente B (datos 2024) dice 12%. Con fechas, no es contradicción: es una aceleración.",
+    "Mal: elegir la más reciente, promediar (10%) o elegir la más “autorizada”.",
+    "Bien: mostrar ambos valores con fuente, fecha y metodología, y que el lector decida.",
+    "Las fechas son obligatorias en todo output estructurado: sin ellas, una tendencia parece un error de datos. Los agentes de análisis también anotan conflictos en vez de resolverlos; el coordinator decide si presenta ambos, investiga más o escala.",
+    "Cada tipo de contenido, su formato:",
+    {
+     "tabla": [
+      [
+       "Formato",
+       "Para",
+       "Ejemplo"
+      ],
+      [
+       "Tablas",
+       "Datos financieros: números, comparaciones, tendencias",
+       "Precios por año de cada proveedor"
+      ],
+      [
+       "Prosa",
+       "Noticias y eventos: causa, efecto y cronología",
+       "Un proveedor cambió de dueño"
+      ],
+      [
+       "Listas",
+       "Hallazgos técnicos: arquitectura, APIs, configuración",
+       "Requisitos de integración"
+      ]
+     ]
+    },
+    "Trampa: un solo formato para todo el reporte; empeora la lectura."
+   ],
+   "analogia": [
+    "Un trabajo escolar con bibliografía. “Leí que los precios subieron mucho” no sirve; “el reporte anual de noviembre de 2025 dice 12% (p. 4)” sí. Y si dos libros dan cifras distintas, un buen trabajo dice “A reporta 8% para 2023 y B 12% para 2024”, en vez de inventar un 10%."
+   ],
+   "tiendita": [
+    "En la demo 5.6 del lab hay 4 fuentes sobre el tiempo de entrega: SRC-A (estudio interno, octubre 2026, 1,200 pedidos → 3.2 días), SRC-B (encuesta de febrero 2025, 80 respuestas → 6 días), SRC-C (paquetería, septiembre 2026, solo zona centro → 2.8 días) y SRC-D (blog sin fecha → menos de 2 días). libre: respuesta en prosa para la página de preguntas frecuentes; suele dar un número único (“unos 3 días”) sin decir de dónde sale. con_procedencia: afirmaciones con fuente, fecha y alcance, conflictos con explicación posible y conclusión. El lector ve por qué difieren: fechas, muestras y zonas distintas.",
+    "Experimento: quita del system prompt “no elijas una en silencio” y compara."
+   ],
+   "examen": [
+    "El reporte final no puede citar fuentes → claim-source mapping desde los subagentes y conservarlo en la síntesis.",
+    "Dos fuentes con valores distintos → anotar ambas con fecha y metodología.",
+    "Dónde se pierde la atribución → en la síntesis.",
+    "Formato del reporte → tablas para números, prosa para eventos, listas para hallazgos técnicos."
+   ],
+   "explicar": [
+    "Guion: “Cada dato viaja con su pasaporte: de dónde viene y de cuándo es. Si dos datos no coinciden, se muestran los dos con su pasaporte.”",
+    "Pregunta para lanzar: Una fuente de 2023 dice 8% y otra de 2024 dice 12%. ¿Qué pones en el reporte? Respuesta: ambos valores con su fecha; probablemente es una tendencia, no un error."
+   ],
+   "autoevaluacion": [
+    "1. ¿Cuáles son los 5 campos del claim-source mapping? — claim, sourceUrl, documentName, excerpt, publicationDate.",
+    "2. ¿En qué paso del pipeline se pierde más la atribución? — En la síntesis.",
+    "3. ¿Qué formato usas para comparar precios por año? — Una tabla."
+   ],
+   "confusiones": [
+    [
+     "“Si dos fuentes no coinciden, uso la más reciente”",
+     "Se muestran ambas con fecha; el lector decide"
+    ],
+    [
+     "“Promediar los valores es neutral”",
+     "Inventa un dato que ninguna fuente dice"
+    ],
+    [
+     "“Los subagentes pueden devolver prosa con las fuentes al final”",
+     "Deben devolver el mapeo afirmación-fuente estructurado"
+    ],
+    [
+     "“Un formato uniforme se ve más profesional”",
+     "Cada tipo de contenido tiene su formato"
+    ]
+   ]
+  }
+ },
+ "repaso": {
+  "1": [
+   [
+    "El agente se detiene a medias",
+    "Revisar stop_reason",
+    "1.1"
+   ],
+   [
+    "Falta un tema en el reporte",
+    "Descomposición del coordinator",
+    "1.2"
+   ],
+   [
+    "Reporte sin fuentes",
+    "Metadatos estructurados (afirmación + fuente)",
+    "1.3"
+   ],
+   [
+    "Subagentes independientes y lentos",
+    "Paralelo: varias Task en una respuesta",
+    "1.3"
+   ],
+   [
+    "Dinero, seguridad o compliance",
+    "Prerequisite gate / PreToolUse",
+    "1.4,1.5"
+   ],
+   [
+    "Formatos de datos mezclados",
+    "PostToolUse",
+    "1.5"
+   ],
+   [
+    "Últimos archivos mal revisados",
+    "Multi-pass",
+    "1.6"
+   ],
+   [
+    "Archivos cambiaron tras la sesión",
+    "Cambió mucho: nueva sesión + resumen. Cambió poco: --resume y avisar qué cambió",
+    "1.7"
+   ]
+  ],
+  "2": [
+   [
+    "Claude elige la tool equivocada",
+    "Mejorar descripciones (con boundaries)",
+    "2.1"
+   ],
+   [
+    "Reintenta una búsqueda sin resultados",
+    "Separar falla de acceso de vacío válido",
+    "2.2"
+   ],
+   [
+    "Error de regla de negocio",
+    "isRetryable: false → explicar al cliente, otro camino o escalar (nunca reintentar)",
+    "2.2"
+   ],
+   [
+    "Un agente con 18 tools",
+    "Repartir por rol (4–5 cada uno)",
+    "2.3"
+   ],
+   [
+    "Muchas vueltas por algo simple",
+    "Scoped cross-role tool",
+    "2.3"
+   ],
+   [
+    "Se exige salida estructurada",
+    "tool_choice: any o forced",
+    "2.3"
+   ],
+   [
+    "MCP para todo el equipo",
+    ".mcp.json + ${TOKEN}",
+    "2.4"
+   ],
+   [
+    "¿Quién llama esta función?",
+    "Grep (no Glob)",
+    "2.5"
+   ]
+  ],
+  "3": [
+   [
+    "El dev nuevo no recibe las convenciones",
+    "Estaban en ~/.claude/ → moverlas al proyecto",
+    "3.1"
+   ],
+   [
+    "Algo DEBE cumplirse siempre",
+    "settings.json o hook, no CLAUDE.md",
+    "3.1"
+   ],
+   [
+    "Un skill con output muy largo",
+    "context: fork",
+    "3.2"
+   ],
+   [
+    "Tests repartidos en 50+ carpetas",
+    ".claude/rules/ con paths",
+    "3.3"
+   ],
+   [
+    "Varios diseños válidos",
+    "Plan mode",
+    "3.4"
+   ],
+   [
+    "Bug claro en un archivo",
+    "Directo (direct execution)",
+    "3.4"
+   ],
+   [
+    "Prosa interpretada distinto cada vez",
+    "2–3 ejemplos de entrada/salida",
+    "3.5"
+   ],
+   [
+    "El job de CI se queda esperando",
+    "claude -p",
+    "3.6"
+   ],
+   [
+    "Check pre-merge",
+    "En tiempo real, no Batch",
+    "3.6"
+   ]
+  ],
+  "4": [
+   [
+    "“Sé conservador” en el prompt",
+    "Criterios: qué reportar y qué ignorar",
+    "4.1"
+   ],
+   [
+    "Una categoría con muchos falsos positivos",
+    "Desactivarla y refinarla",
+    "4.1"
+   ],
+   [
+    "Formato inconsistente",
+    "2–4 ejemplos few-shot",
+    "4.2"
+   ],
+   [
+    "JSON roto",
+    "tool_use con schema",
+    "4.3"
+   ],
+   [
+    "Inventa datos que faltan",
+    "Campos nullable",
+    "4.3"
+   ],
+   [
+    "La suma no cuadra",
+    "Reintentar con el error específico",
+    "4.4"
+   ],
+   [
+    "El dato no está en el documento",
+    "Revisión humana, no reintentar",
+    "4.4"
+   ],
+   [
+    "Reporte nocturno",
+    "Batch API",
+    "4.5"
+   ],
+   [
+    "SLA de 30 h con la Batch API",
+    "Lotes al menos cada 6 h (30 − 24 de espera máxima del lote); con margen, cada 4 h",
+    "4.5"
+   ],
+   [
+    "PR enorme con revisión dispareja",
+    "Por archivo + integración",
+    "4.6"
+   ]
+  ],
+  "5": [
+   [
+    "Montos y fechas perdidos al resumir",
+    "Case facts block fuera del historial",
+    "5.1"
+   ],
+   [
+    "Hallazgos ignorados a la mitad",
+    "Resumen arriba + encabezados",
+    "5.1"
+   ],
+   [
+    "Tool output de 40 campos",
+    "Recortar antes de que entre",
+    "5.1"
+   ],
+   [
+    "El cliente pide un humano",
+    "Escalar de inmediato",
+    "5.2"
+   ],
+   [
+    "Cliente molesto, caso simple",
+    "Reconocer y resolver",
+    "5.2"
+   ],
+   [
+    "Tres “Juan Pérez”",
+    "Pedir más identificadores",
+    "5.2"
+   ],
+   [
+    "Subagente con timeout",
+    "Error estructurado, nunca vacío",
+    "5.3"
+   ],
+   [
+    "“Patrones típicos” en vez de clases",
+    "Scratchpad",
+    "5.4"
+   ],
+   [
+    "97% de precisión global",
+    "Validar por segmento y calibrar",
+    "5.5"
+   ],
+   [
+    "Dos fuentes no coinciden",
+    "Anotar ambas, con fecha",
+    "5.6"
+   ]
+  ]
+ },
+ "glosario": {
+  "1": [
+   [
+    "Agentic loop",
+    "Ciclo: llamar a Claude → ejecutar las tools que pidió → devolver resultados → repetir hasta que termine",
+    "1.1"
+   ],
+   [
+    "stop_reason",
+    "Campo de la respuesta que dice por qué paró Claude: tool_use (quiere una tool) o end_turn (terminó)",
+    "1.1"
+   ],
+   [
+    "tool_use / tool_result",
+    "El bloque con que Claude pide una tool / el bloque con que tú le devuelves el resultado",
+    "1.1"
+   ],
+   [
+    "Messages API",
+    "Llamar a Claude directamente; tú escribes el loop",
+    "Puente"
+   ],
+   [
+    "Agent SDK",
+    "Librería que corre el loop por ti, con tools built-in, subagentes, hooks y sesiones",
+    "Puente"
+   ],
+   [
+    "Built-in tools",
+    "Tools que ya trae el SDK: Read, Glob, Grep, Write, Edit, Bash, WebSearch, WebFetch",
+    "Puente,1.3"
+   ],
+   [
+    "Custom tool",
+    "Tool que defines tú (@tool + create_sdk_mcp_server); se llama mcp__<servidor>__<tool>",
+    "1.3"
+   ],
+   [
+    "MCP",
+    "Estándar para conectar tools externas al agente",
+    "Puente"
+   ],
+   [
+    "Coordinator",
+    "Agente central que divide el trabajo, delega y sintetiza",
+    "1.2"
+   ],
+   [
+    "Subagent",
+    "Agente especializado que recibe un encargo y devuelve un resultado",
+    "1.2"
+   ],
+   [
+    "Hub-and-spoke",
+    "Toda la comunicación pasa por el coordinator; los subagentes no se hablan",
+    "1.2"
+   ],
+   [
+    "Isolation",
+    "El subagente solo ve su prompt: nada del historial ni de otros subagentes",
+    "1.2"
+   ],
+   [
+    "Task (hoy Agent)",
+    "Tool con la que el coordinator lanza subagentes; debe estar en allowed_tools",
+    "1.3"
+   ],
+   [
+    "AgentDefinition",
+    "Definición de un subagente: description, prompt, tools",
+    "1.3"
+   ],
+   [
+    "Context passing",
+    "Escribir en el prompt del subagente todo lo que necesita, con metadata y como meta",
+    "1.3"
+   ],
+   [
+    "Programmatic enforcement / gate",
+    "Chequeo en código que bloquea una tool si no se cumple una condición",
+    "1.4"
+   ],
+   [
+    "Structured handoff",
+    "Resumen autocontenido para el humano que recibe un caso escalado",
+    "1.4"
+   ],
+   [
+    "Multi-concern request",
+    "Un mensaje con varios temas: descomponer, paralelo, una respuesta",
+    "1.4"
+   ],
+   [
+    "Hook",
+    "Función tuya que el SDK ejecuta alrededor de cada tool",
+    "1.5"
+   ],
+   [
+    "PreToolUse",
+    "Hook antes de la tool: puede negarla o cambiar sus argumentos",
+    "1.5"
+   ],
+   [
+    "PostToolUse",
+    "Hook después de la tool: puede transformar el resultado",
+    "1.5"
+   ],
+   [
+    "HookMatcher",
+    "Dice a qué tool aplica un hook (matcher)",
+    "1.5"
+   ],
+   [
+    "Prompt chaining",
+    "Pasos fijos, cada uno en su propia llamada",
+    "1.6"
+   ],
+   [
+    "Dynamic decomposition",
+    "El plan se ajusta según lo que se va encontrando",
+    "1.6"
+   ],
+   [
+    "Attention dilution",
+    "Demasiados elementos en un pase: los últimos se revisan por encima",
+    "1.6"
+   ],
+   [
+    "Multi-pass review",
+    "Una pasada por elemento + una pasada de integración",
+    "1.6"
+   ],
+   [
+    "resume",
+    "Continuar una sesión con todo su historial",
+    "1.7"
+   ],
+   [
+    "fork_session",
+    "Copiar el historial a una sesión nueva para probar otro enfoque",
+    "1.7"
+   ],
+   [
+    "Stale context",
+    "Datos viejos en el historial que ya no son ciertos",
+    "1.7"
+   ]
+  ],
+  "2": [
+   [
+    "name / description / input_schema",
+    "Lo único que Claude lee para elegir y llamar una tool",
+    "2.1"
+   ],
+   [
+    "Misrouting",
+    "Claude elige la tool equivocada porque dos descripciones se parecen",
+    "2.1"
+   ],
+   [
+    "Boundary",
+    "Parte de la descripción que dice cuándo NO usar la tool y cuál usar en su lugar",
+    "2.1"
+   ],
+   [
+    "Tool splitting",
+    "Dividir una tool genérica en varias con un solo trabajo",
+    "2.1"
+   ],
+   [
+    "Renaming",
+    "Cambiar nombres vagos por nombres claros, con descripción nueva",
+    "2.1"
+   ],
+   [
+    "Protocol error",
+    "Error JSON-RPC por una petición mal formada; Claude no ve resultado",
+    "2.2"
+   ],
+   [
+    "Tool execution error",
+    "La tool corrió y falló; se devuelve con isError: true",
+    "2.2"
+   ],
+   [
+    "errorCategory",
+    "transient, validation, business o permission",
+    "2.2"
+   ],
+   [
+    "isRetryable",
+    "¿Repetir exactamente la misma llamada funcionaría?",
+    "2.2"
+   ],
+   [
+    "Valid empty result",
+    "La consulta funcionó y devolvió 0 resultados; no es error",
+    "2.2"
+   ],
+   [
+    "Tool overload",
+    "Demasiadas tools por agente: peor selección y más tokens",
+    "2.3"
+   ],
+   [
+    "Consolidar",
+    "Juntar muchas tools de la misma forma en una con parámetro",
+    "2.3"
+   ],
+   [
+    "Restringir (constrain)",
+    "Hacer una tool más angosta para limitar qué puede alcanzar",
+    "2.3"
+   ],
+   [
+    "Scoped cross-role tool",
+    "Tool acotada que un rol recibe de otro para casos simples (verify_fact)",
+    "2.3"
+   ],
+   [
+    "tool_choice",
+    "auto (decide), any (alguna tool), forced (esa tool)",
+    "2.3"
+   ],
+   [
+    "MCP",
+    "Estándar para conectar tools y datos externos a un agente",
+    "2.4"
+   ],
+   [
+    "Resource",
+    "Datos que un servidor MCP expone para leer (catálogo, schema)",
+    "2.4"
+   ],
+   [
+    ".mcp.json",
+    "Configuración MCP del proyecto, en git, para todo el equipo",
+    "2.4"
+   ],
+   [
+    "~/.claude.json",
+    "Configuración MCP personal, no se comparte",
+    "2.4"
+   ],
+   [
+    "${VARIABLE}",
+    "Expansión de variables de entorno para no poner secretos en .mcp.json",
+    "2.4"
+   ],
+   [
+    "Community server",
+    "Servidor MCP mantenido por terceros para integraciones estándar",
+    "2.4"
+   ],
+   [
+    "Grep",
+    "Busca texto dentro de los archivos",
+    "2.5"
+   ],
+   [
+    "Glob",
+    "Busca archivos por nombre o ruta",
+    "2.5"
+   ],
+   [
+    "Edit / anchor",
+    "Reemplazo de texto exacto; el old_string debe ser único",
+    "2.5"
+   ],
+   [
+    "Incremental discovery",
+    "Explorar con Grep → Read → seguir imports, sin leer todo",
+    "2.5"
+   ],
+   [
+    "Barrel / re-export",
+    "Archivo que exporta una función con otro nombre y esconde lugares que la llaman",
+    "2.5"
+   ]
+  ],
+  "3": [
+   [
+    "CLAUDE.md",
+    "Instrucciones que Claude Code lee al iniciar; existe en varios niveles",
+    "3.1"
+   ],
+   [
+    "CLAUDE.local.md",
+    "Notas personales de un repo; va en .gitignore",
+    "3.1"
+   ],
+   [
+    "@ruta",
+    "Import: inserta otro archivo en un CLAUDE.md",
+    "3.1"
+   ],
+   [
+    "settings.json",
+    "Configuración que el cliente aplica siempre; sí tiene precedencia",
+    "3.1"
+   ],
+   [
+    "/memory / /context",
+    "Ver archivos de memoria / ver qué se cargó",
+    "3.1"
+   ],
+   [
+    "/compact",
+    "Resume la conversación para liberar contexto",
+    "3.1"
+   ],
+   [
+    "Skill",
+    "Flujo reusable en .claude/skills/<nombre>/SKILL.md, cargado bajo demanda",
+    "3.2"
+   ],
+   [
+    "Slash command",
+    "Lo que escribes para invocar un skill o command (/review)",
+    "3.2"
+   ],
+   [
+    "$ARGUMENTS",
+    "Se reemplaza por lo que escribes después del comando",
+    "3.2"
+   ],
+   [
+    "context: fork",
+    "El skill corre en un subagente aislado",
+    "3.2"
+   ],
+   [
+    "allowed-tools",
+    "Tools del skill (examen: las restringe)",
+    "3.2"
+   ],
+   [
+    "Rule con paths",
+    "Archivo en .claude/rules/ que se carga solo con archivos que coinciden",
+    "3.3"
+   ],
+   [
+    "Glob (**)",
+    "Patrón de rutas; ** = cualquier nivel de carpetas",
+    "3.3"
+   ],
+   [
+    "Plan mode",
+    "Analiza y propone sin modificar archivos",
+    "3.4"
+   ],
+   [
+    "Direct execution",
+    "Hace los cambios de inmediato",
+    "3.4"
+   ],
+   [
+    "Explore",
+    "Subagente que hace el descubrimiento que genera mucho texto y regresa un resumen",
+    "3.4"
+   ],
+   [
+    "Interview pattern",
+    "Pedirle a Claude que pregunte requisitos antes de implementar",
+    "3.5"
+   ],
+   [
+    "Test-driven iteration",
+    "Tests primero y compartir cada falla",
+    "3.5"
+   ],
+   [
+    "Batch / sequential feedback",
+    "Cambios que interactúan juntos / independientes uno a uno",
+    "3.5"
+   ],
+   [
+    "-p (--print)",
+    "Modo no interactivo: procesa, imprime y termina",
+    "3.6"
+   ],
+   [
+    "--output-format json / --json-schema",
+    "Salida JSON / salida validada por un schema (en structured_output)",
+    "3.6"
+   ],
+   [
+    "--append-system-prompt",
+    "Agrega reglas sin quitar las de default",
+    "3.6"
+   ],
+   [
+    "Message Batches API",
+    "50% más barata, hasta 24 h, sin SLA",
+    "3.6"
+   ]
+  ],
+  "4": [
+   [
+    "Criterio explícito",
+    "Disparador concreto + qué reportar + qué ignorar",
+    "4.1"
+   ],
+   [
+    "Falso positivo",
+    "Hallazgo equivocado",
+    "4.1"
+   ],
+   [
+    "Severidad con ejemplos",
+    "Un ejemplo de código por nivel de severidad",
+    "4.1"
+   ],
+   [
+    "Few-shot",
+    "Ejemplos resueltos (input, output, razonamiento) en el prompt",
+    "4.2"
+   ],
+   [
+    "Structured output",
+    "Respuesta con forma fija definida por un JSON schema",
+    "4.3"
+   ],
+   [
+    "tool_use + schema",
+    "Claude llama una tool y sus argumentos llenan el schema",
+    "4.3"
+   ],
+   [
+    "Nullable",
+    "Campo que acepta null para no obligar a inventar",
+    "4.3"
+   ],
+   [
+    "“unclear” / “other”",
+    "Opciones del enum para fuentes ambiguas o categorías nuevas",
+    "4.3"
+   ],
+   [
+    "Validation-retry loop",
+    "Validar y reintentar con documento + extracción + error específico",
+    "4.4"
+   ],
+   [
+    "calculated vs. stated",
+    "Campo calculado junto al declarado para detectar discrepancias",
+    "4.4"
+   ],
+   [
+    "conflict_detected",
+    "Marca que el documento se contradice; se extraen ambos valores",
+    "4.4"
+   ],
+   [
+    "detected_pattern",
+    "Qué patrón disparó un hallazgo, para refinar prompts",
+    "4.4"
+   ],
+   [
+    "Message Batches API",
+    "50% más barata, hasta 24 h, sin SLA",
+    "4.5"
+   ],
+   [
+    "custom_id",
+    "Empareja cada resultado del batch con su request",
+    "4.5"
+   ],
+   [
+    "errored / expired",
+    "Requests del batch que hay que reenviar",
+    "4.5"
+   ],
+   [
+    "Self-review",
+    "Revisar en la misma sesión que generó",
+    "4.6"
+   ],
+   [
+    "Instancia independiente",
+    "Revisión en una llamada nueva, sin el razonamiento previo",
+    "4.6"
+   ],
+   [
+    "Pasada de integración",
+    "Revisa lo que cruza archivos después de las pasadas por archivo",
+    "4.6"
+   ],
+   [
+    "Confidence routing",
+    "Mandar hallazgos por confianza (alta → dev, baja → humano)",
+    "4.6"
+   ],
+   [
+    "Calibración",
+    "Fijar umbrales midiendo la confianza contra sets etiquetados",
+    "4.6"
+   ]
+  ],
+  "5": [
+   [
+    "Context window",
+    "Todo lo que Claude lee en un request",
+    "5.1"
+   ],
+   [
+    "Stateless",
+    "La API no recuerda: el historial va completo en cada request",
+    "5.1"
+   ],
+   [
+    "Resumen progresivo",
+    "Resumir la conversación para ahorrar tokens; pierde lo específico",
+    "5.1"
+   ],
+   [
+    "Case facts block",
+    "Bloque con los datos del caso que va en cada request y nunca se resume",
+    "5.1"
+   ],
+   [
+    "Lost in the middle",
+    "La mitad de un input largo se lee peor que el inicio y el final",
+    "5.1"
+   ],
+   [
+    "Prompt caching",
+    "Abarata prefijos que no cambian; no cambia lo que el modelo ve",
+    "5.1"
+   ],
+   [
+    "First-contact resolution",
+    "Casos resueltos sin pasar a un humano",
+    "5.2"
+   ],
+   [
+    "Hueco de política",
+    "La política no dice nada del caso: se escala",
+    "5.2"
+   ],
+   [
+    "Coverage annotation",
+    "Nota del reporte sobre qué quedó limitado y por qué",
+    "5.3"
+   ],
+   [
+    "Supresión silenciosa",
+    "Devolver vacío como éxito cuando algo falló",
+    "5.3"
+   ],
+   [
+    "Context degradation",
+    "El modelo deja de usar hallazgos específicos previos",
+    "5.4"
+   ],
+   [
+    "Scratchpad",
+    "Archivo donde el agente guarda hallazgos y los relee",
+    "5.4"
+   ],
+   [
+    "State manifest",
+    "Archivo con fase, rutas, hallazgos y siguientes pasos para retomar",
+    "5.4"
+   ],
+   [
+    "Confidence score",
+    "Estimación del modelo de que un campo es correcto",
+    "5.5"
+   ],
+   [
+    "Calibración",
+    "Comparar la confianza contra respuestas conocidas",
+    "5.5"
+   ],
+   [
+    "Stratified sampling",
+    "Muestrear al azar de cada tipo, banda de confianza y campo",
+    "5.5"
+   ],
+   [
+    "Ground truth",
+    "Set etiquetado con las respuestas correctas",
+    "5.5"
+   ],
+   [
+    "Provenance",
+    "De dónde viene cada afirmación y cuánto confiar en ella",
+    "5.6"
+   ],
+   [
+    "Claim-source mapping",
+    "Afirmación + URL + documento + extracto + fecha",
+    "5.6"
+   ]
+  ]
+ },
+ "paginas": {
+  "guia_estudio": {
+   "1.1": 3,
+   "1.2": 7,
+   "1.3": 10,
+   "1.4": 12,
+   "1.5": 15,
+   "1.6": 18,
+   "1.7": 21,
+   "2.1": 3,
+   "2.2": 6,
+   "2.3": 10,
+   "2.4": 13,
+   "2.5": 17,
+   "3.1": 2,
+   "3.2": 6,
+   "3.3": 10,
+   "3.4": 12,
+   "3.5": 15,
+   "3.6": 19,
+   "4.1": 3,
+   "4.2": 6,
+   "4.3": 8,
+   "4.4": 12,
+   "4.5": 15,
+   "4.6": 17,
+   "5.1": 2,
+   "5.2": 5,
+   "5.3": 9,
+   "5.4": 12,
+   "5.5": 15,
+   "5.6": 17
+  },
+  "slides": {
+   "1.1": 4,
+   "1.2": 18,
+   "1.3": 24,
+   "1.4": 31,
+   "1.5": 38,
+   "1.6": 44,
+   "1.7": 50,
+   "2.1": 4,
+   "2.2": 12,
+   "2.3": 19,
+   "2.4": 26,
+   "2.5": 33,
+   "3.1": 4,
+   "3.2": 12,
+   "3.3": 18,
+   "3.4": 23,
+   "3.5": 29,
+   "3.6": 36,
+   "4.1": 4,
+   "4.2": 10,
+   "4.3": 16,
+   "4.4": 22,
+   "4.5": 27,
+   "4.6": 32,
+   "5.1": 4,
+   "5.2": 10,
+   "5.3": 15,
+   "5.4": 19,
+   "5.5": 24,
+   "5.6": 29
+  }
+ }
+}

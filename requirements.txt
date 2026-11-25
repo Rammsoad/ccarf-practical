@@ -1,0 +1,6 @@
+# Versiones probadas con los labs (nov 2026). El tope evita que una versión nueva con cambios rompa las demos.
+anthropic>=2.8,<3
+claude-agent-sdk>=0.2.170,<0.3
+mcp>=2.3,<3
+rich>=13,<16
+python-dotenv>=1.0,<2

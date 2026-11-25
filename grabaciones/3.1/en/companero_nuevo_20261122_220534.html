@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+.r1 {color: #727272; text-decoration-color: #727272}
+.r2 {color: #326e7b; text-decoration-color: #326e7b; font-weight: bold}
+.r3 {color: #9d65ff; text-decoration-color: #9d65ff}
+.r4 {color: #c4c5b5; text-decoration-color: #c4c5b5; background-color: #000087; font-weight: bold}
+.r5 {color: #527618; text-decoration-color: #527618}
+.r6 {color: #fd971f; text-decoration-color: #fd971f}
+.r7 {color: #98e024; text-decoration-color: #98e024; font-weight: bold}
+.r8 {font-style: italic}
+.r9 {color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822}
+.r10 {background-color: #272822}
+.r11 {color: #66d9ef; text-decoration-color: #66d9ef; background-color: #272822}
+.r12 {color: #f4005f; text-decoration-color: #f4005f; font-weight: bold}
+.r13 {color: #727272; text-decoration-color: #727272; font-weight: bold}
+.r14 {color: #845115; text-decoration-color: #845115}
+.r15 {color: #767036; text-decoration-color: #767036}
+.r16 {color: #800635; text-decoration-color: #800635}
+.r17 {color: #98e024; text-decoration-color: #98e024}
+.r18 {font-weight: bold}
+.r19 {color: #9d65ff; text-decoration-color: #9d65ff; font-weight: bold}
+.r20 {color: #58d1eb; text-decoration-color: #58d1eb}
+.r21 {color: #58d1eb; text-decoration-color: #58d1eb; font-weight: bold}
+body {
+    color: #d9d9d9;
+    background-color: #0c0c0c;
+}
+</style>
+<style>@font-face{font-family:'Atkinson Hyperlegible Next';font-style:italic;font-weight:400;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-italic-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:italic;font-weight:400;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-italic-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-normal-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-normal-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}@font-face{font-family:'Recursive';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/recursive-normal-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Recursive';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/recursive-normal-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+body{max-width:1100px;margin:0 auto !important;padding:8px 24px 48px;font-family:'Atkinson Hyperlegible Next',Inter,system-ui,sans-serif !important}
+pre,code{font-family:'Recursive',Menlo,'DejaVu Sans Mono',monospace !important}
+.diagrama svg{max-width:100%;height:auto}
+.diagrama{max-width:100% !important;box-sizing:border-box;overflow-x:auto}
+pre{font-size:14px !important;line-height:1.5 !important}
+abbr.termino{text-decoration:underline dotted #8ab4f8;text-underline-offset:3px;cursor:help}
+</style></head>
+<body><div style="font-family:'Atkinson Hyperlegible Next',Inter,'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;color:#e8e8e8;background:#1b1c18;line-height:1.5;border:1px solid #444;border-radius:10px;padding:14px 20px;margin:14px 0;max-width:1000px"><div style="font-size:19px;font-weight:600">Domain 3 · demo 3.1 · 23/11/2026 12:56:03</div><div style="font-size:15px;color:#e6e6e6;margin:6px 0">📝 Recording «❌ New teammate». Result: Loaded: CLAUDE.md, docs/estilo.md, src/api/CLAUDE.md</div><div style="font-size:14px;color:#bbb;margin:0 0 6px">💲 2 API calls · 731 tokens (4 input + 727 output + 10,799 from cache) · ≈ $0.0009 USD</div><div style="font-size:14px;color:#bbb;margin:8px 0 6px">Variables of this run (<a style="color:#58a6ff" href="/archivos/salidas_html/dominio3/index.html">browse all runs</a>)</div><table style="font-size:14px;border-collapse:collapse"><tr><td style="padding:3px 16px 3px 0;color:#bbb">MODELO</td><td>&quot;claude-haiku-5-5&quot;</td></tr><tr><td style="padding:3px 16px 3px 0;color:#bbb">D31_USAR_IMPORT</td><td>true</td></tr><tr><td style="padding:3px 16px 3px 0;color:#bbb">D31_SIMULAR_COMPANERO</td><td>true</td></tr><tr><td style="padding:3px 16px 3px 0;color:#bbb">D31_PREGUNTA</td><td>&quot;Antes de hacer nada: ¿qué reglas de este proyecto conoces? Luego lee src/api/reembolsos.…</td></tr></table></div>
+    <pre style="font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><code style="font-family:inherit">🎛  Panel settings for this run: D31_SIMULAR_COMPANERO = true
+<span class="r1">   Model: claude-haiku-</span><span class="r2">5</span><span class="r1">-</span><span class="r2">5</span>
+<span class="r1">   HTML mode: on → salidas_html/dominio3/</span>
+
+<span class="r3">──────────────────── </span><span class="r4"> DEMO </span><span class="r4">3.1</span><span class="r4"> · CLAUDE.md hierarchy: where does each instruction live? </span><span class="r3"> ─────────────────────</span>
+
+<span class="r1">📖 This demo&#x27;s guide: python lab_dominio3.py guia </span><span class="r2">3.1</span><span class="r1">  ·  more detail: set DETALLE = </span><span class="r5">&quot;completo&quot;</span><span class="r1"> at the top of </span>
+<span class="r1">the file</span>
+<span class="r6">╭───────────────────────────────────────────── 💡 Exam concept ──────────────────────────────────────────────╮</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">│</span>  Claude Code gathers instructions from several files:                                                      <span class="r6">│</span>
+<span class="r6">│</span>    • ~/.claude/CLAUDE.md → personal, on YOUR machine (doesn&#x27;t go into git; your team doesn&#x27;t see it).      <span class="r6">│</span>
+<span class="r6">│</span>    • CLAUDE.md at the repo root → the team&#x27;s, goes into git.                                               <span class="r6">│</span>
+<span class="r6">│</span>    • CLAUDE.local.md → personal for this repo (goes in .gitignore).                                        <span class="r6">│</span>
+<span class="r6">│</span>    • CLAUDE.md in subfolders → loads ONLY when Claude works with files in that folder.                     <span class="r6">│</span>
+<span class="r6">│</span>    • @path/file.md inside a CLAUDE.md → imports another file (modular).                                    <span class="r6">│</span>
+<span class="r6">│</span>  Classic question: &#x27;a new teammate doesn&#x27;t get the instructions&#x27; → they were in a personal file.           <span class="r6">│</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r7">   ✔ Test project: </span>
+<span class="r7">$TMP/ccarf_corrida_rt1261o7/tiendita_proyecto_5_ncgbbq</span>
+<span class="r8">  Archivos del proyecto  </span>
+┌───────────────────────┐
+│ CLAUDE.local.md       │
+│ CLAUDE.md             │
+│ docs/estilo.md        │
+│ src/api/CLAUDE.md     │
+│ src/api/reembolsos.ts │
+│ src/carrito/total.ts  │
+└───────────────────────┘
+<span class="r3">╭──────────────────────────────────────────────── CLAUDE.md ─────────────────────────────────────────────────╮</span>
+<span class="r3">│</span> <span class="r9"># Proyecto La Tiendita</span><span class="r10">                                                                                    </span> <span class="r3">│</span>
+<span class="r3">│</span> <span class="r11">-</span><span class="r9"> Responde siempre en español neutro.</span><span class="r10">                                                                     </span> <span class="r3">│</span>
+<span class="r3">│</span> <span class="r11">-</span><span class="r9"> Estilo de código y montos: ver @docs/estilo.md</span><span class="r10">                                                          </span> <span class="r3">│</span>
+<span class="r3">│</span> <span class="r10">                                                                                                          </span> <span class="r3">│</span>
+<span class="r3">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r3">╭────────────────────────────────────────────── docs/estilo.md ──────────────────────────────────────────────╮</span>
+<span class="r3">│</span> <span class="r11">-</span><span class="r9"> Los montos van en MXN con dos decimales (p. ej. $1,850.00).</span><span class="r10">                                             </span> <span class="r3">│</span>
+<span class="r3">│</span> <span class="r11">-</span><span class="r9"> Nombres de funciones en inglés.</span><span class="r10">                                                                         </span> <span class="r3">│</span>
+<span class="r3">│</span> <span class="r10">                                                                                                          </span> <span class="r3">│</span>
+<span class="r3">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r3">╭───────────────────────────────────────────── CLAUDE.local.md ──────────────────────────────────────────────╮</span>
+<span class="r3">│</span> <span class="r11">-</span><span class="r9"> (Personal de Rafa) Prefiero respuestas en viñetas cortas.</span><span class="r10">                                               </span> <span class="r3">│</span>
+<span class="r3">│</span> <span class="r10">                                                                                                          </span> <span class="r3">│</span>
+<span class="r3">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r3">╭──────────────────────────────────────────── src/api/CLAUDE.md ─────────────────────────────────────────────╮</span>
+<span class="r3">│</span> <span class="r11">-</span><span class="r9"> Toda respuesta de la API tiene la forma {ok, data, error}.</span><span class="r10">                                              </span> <span class="r3">│</span>
+<span class="r3">│</span> <span class="r10">                                                                                                          </span> <span class="r3">│</span>
+<span class="r3">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r12">   ✘ Simulating a new teammate: </span><span class="r12">setting_sources</span><span class="r12">=[</span><span class="r12">&#x27;project&#x27;</span><span class="r12">] → doesn&#x27;t see CLAUDE.local.md.</span>
+<span class="r1">   setting_sources = </span><span class="r13">[</span><span class="r5">&#x27;project&#x27;</span><span class="r13">]</span><span class="r1">   ·   tools = </span><span class="r13">[</span><span class="r5">&#x27;Read&#x27;</span><span class="r13">]</span>
+
+<span class="r12">→ Agent SDK (Claude Code in the project)</span> prompt: Antes de hacer nada: ¿qué reglas de este proyecto conoces? 
+Luego lee src/api/reembolsos.ts y dime qué regla adicional aplica a ese archivo.
+<span class="r1">   session started · </span><span class="r14">session_id</span><span class="r1">=</span><span class="r15">e7962e6a</span><span class="r15">-3268-44f3-b6f6-ce9d071044c7</span><span class="r1"> · </span><span class="r14">model</span><span class="r1">=</span><span class="r16">claude</span><span class="r1">-haiku-</span><span class="r2">5</span><span class="r1">-</span><span class="r2">5</span>
+<span class="r1">   available tools: Read</span>
+<span class="r1">   </span><span class="r13">(</span><span class="r1">thinking hidden</span><span class="r13">)</span>
+<span class="r17">╭─────────────────────────────────────────────── agent&#x27;s text ───────────────────────────────────────────────╮</span>
+<span class="r17">│</span> Reglas que conozco del proyecto (de `CLAUDE.md` y `docs/estilo.md`):                                       <span class="r17">│</span>
+<span class="r17">│</span>                                                                                                            <span class="r17">│</span>
+<span class="r17">│</span> - Respondo siempre en español neutro.                                                                      <span class="r17">│</span>
+<span class="r17">│</span> - Los montos van en MXN con dos decimales (por ejemplo, $1,850.00).                                        <span class="r17">│</span>
+<span class="r17">│</span> - Los nombres de funciones van en inglés.                                                                  <span class="r17">│</span>
+<span class="r17">│</span>                                                                                                            <span class="r17">│</span>
+<span class="r17">│</span> Ahora leo el archivo.                                                                                      <span class="r17">│</span>
+<span class="r17">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r6">╭───────────────────────────────────────────── tool_use → Read ──────────────────────────────────────────────╮</span>
+<span class="r6">│</span> <span class="r18">{</span>                                                                                                          <span class="r6">│</span>
+<span class="r6">│</span>   <span class="r19">&quot;file_path&quot;</span>: <span class="r17">&quot;$TMP/ccarf_corrida_rt1261o7/tiendita_p</span> <span class="r6">│</span>
+<span class="r6">│</span> <span class="r18">}</span>                                                                                                          <span class="r6">│</span>
+<span class="r6">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r20">╭─────────────────────────────────────────────── tool_result ────────────────────────────────────────────────╮</span>
+<span class="r20">│</span> 1       export function refund(orderId: string, amount: number) {                                          <span class="r20">│</span>
+<span class="r20">│</span> 2         return { ok: true, data: { orderId, amount }, error: null };                                     <span class="r20">│</span>
+<span class="r20">│</span> 3       }                                                                                                  <span class="r20">│</span>
+<span class="r20">│</span> 4                                                                                                          <span class="r20">│</span>
+<span class="r20">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r1">   </span><span class="r13">(</span><span class="r1">thinking hidden</span><span class="r13">)</span>
+<span class="r17">╭─────────────────────────────────────────────── agent&#x27;s text ───────────────────────────────────────────────╮</span>
+<span class="r17">│</span> El archivo `src/api/reembolsos.ts` se rige por la regla adicional de `src/api/CLAUDE.md`: toda respuesta   <span class="r17">│</span>
+<span class="r17">│</span> de la API debe tener la forma `{ok, data, error}`.                                                         <span class="r17">│</span>
+<span class="r17">│</span>                                                                                                            <span class="r17">│</span>
+<span class="r17">│</span> La función `refund` ya la cumple, porque devuelve `{ ok: true, data: { orderId, amount }, error: null }`.  <span class="r17">│</span>
+<span class="r17">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r3">╭──────────────────────────────────── 🏁 ResultMessage (end of the run) ─────────────────────────────────────╮</span>
+<span class="r3">│</span> subtype: success                                                                                           <span class="r3">│</span>
+<span class="r3">│</span> turns: 2                                                                                                   <span class="r3">│</span>
+<span class="r3">│</span> session_id: e7962e6a-3268-44f3-b6f6-ce9d071044c7                                                           <span class="r3">│</span>
+<span class="r3">│</span> reported cost: $0.0009 USD                                                                                 <span class="r3">│</span>
+<span class="r3">│</span> error: False                                                                                               <span class="r3">│</span>
+<span class="r3">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+
+<span class="r21">▶ What did Claude Code really load?</span>
+<span class="r8"> 📂 Which instructions Claude Code loaded and when (read from the transcript) </span>
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┓
+┃<span class="r18"> Moment                        </span>┃<span class="r18"> File              </span>┃<span class="r18"> Type    </span>┃<span class="r18"> Triggered by </span>┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━┩
+│<span class="r20"> al iniciar la sesión          </span>│<span class="r6"> CLAUDE.md         </span>│ Project │ —            │
+│<span class="r20"> al iniciar la sesión          </span>│<span class="r6"> docs/estilo.md    </span>│ Project │ —            │
+│<span class="r20"> después de leer reembolsos.ts </span>│<span class="r6"> src/api/CLAUDE.md </span>│ Project │ —            │
+└───────────────────────────────┴───────────────────┴─────────┴──────────────┘
+<span class="r1">   Transcript: </span>
+<span class="r16">$TMP/ccarf_corrida_rt1261o7/claude_config_2186achq/project</span>
+<span class="r16">s/-private-var-folders-j0-cbhn0kzs2d36vv9w7vsj107c0000gn-T-ccarf-corrida-rt1261o7-tiendita-proyecto-5-ncgbbq/</span><span class="r16">e</span>
+<span class="r16">7962e6a-3268-44f3-b6f6-ce9d071044c7.jsonl</span>
+<span class="r7">   ✔ CLAUDE.md: cargado (raíz del proyecto, siempre al iniciar)</span>
+<span class="r7">   ✔ docs/estilo.md: cargado (solo si el CLAUDE.md raíz lo importa con @)</span>
+<span class="r12">   ✘ CLAUDE.local.md: NO cargado (solo si setting_sources incluye </span><span class="r12">&#x27;local&#x27;</span><span class="r12">)</span>
+<span class="r7">   ✔ src/api/CLAUDE.md: cargado (solo cuando lee un archivo de src/api/)</span>
+<span class="r6">╭────────────────────────────────────────────── 🧪 Experiment ───────────────────────────────────────────────╮</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">│</span>  1) D31_USAR_IMPORT = False → docs/estilo.md stops loading and the agent no longer knows the amounts       <span class="r6">│</span>
+<span class="r6">│</span>  rule.                                                                                                     <span class="r6">│</span>
+<span class="r6">│</span>  2) D31_SIMULAR_COMPANERO = True → the personal preference disappears: that&#x27;s what happens to someone new  <span class="r6">│</span>
+<span class="r6">│</span>  when the team&#x27;s rule is in a personal file. Fix: move it to the repo&#x27;s CLAUDE.md.                         <span class="r6">│</span>
+<span class="r6">│</span>  3) Change the question so it reads src/carrito/total.ts: src/api/CLAUDE.md doesn&#x27;t load.                  <span class="r6">│</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r3">╭──────────────────────────────────── 📊 Messages API usage in this run ─────────────────────────────────────╮</span>
+<span class="r3">│</span> API calls: 0                                                                                               <span class="r3">│</span>
+<span class="r3">│</span> Input tokens: 0                                                                                            <span class="r3">│</span>
+<span class="r3">│</span> Output tokens:  0                                                                                          <span class="r3">│</span>
+<span class="r3">│</span> Estimated cost (with the price of each model used): ~$0.0000 USD                                           <span class="r3">│</span>
+<span class="r3">│</span> Agent SDK / claude -p: 2 turnos · 731 tokens · $0.0009 USD (costo que reporta)                             <span class="r3">│</span>
+<span class="r3">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+</code></pre><div class="diagrama" style="font-family:'Atkinson Hyperlegible Next',Inter,'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;background:#1b1c18;color:#f0f0f0;border:1px solid #444;border-radius:10px;padding:16px 20px;margin:16px 0;max-width:1000px;white-space:normal"><div style="font-size:18px;font-weight:600;color:#f0f0f0;margin-bottom:6px">📊 The flow of this run</div><div style="font-size:15px;line-height:1.55;color:#d0d0d0;margin-bottom:12px;max-width:80ch">Left: what your code sent (or what Claude asked for). Right: how it responded. Automatic diagram: it shows the flow of calls, not the demo's concept.</div><!--tipos:claude,ok--><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 107" width="1000" height="107" font-family="Atkinson Hyperlegible Next, Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13"><defs><marker id="punta_f32c1293" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bbbbbb"/></marker></defs><g><line x1="460" y1="54" x2="540" y2="54" stroke="#bbbbbb" stroke-width="1.6" marker-end="url(#punta_f32c1293)"/><rect x="456" y="30" width="87" height="18" rx="4" fill="#1b1c18"/><text x="500" y="44" fill="#d0d0d0" font-size="11.5" text-anchor="middle">tool_result</text></g><g><rect x="60" y="20" width="400" height="67" rx="9" fill="#1f3b57" stroke="#58a6ff" stroke-width="1.6"/><text x="260" y="41" fill="#f0f0f0" text-anchor="middle" font-weight="600">Claude asks for Read</text><text x="260" y="58" fill="#f0f0f0" text-anchor="middle">{&quot;file_path&quot;:</text><text x="260" y="75" fill="#f0f0f0" text-anchor="middle">&quot;$TMP/…</text></g><g><rect x="540" y="20" width="400" height="67" rx="9" fill="#1e3d2a" stroke="#3fb950" stroke-width="1.6"/><text x="740" y="41" fill="#f0f0f0" text-anchor="middle" font-weight="600">Result</text><text x="740" y="58" fill="#f0f0f0" text-anchor="middle">1 export function refund(orderId: string, amount:</text><text x="740" y="75" fill="#f0f0f0" text-anchor="middle">number) {…</text></g></svg><div style="font-size:12px;color:#c8c8c8;margin-top:8px"><span style="display:inline-flex;align-items:center;gap:5px;margin-right:14px"><span style="width:14px;height:14px;border-radius:4px;background:#1f3b57;border:1.5px solid #58a6ff;display:inline-block"></span>Claude: lo que responde o pide</span><span style="display:inline-flex;align-items:center;gap:5px;margin-right:14px"><span style="width:14px;height:14px;border-radius:4px;background:#1e3d2a;border:1.5px solid #3fb950;display:inline-block"></span>Salió bien / permitido / cubierto</span></div><div style="font-size:15.5px;line-height:1.55;color:#f3f3f3;background:#26331f;border-left:4px solid #3fb950;border-radius:6px;padding:10px 14px;margin-top:12px">👉 Loaded: CLAUDE.md, docs/estilo.md, src/api/CLAUDE.md</div></div><pre style="font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><code style="font-family:inherit">
+</code></pre>
+<div id="ccZoom" title="Tamaño de letra (se recuerda)">
+<button onclick="ccZoom(-1)">A−</button><button onclick="ccZoom(1)">A+</button>
+<button id="ccTemaBtn" onclick="ccTema()" title="Tema claro / oscuro (por defecto, el de tu sistema)" hidden>☀</button></div>
+<style>#ccZoom{position:fixed;top:10px;right:14px;z-index:50;display:flex;gap:4px;font-family:var(--letra,system-ui,sans-serif)}
+#ccZoom button{background:var(--superficie-2,#2d2d2d);color:var(--texto,#f0f0f0);border:1px solid var(--borde,#666);border-radius:7px;
+  padding:4px 10px;font-size:14px;cursor:pointer}
+@media print{#ccZoom{display:none}}</style>
+<script>(function(){
+  if (window.top !== window.self) { document.getElementById('ccZoom').style.display = 'none'; }
+  // Tema: solo en páginas con los colores de tema.py (las corridas HTML son siempre oscuras, como una terminal)
+  var meta = document.querySelector('meta[name="color-scheme"]');
+  var conTema = !!meta && getComputedStyle(document.documentElement).getPropertyValue('--fondo').trim() !== '';
+  function sistema(){ return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+  function guardado(){ try { return localStorage.getItem('ccarf_esquema'); } catch (e) { return null; } }
+  function pintar(){ document.getElementById('ccTemaBtn').textContent = (guardado() || sistema()) === 'dark' ? '☀' : '☾'; }
+  window.ccTema = function(){
+    if (window.top !== window.self) {   // dentro del panel: el tema es del panel completo
+      try { var b = window.top.document.getElementById('tema'); if (b) { b.click(); return; } } catch (e) {}
+    }
+    var destino = (guardado() || sistema()) === 'dark' ? 'light' : 'dark';
+    try { destino === sistema() ? localStorage.removeItem('ccarf_esquema') : localStorage.setItem('ccarf_esquema', destino); } catch (e) {}
+    meta.content = guardado() || 'light dark'; pintar();
+  };
+  if (conTema) { document.getElementById('ccTemaBtn').hidden = false; pintar(); matchMedia('(prefers-color-scheme: dark)').addEventListener('change', pintar); }
+  function leer(){ try { return +(localStorage.getItem('ccarf_escala') || 1); } catch (e) { return 1; } }
+  function guardar(v){ try { localStorage.setItem('ccarf_escala', v); } catch (e) {} }
+  window.ccZoom = function(d){ var v = Math.min(1.6, Math.max(0.8, +(leer() + 0.1 * d).toFixed(2))); guardar(v); document.body.style.zoom = v; };
+  document.body.style.zoom = leer();
+})();</script></body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><title>CCAR-F · Panel de labs</title>
+__TEMA_CABEZA__
+<style>
+/*__CSS__*/
+</style></head><body>
+<header><h1 data-t="titulo" data-tt="notaCab"></h1>
+<span class="espacio"></span>
+<button id="llave" class="chip" type="button">…</button>
+<button id="abrirBuscar" class="sec mini" data-tt="buscarTitulo"><span data-t="buscar"></span> <kbd>Ctrl K</kbd></button>
+<button id="menos" class="sec mini" data-tt="letraMenos">A−</button><button id="mas" class="sec mini" data-tt="letraMas">A+</button>
+<button id="tourBtn" class="sec mini" data-tt="tourTitulo">?</button>
+<button id="tema" class="sec mini" data-tt="temaTitulo">☀</button>
+<button id="idioma" class="sec mini" data-tt="idiomaTitulo">EN</button>
+<button id="abrirRecursos" class="sec mini" data-t="recursos"></button></header>
+<dialog id="tour" popover="manual" aria-labelledby="tourPaso"><b id="tourPaso"></b><p id="tourTexto"></p><div class="pie"><button id="tourSaltar" class="sec mini" data-t="tourSaltar"></button><button id="tourSig" class="mini" data-t="tourSig"></button></div></dialog>
+<dialog id="recursos" closedby="any" aria-labelledby="recTitulo">
+  <div class="rec-cab"><b id="recTitulo" data-t="recursos"></b><button id="cerrarRecursos" class="sec mini" data-tt="cerrar">✕</button></div>
+  <p class="rec-nota" data-t="recNota"></p>
+  <div id="recursosLista">…</div>
+</dialog>
+<dialog id="buscador" closedby="any" aria-labelledby="abrirBuscar">
+  <input id="q" type="search" autocomplete="off" autofocus>
+  <div id="resBusca"></div>
+  <div class="pie-busca" data-t="pieBusca"></div>
+</dialog>
+<main>
+<aside>
+  <label class="cab" for="dominio"><span data-t="dominio"></span><a id="paginaDominio" href="/dominio?n=1" target="_blank" data-t="paginaDominio"></a></label>
+  <select id="dominio"></select>
+  <label class="cab" for="demo"><span data-t="demo"></span></label><select id="demo"></select>
+  <div class="contexto" id="contexto"></div>
+  <div id="escenarios"></div>
+  <div id="producto"></div>
+  <details class="ruta" id="ruta" open><summary id="rutaTitulo"></summary><div id="rutaPasos"></div></details>
+  <details class="guia" id="guiaBox"><summary data-t="guiaDemo"></summary><div id="guia"></div></details>
+  <div class="bloque" id="casosBox"><h3 data-t="casos"></h3><div class="casos" id="casos"></div><div class="ayuda" id="casoExplica"></div></div>
+  <div class="bloque" id="grabBox"><h3 data-t="grabOtras"></h3><div class="ayuda" data-t="grabAyuda"></div><div class="grabs" id="grabs"></div></div>
+  <label class="cab" for="modelo"><span data-t="modelo"></span></label><select id="modelo"></select>
+  <div id="estimado"></div>
+  <div class="fila-mini"><button id="dosModelos" class="sec mini" data-t="dosModelos" data-tt="dosModelosTitulo"></button><select id="modelo2"></select></div>
+  <div class="fila-mini"><span class="ayuda" style="margin:0" data-t="detalleEtiqueta"></span><select id="detalle"><option value="basico" data-t="detalleBasico"></option><option value="completo" data-t="detalleCompleto"></option></select></div>
+  <label class="cab"><span data-t="variables"></span></label>
+  <div class="ayuda" data-t="variablesAyuda"></div>
+  <div id="variables"></div>
+  <div class="botones">
+    <button id="correr" data-t="correr"></button>
+    <button id="detener" class="sec" disabled data-t="detener"></button>
+    <button id="restaurar" class="sec" data-t="restaurar" data-tt="restaurarTitulo"></button>
+  </div>
+</aside>
+<section id="derecha">
+  <div class="pestanas"><button id="togglePanel" class="sec" data-tt="togglePanelTitulo"></button>
+    <div role="tablist" aria-label="Vistas" style="display:contents">
+    <button id="tabEstudiar" role="tab" data-t="tabEstudiar"></button><button id="tabSalida" role="tab" class="activa" data-t="tabSalida"></button>
+    <button id="tabVista" role="tab" disabled data-t="tabVista" data-tt="tabVistaTitulo"></button>
+    <button id="tabComparar" role="tab" data-t="tabComparar" data-tt="compararTitulo"></button>
+    <button id="tabMaterial" role="tab" data-t="tabMaterial" data-tt="tabMaterialTitulo"></button></div></div>
+  <div id="ayudaKey"></div>
+  <div id="estado"></div>
+  <div id="resultado"></div>
+  <div id="estudio"></div>
+  <pre id="salida"><span class="vacio" data-t="vacio"></span></pre>
+  <iframe id="vista"></iframe>
+  <div id="material"><div class="barra"><select id="matSel"></select>
+      <button id="matTema" class="sec mini"></button>
+      <a id="matAparte" target="_blank" data-t="matAparte"></a></div>
+    <div id="matAviso"></div><iframe id="visor" title="Guías y slides"></iframe></div>
+</section>
+</main>
+<script>
+/*__JS__*/
+</script></body></html>

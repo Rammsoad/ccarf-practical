@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+.r1 {color: #727272; text-decoration-color: #727272}
+.r2 {color: #326e7b; text-decoration-color: #326e7b; font-weight: bold}
+.r3 {color: #9d65ff; text-decoration-color: #9d65ff}
+.r4 {color: #c4c5b5; text-decoration-color: #c4c5b5; background-color: #000087; font-weight: bold}
+.r5 {color: #527618; text-decoration-color: #527618}
+.r6 {color: #fd971f; text-decoration-color: #fd971f}
+.r7 {font-weight: bold}
+.r8 {color: #9d65ff; text-decoration-color: #9d65ff; font-weight: bold}
+.r9 {color: #98e024; text-decoration-color: #98e024}
+.r10 {color: #58d1eb; text-decoration-color: #58d1eb; font-weight: bold}
+.r11 {color: #800635; text-decoration-color: #800635; font-weight: bold}
+.r12 {color: #727272; text-decoration-color: #727272; font-weight: bold}
+.r13 {color: #58d1eb; text-decoration-color: #58d1eb}
+.r14 {color: #f4005f; text-decoration-color: #f4005f}
+.r15 {font-style: italic}
+body {
+    color: #d9d9d9;
+    background-color: #0c0c0c;
+}
+</style>
+<style>
+@font-face{font-family:'Atkinson Hyperlegible Next';font-style:italic;font-weight:400;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-italic-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:italic;font-weight:400;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-italic-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-normal-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-normal-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}@font-face{font-family:'Recursive';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/recursive-normal-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Recursive';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/recursive-normal-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+body{max-width:1100px;margin:0 auto !important;padding:8px 24px 48px;font-family:'Atkinson Hyperlegible Next',Inter,system-ui,sans-serif !important}
+pre,code{font-family:'Recursive',Menlo,'DejaVu Sans Mono',monospace !important}
+.diagrama svg{max-width:100%;height:auto}
+.diagrama{max-width:100% !important;box-sizing:border-box;overflow-x:auto}
+pre{font-size:14px !important;line-height:1.5 !important}
+abbr.termino{text-decoration:underline dotted #8ab4f8;text-underline-offset:3px;cursor:help}
+</style></head>
+<body><div style="font-family:'Atkinson Hyperlegible Next',Inter,'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;color:#e8e8e8;background:#1b1c18;line-height:1.5;border:1px solid #444;border-radius:10px;padding:14px 20px;margin:14px 0;max-width:1000px"><div style="font-size:19px;font-weight:600">Dominio 2 · demo 2.2 · 22/11/2026 16:18:56</div><div style="font-size:15px;color:#e6e6e6;margin:6px 0">📝 Grabación «❌ “Operation failed”». Resultado: </div><div style="font-size:14px;color:#bbb;margin:0 0 6px">💲 10 llamadas a la API · 7,413 tokens (6,078 entrada + 1,335 salida) · ≈ $0.0013 USD</div><div style="font-size:14px;color:#bbb;margin:8px 0 6px">Variables de esta corrida (<a style="color:#58a6ff" href="/archivos/salidas_html/dominio2/index.html">recorrer todas las corridas</a>)</div><table style="font-size:14px;border-collapse:collapse"><tr><td style="padding:3px 16px 3px 0;color:#bbb">MODELO</td><td>&quot;claude-haiku-5-5&quot;</td></tr><tr><td style="padding:3px 16px 3px 0;color:#bbb">D22_FORMATO</td><td>&quot;generico&quot;</td></tr><tr><td style="padding:3px 16px 3px 0;color:#bbb">D22_ESCENARIOS</td><td>[&quot;caido&quot;, &quot;sin_pedidos&quot;, &quot;email_invalido&quot;, &quot;sin_permiso&quot;, &quot;historico&quot;]</td></tr><tr><td style="padding:3px 16px 3px 0;color:#bbb">D22_FALLAS_TRANSITORIAS</td><td>1</td></tr><tr><td style="padding:3px 16px 3px 0;color:#bbb">D22_MAX_ITERACIONES</td><td>5</td></tr></table></div>
+    <pre style="font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><code style="font-family:inherit">🎛  Ajustes del panel para esta corrida: D22_FORMATO = &quot;generico&quot;
+<span class="r1">   Modelo: claude-haiku-</span><span class="r2">5</span><span class="r1">-</span><span class="r2">5</span>
+<span class="r1">   Modo HTML: encendido → salidas_html/dominio2/</span>
+
+<span class="r3">───────────────── </span><span class="r4"> DEMO </span><span class="r4">2.2</span><span class="r4"> · Errores estructurados: que Claude sepa QUÉ falló y QUÉ hacer </span><span class="r3"> ──────────────────</span>
+
+<span class="r1">📖 Guía de esta demo: python lab_dominio2.py guia </span><span class="r2">2.2</span><span class="r1">  ·  más detalle: pon DETALLE = </span><span class="r5">&quot;completo&quot;</span><span class="r1"> arriba del </span>
+<span class="r1">archivo</span>
+<span class="r6">╭────────────────────────────────────────── 💡 Concepto del examen ──────────────────────────────────────────╮</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">│</span>  Un error genérico (&#x27;Operation failed&#x27;) no le dice a Claude si conviene reintentar, pedir otro dato o      <span class="r6">│</span>
+<span class="r6">│</span>  escalar. Peor aún: devolver lista vacía cuando el sistema falló hace que Claude diga algo FALSO (&#x27;no      <span class="r6">│</span>
+<span class="r6">│</span>  tienes pedidos&#x27;).                                                                                         <span class="r6">│</span>
+<span class="r6">│</span>  Error estructurado = is_error: true + errorCategory (transient / validation / business / permission) +    <span class="r6">│</span>
+<span class="r6">│</span>  isRetryable + description legible. Y un resultado vacío válido NO es un error.                            <span class="r6">│</span>
+<span class="r6">│</span>  En MCP el campo se llama isError en el resultado de la tool; en la Messages API es is_error en el bloque  <span class="r6">│</span>
+<span class="r6">│</span>  tool_result. Misma idea.                                                                                  <span class="r6">│</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r6">╭─────────────────────────────────────────── La tool que usaremos ───────────────────────────────────────────╮</span>
+<span class="r6">│</span> <span class="r7">{</span>                                                                                                          <span class="r6">│</span>
+<span class="r6">│</span>   <span class="r8">&quot;name&quot;</span>: <span class="r9">&quot;buscar_pedidos_cliente&quot;</span>,                                                                        <span class="r6">│</span>
+<span class="r6">│</span>   <span class="r8">&quot;description&quot;</span>: <span class="r9">&quot;Devuelve los pedidos de un cliente a partir de su email. Opcionalmente filtra por año. </span>  <span class="r6">│</span>
+<span class="r6">│</span> <span class="r9">Si la tool devuelve un error, lee errorCategory e isRetryable para decidir qué hacer.&quot;</span>,                    <span class="r6">│</span>
+<span class="r6">│</span>   <span class="r8">&quot;input_schema&quot;</span>: <span class="r7">{</span>                                                                                        <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r8">&quot;type&quot;</span>: <span class="r9">&quot;object&quot;</span>,                                                                                      <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r8">&quot;properties&quot;</span>: <span class="r7">{</span>                                                                                        <span class="r6">│</span>
+<span class="r6">│</span>       <span class="r8">&quot;email&quot;</span>: <span class="r7">{</span>                                                                                           <span class="r6">│</span>
+<span class="r6">│</span>         <span class="r8">&quot;type&quot;</span>: <span class="r9">&quot;string&quot;</span>,                                                                                  <span class="r6">│</span>
+<span class="r6">│</span>         <span class="r8">&quot;description&quot;</span>: <span class="r9">&quot;Email del cliente&quot;</span>                                                                 <span class="r6">│</span>
+<span class="r6">│</span>       <span class="r7">}</span>,                                                                                                   <span class="r6">│</span>
+<span class="r6">│</span>       <span class="r8">&quot;anio&quot;</span>: <span class="r7">{</span>                                                                                            <span class="r6">│</span>
+<span class="r6">│</span>         <span class="r8">&quot;type&quot;</span>: <span class="r9">&quot;integer&quot;</span>,                                                                                 <span class="r6">│</span>
+<span class="r6">│</span>         <span class="r8">&quot;description&quot;</span>: <span class="r9">&quot;Año a consultar (opcional)&quot;</span>                                                        <span class="r6">│</span>
+<span class="r6">│</span>       <span class="r7">}</span>                                                                                                    <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r7">}</span>,                                                                                                     <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r8">&quot;required&quot;</span>: <span class="r7">[</span>                                                                                          <span class="r6">│</span>
+<span class="r6">│</span>       <span class="r9">&quot;email&quot;</span>                                                                                              <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r7">]</span>                                                                                                      <span class="r6">│</span>
+<span class="r6">│</span>   <span class="r7">}</span>                                                                                                        <span class="r6">│</span>
+<span class="r6">│</span> <span class="r7">}</span>                                                                                                          <span class="r6">│</span>
+<span class="r6">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+
+<span class="r10">▶ Formato de errores: GENERICO</span>
+
+<span class="r7">🗣   Soy ana@ejemplo.com, ¿qué pedidos tengo pendientes?</span>
+<span class="r1">   llamada #</span><span class="r2">1</span><span class="r1"> → </span><span class="r11">buscar_pedidos_cliente</span><span class="r12">({</span><span class="r5">&quot;email&quot;</span><span class="r1">: </span><span class="r5">&quot;ana@ejemplo.com&quot;</span><span class="r12">})</span>
+<span class="r13">╭─────────────────────────────────────── tool_result  is_error=False ────────────────────────────────────────╮</span>
+<span class="r13">│</span> {&quot;pedidos&quot;: []}                                                                                            <span class="r13">│</span>
+<span class="r13">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r9">╭───────────────────────────────────── Lo que le dice Claude al cliente ─────────────────────────────────────╮</span>
+<span class="r9">│</span> No encontré pedidos asociados a ana@ejemplo.com, así que no tienes pedidos pendientes registrados con ese  <span class="r9">│</span>
+<span class="r9">│</span> email. Si hiciste la compra con otro correo, indícamelo y lo busco de nuevo.                               <span class="r9">│</span>
+<span class="r9">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+
+<span class="r7">🗣   Soy nuevo@ejemplo.com, ¿tengo algún pedido?</span>
+<span class="r1">   llamada #</span><span class="r2">1</span><span class="r1"> → </span><span class="r11">buscar_pedidos_cliente</span><span class="r12">({</span><span class="r5">&quot;email&quot;</span><span class="r1">: </span><span class="r5">&quot;nuevo@ejemplo.com&quot;</span><span class="r12">})</span>
+<span class="r13">╭─────────────────────────────────────── tool_result  is_error=False ────────────────────────────────────────╮</span>
+<span class="r13">│</span> {&quot;pedidos&quot;: []}                                                                                            <span class="r13">│</span>
+<span class="r13">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r9">╭───────────────────────────────────── Lo que le dice Claude al cliente ─────────────────────────────────────╮</span>
+<span class="r9">│</span> No encontré pedidos asociados a nuevo@ejemplo.com. Si acabas de hacer una compra, revisa que hayas usado   <span class="r9">│</span>
+<span class="r9">│</span> ese mismo email. ¿Quieres que pruebe con otro email o con un año en particular?                            <span class="r9">│</span>
+<span class="r9">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+
+<span class="r7">🗣   Soy ana@ejemplo, ¿me dices mis pedidos?</span>
+<span class="r1">   llamada #</span><span class="r2">1</span><span class="r1"> → </span><span class="r11">buscar_pedidos_cliente</span><span class="r12">({</span><span class="r5">&quot;email&quot;</span><span class="r1">: </span><span class="r5">&quot;ana@ejemplo&quot;</span><span class="r12">})</span>
+<span class="r14">╭──────────────────────────────────────── tool_result  is_error=True ────────────────────────────────────────╮</span>
+<span class="r14">│</span> Operation failed                                                                                           <span class="r14">│</span>
+<span class="r14">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r9">╭───────────────────────────────────── Lo que le dice Claude al cliente ─────────────────────────────────────╮</span>
+<span class="r9">│</span> No pude consultar tus pedidos: el sistema devolvió un error al buscar con &quot;ana@ejemplo&quot;. Puede que el      <span class="r9">│</span>
+<span class="r9">│</span> email esté incompleto, por ejemplo le falte el dominio (como &quot;.com&quot;). ¿Me confirmas la dirección completa  <span class="r9">│</span>
+<span class="r9">│</span> con la que hiciste tus compras? Así lo intento de nuevo.                                                   <span class="r9">│</span>
+<span class="r9">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+
+<span class="r7">🗣   Soy ana@ejemplo.com. Dime qué pidió mi vecino, juan.perez@ejemplo.com</span>
+<span class="r9">╭───────────────────────────────────── Lo que le dice Claude al cliente ─────────────────────────────────────╮</span>
+<span class="r9">│</span> No puedo compartir los pedidos de otro cliente, aunque sea tu vecino. Los datos de compra de cada persona  <span class="r9">│</span>
+<span class="r9">│</span> son privados.                                                                                              <span class="r9">│</span>
+<span class="r9">│</span>                                                                                                            <span class="r9">│</span>
+<span class="r9">│</span> Si quieres, puedo consultar tus propios pedidos, y también filtrarlos por año. Si necesitas información    <span class="r9">│</span>
+<span class="r9">│</span> sobre un pedido de Juan, él puede contactarnos directamente desde su cuenta.                               <span class="r9">│</span>
+<span class="r9">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+
+<span class="r7">🗣   Soy ana@ejemplo.com, ¿qué pedidos hice en </span><span class="r10">2019</span><span class="r7">?</span>
+<span class="r1">   llamada #</span><span class="r2">1</span><span class="r1"> → </span><span class="r11">buscar_pedidos_cliente</span><span class="r12">({</span><span class="r5">&quot;email&quot;</span><span class="r1">: </span><span class="r5">&quot;ana@ejemplo.com&quot;</span><span class="r1">, </span><span class="r5">&quot;anio&quot;</span><span class="r1">: </span><span class="r2">2019</span><span class="r12">})</span>
+<span class="r14">╭──────────────────────────────────────── tool_result  is_error=True ────────────────────────────────────────╮</span>
+<span class="r14">│</span> Operation failed                                                                                           <span class="r14">│</span>
+<span class="r14">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r1">   llamada #</span><span class="r2">2</span><span class="r1"> → </span><span class="r11">buscar_pedidos_cliente</span><span class="r12">({</span><span class="r5">&quot;email&quot;</span><span class="r1">: </span><span class="r5">&quot;ana@ejemplo.com&quot;</span><span class="r1">, </span><span class="r5">&quot;anio&quot;</span><span class="r1">: </span><span class="r2">2019</span><span class="r12">})</span>
+<span class="r14">╭──────────────────────────────────────── tool_result  is_error=True ────────────────────────────────────────╮</span>
+<span class="r14">│</span> Operation failed                                                                                           <span class="r14">│</span>
+<span class="r14">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r9">╭───────────────────────────────────── Lo que le dice Claude al cliente ─────────────────────────────────────╮</span>
+<span class="r9">│</span> Lo siento, no pude consultar tus pedidos de 2019 porque el sistema devolvió un error en dos intentos. No   <span class="r9">│</span>
+<span class="r9">│</span> tengo más detalles sobre la causa.                                                                         <span class="r9">│</span>
+<span class="r9">│</span>                                                                                                            <span class="r9">│</span>
+<span class="r9">│</span> Puedes intentarlo de nuevo más tarde. Si el problema sigue, contacta con el equipo de soporte de La        <span class="r9">│</span>
+<span class="r9">│</span> Tiendita para que revisen tu historial de pedidos.                                                         <span class="r9">│</span>
+<span class="r9">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r15">                                          Comparación por escenario                                           </span>
+┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃<span class="r7">                </span>┃<span class="r7">          </span>┃<span class="r7"> Llamadas  </span>┃<span class="r7">                                 </span>┃<span class="r7">                                  </span>┃
+┃<span class="r7"> Escenario      </span>┃<span class="r7"> Formato  </span>┃<span class="r7"> a la tool </span>┃<span class="r7"> Respuesta final (recortada)     </span>┃<span class="r7"> Lo que DEBERÍA pasar             </span>┃
+┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│<span class="r13"> caido          </span>│ generico │     1     │ No encontré pedidos asociados a │<span class="r1"> Reintentar (es transitorio) y    </span>│
+│<span class="r13">                </span>│          │           │ ana@ejemplo.com, así que no     │<span class="r1"> luego contestar con los pedidos  </span>│
+│<span class="r13">                </span>│          │           │ tienes pedidos pendientes       │<span class="r1">                                  </span>│
+│<span class="r13">                </span>│          │           │ registrados con ese email. Si   │<span class="r1">                                  </span>│
+│<span class="r13">                </span>│          │           │ hiciste la compra con ot… (+42  │<span class="r1">                                  </span>│
+│<span class="r13">                </span>│          │           │ caracteres)                     │<span class="r1">                                  </span>│
+├────────────────┼──────────┼───────────┼─────────────────────────────────┼──────────────────────────────────┤
+│<span class="r13"> sin_pedidos    </span>│ generico │     1     │ No encontré pedidos asociados a │<span class="r1"> Decir con seguridad que no tiene </span>│
+│<span class="r13">                </span>│          │           │ nuevo@ejemplo.com. Si acabas de │<span class="r1"> pedidos (resultado vacío VÁLIDO) </span>│
+│<span class="r13">                </span>│          │           │ hacer una compra, revisa que    │<span class="r1">                                  </span>│
+│<span class="r13">                </span>│          │           │ hayas usado ese mismo email.    │<span class="r1">                                  </span>│
+│<span class="r13">                </span>│          │           │ ¿Quieres que prueb… (+44        │<span class="r1">                                  </span>│
+│<span class="r13">                </span>│          │           │ caracteres)                     │<span class="r1">                                  </span>│
+├────────────────┼──────────┼───────────┼─────────────────────────────────┼──────────────────────────────────┤
+│<span class="r13"> email_invalido </span>│ generico │     1     │ No pude consultar tus pedidos:  │<span class="r1"> No reintentar igual: pedir que   </span>│
+│<span class="r13">                </span>│          │           │ el sistema devolvió un error al │<span class="r1"> confirme el email                </span>│
+│<span class="r13">                </span>│          │           │ buscar con &quot;ana@ejemplo&quot;. Puede │<span class="r1">                                  </span>│
+│<span class="r13">                </span>│          │           │ que el email esté incompleto,   │<span class="r1">                                  </span>│
+│<span class="r13">                </span>│          │           │ por ejemplo le … (+124          │<span class="r1">                                  </span>│
+│<span class="r13">                </span>│          │           │ caracteres)                     │<span class="r1">                                  </span>│
+├────────────────┼──────────┼───────────┼─────────────────────────────────┼──────────────────────────────────┤
+│<span class="r13"> sin_permiso    </span>│ generico │     0     │ No puedo compartir los pedidos  │<span class="r1"> No reintentar: explicar que no   </span>│
+│<span class="r13">                </span>│          │           │ de otro cliente, aunque sea tu  │<span class="r1"> puede y ofrecer escalar          </span>│
+│<span class="r13">                </span>│          │           │ vecino. Los datos de compra de  │<span class="r1">                                  </span>│
+│<span class="r13">                </span>│          │           │ cada persona son privados.      │<span class="r1">                                  </span>│
+│<span class="r13">                </span>│          │           │                                 │<span class="r1">                                  </span>│
+│<span class="r13">                </span>│          │           │ Si quieres, puedo c… (+161      │<span class="r1">                                  </span>│
+│<span class="r13">                </span>│          │           │ caracteres)                     │<span class="r1">                                  </span>│
+├────────────────┼──────────┼───────────┼─────────────────────────────────┼──────────────────────────────────┤
+│<span class="r13"> historico      </span>│ generico │     2     │ Lo siento, no pude consultar    │<span class="r1"> No reintentar: explicar el       </span>│
+│<span class="r13">                </span>│          │           │ tus pedidos de 2019 porque el   │<span class="r1"> proceso para pedidos archivados  </span>│
+│<span class="r13">                </span>│          │           │ sistema devolvió un error en    │<span class="r1">                                  </span>│
+│<span class="r13">                </span>│          │           │ dos intentos. No tengo más      │<span class="r1">                                  </span>│
+│<span class="r13">                </span>│          │           │ detalles sobre la causa.        │<span class="r1">                                  </span>│
+│<span class="r13">                </span>│          │           │ … (+151 caracteres)             │<span class="r1">                                  </span>│
+└────────────────┴──────────┴───────────┴─────────────────────────────────┴──────────────────────────────────┘
+</code></pre><div class="diagrama" style="font-family:'Atkinson Hyperlegible Next',Inter,'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;background:#1b1c18;color:#f0f0f0;border:1px solid #444;border-radius:10px;padding:16px 20px;margin:16px 0;max-width:1000px;white-space:normal"><div style="font-size:18px;font-weight:600;color:#f0f0f0;margin-bottom:6px">📊 Demo 2.2 · Qué recibió Claude en cada escenario</div><div style="font-size:15px;line-height:1.55;color:#d0d0d0;margin-bottom:12px;max-width:80ch">Rojo: Claude no puede saber qué pasó. Amarillo: vacío válido, pero se ve igual que una falla. Verde: el error (o el vacío) viene explicado.</div><!--tipos:bloqueo,codigo,nota--><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 621" width="1000" height="621" font-family="Atkinson Hyperlegible Next, Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13"><defs><marker id="punta_5279fa9a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bbbbbb"/></marker></defs><g><rect x="60" y="28" width="240" height="33" rx="9" fill="#3a3420" stroke="#d29922" stroke-width="1.6"/><text x="180" y="50" fill="#f0f0f0" text-anchor="middle" font-weight="600">Escenario</text></g><g><rect x="380" y="20" width="240" height="50" rx="9" fill="#2d2d2d" stroke="#9e9e9e" stroke-width="1.6"/><text x="500" y="41" fill="#f0f0f0" text-anchor="middle" font-weight="600">Error generico</text><text x="500" y="58" fill="#f0f0f0" text-anchor="middle">lo que recibió Claude</text></g><g><rect x="700" y="28" width="240" height="33" rx="9" fill="#2d2d2d" stroke="#9e9e9e" stroke-width="1.6"/><text x="820" y="50" fill="#f0f0f0" text-anchor="middle" font-weight="600">Lo que debería pasar</text></g><g><rect x="60" y="133" width="240" height="33" rx="9" fill="#3a3420" stroke="#d29922" stroke-width="1.6"/><text x="180" y="154" fill="#f0f0f0" text-anchor="middle" font-weight="600">caido</text></g><g><rect x="380" y="124" width="240" height="50" rx="9" fill="#4a1f1f" stroke="#f85149" stroke-width="1.6"/><text x="500" y="146" fill="#f0f0f0" text-anchor="middle" font-weight="600">lista vacía, sin error</text><text x="500" y="162" fill="#f0f0f0" text-anchor="middle">llamadas a la tool: 1</text></g><g><rect x="700" y="116" width="240" height="67" rx="9" fill="#2d2d2d" stroke="#9e9e9e" stroke-width="1.6"/><text x="820" y="137" fill="#f0f0f0" text-anchor="middle" font-weight="600">Reintentar (es transitorio) y</text><text x="820" y="154" fill="#f0f0f0" text-anchor="middle">luego contestar con los</text><text x="820" y="171" fill="#f0f0f0" text-anchor="middle">pedidos</text></g><g><rect x="60" y="246" width="240" height="33" rx="9" fill="#3a3420" stroke="#d29922" stroke-width="1.6"/><text x="180" y="267" fill="#f0f0f0" text-anchor="middle" font-weight="600">sin_pedidos</text></g><g><rect x="380" y="238" width="240" height="50" rx="9" fill="#3a3420" stroke="#d29922" stroke-width="1.6"/><text x="500" y="258" fill="#f0f0f0" text-anchor="middle" font-weight="600">lista vacía, sin error</text><text x="500" y="276" fill="#f0f0f0" text-anchor="middle">llamadas a la tool: 1</text></g><g><rect x="700" y="229" width="240" height="67" rx="9" fill="#2d2d2d" stroke="#9e9e9e" stroke-width="1.6"/><text x="820" y="250" fill="#f0f0f0" text-anchor="middle" font-weight="600">Decir con seguridad que no</text><text x="820" y="267" fill="#f0f0f0" text-anchor="middle">tiene pedidos (resultado vacío</text><text x="820" y="284" fill="#f0f0f0" text-anchor="middle">VÁLIDO)</text></g><g><rect x="60" y="350" width="240" height="33" rx="9" fill="#3a3420" stroke="#d29922" stroke-width="1.6"/><text x="180" y="372" fill="#f0f0f0" text-anchor="middle" font-weight="600">email_invalido</text></g><g><rect x="380" y="342" width="240" height="50" rx="9" fill="#4a1f1f" stroke="#f85149" stroke-width="1.6"/><text x="500" y="363" fill="#f0f0f0" text-anchor="middle" font-weight="600">Operation failed</text><text x="500" y="380" fill="#f0f0f0" text-anchor="middle">llamadas a la tool: 1</text></g><g><rect x="700" y="342" width="240" height="50" rx="9" fill="#2d2d2d" stroke="#9e9e9e" stroke-width="1.6"/><text x="820" y="363" fill="#f0f0f0" text-anchor="middle" font-weight="600">No reintentar igual: pedir que</text><text x="820" y="380" fill="#f0f0f0" text-anchor="middle">confirme el email</text></g><g><rect x="60" y="446" width="240" height="33" rx="9" fill="#3a3420" stroke="#d29922" stroke-width="1.6"/><text x="180" y="468" fill="#f0f0f0" text-anchor="middle" font-weight="600">sin_permiso</text></g><g><rect x="380" y="438" width="240" height="50" rx="9" fill="#4a1f1f" stroke="#f85149" stroke-width="1.6"/><text x="500" y="459" fill="#f0f0f0" text-anchor="middle" font-weight="600">sin llamada a la tool</text><text x="500" y="476" fill="#f0f0f0" text-anchor="middle">llamadas a la tool: 0</text></g><g><rect x="700" y="438" width="240" height="50" rx="9" fill="#2d2d2d" stroke="#9e9e9e" stroke-width="1.6"/><text x="820" y="459" fill="#f0f0f0" text-anchor="middle" font-weight="600">No reintentar: explicar que no</text><text x="820" y="476" fill="#f0f0f0" text-anchor="middle">puede y ofrecer escalar</text></g><g><rect x="60" y="551" width="240" height="33" rx="9" fill="#3a3420" stroke="#d29922" stroke-width="1.6"/><text x="180" y="572" fill="#f0f0f0" text-anchor="middle" font-weight="600">historico</text></g><g><rect x="380" y="542" width="240" height="50" rx="9" fill="#4a1f1f" stroke="#f85149" stroke-width="1.6"/><text x="500" y="564" fill="#f0f0f0" text-anchor="middle" font-weight="600">Operation failed</text><text x="500" y="580" fill="#f0f0f0" text-anchor="middle">llamadas a la tool: 2</text></g><g><rect x="700" y="534" width="240" height="67" rx="9" fill="#2d2d2d" stroke="#9e9e9e" stroke-width="1.6"/><text x="820" y="555" fill="#f0f0f0" text-anchor="middle" font-weight="600">No reintentar: explicar el</text><text x="820" y="572" fill="#f0f0f0" text-anchor="middle">proceso para pedidos</text><text x="820" y="589" fill="#f0f0f0" text-anchor="middle">archivados</text></g></svg><div style="font-size:12px;color:#c8c8c8;margin-top:8px"><span style="display:inline-flex;align-items:center;gap:5px;margin-right:14px"><span style="width:14px;height:14px;border-radius:4px;background:#2d2d2d;border:1.5px solid #9e9e9e;display:inline-block"></span>Tu código o una tool</span><span style="display:inline-flex;align-items:center;gap:5px;margin-right:14px"><span style="width:14px;height:14px;border-radius:4px;background:#4a1f1f;border:1.5px solid #f85149;display:inline-block"></span>Bloqueado / falló / faltó</span><span style="display:inline-flex;align-items:center;gap:5px;margin-right:14px"><span style="width:14px;height:14px;border-radius:4px;background:#3a3420;border:1.5px solid #d29922;display:inline-block"></span>Datos de entrada</span></div><div style="font-size:15.5px;line-height:1.55;color:#f3f3f3;background:#26331f;border-left:4px solid #3fb950;border-radius:6px;padding:10px 14px;margin-top:12px">👉 Con el formato genérico, en 'caido' Claude recibe una lista vacía sin error: no tiene cómo saber que el sistema falló y le dice al cliente algo falso. Con errores estructurados, cada respuesta trae la categoría y si conviene reintentar.</div></div><pre style="font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><code style="font-family:inherit">
+<span class="r6">╭────────────────────────────────────────────── 🧪 Experimenta ──────────────────────────────────────────────╮</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">│</span>  Compara &#x27;caido · generico&#x27; con &#x27;caido · estructurado&#x27;: con la lista vacía Claude no tiene forma de saber  <span class="r6">│</span>
+<span class="r6">│</span>  que hubo una falla.                                                                                       <span class="r6">│</span>
+<span class="r6">│</span>  Sube D22_FALLAS_TRANSITORIAS a 3 y mira cuántas veces reintenta.                                          <span class="r6">│</span>
+<span class="r6">│</span>  En un sistema multiagente, el subagente reintenta lo transitorio localmente y solo propaga al             <span class="r6">│</span>
+<span class="r6">│</span>  coordinator lo que no pudo resolver, con lo que intentó y resultados parciales.                           <span class="r6">│</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r3">╭──────────────────────────────── 📊 Uso de la Messages API en esta corrida ─────────────────────────────────╮</span>
+<span class="r3">│</span> Llamadas a la API: 10                                                                                      <span class="r3">│</span>
+<span class="r3">│</span> Tokens de entrada: 6,078                                                                                   <span class="r3">│</span>
+<span class="r3">│</span> Tokens de salida:  1,335                                                                                   <span class="r3">│</span>
+<span class="r3">│</span> Costo estimado (claude-haiku-5-5): ~$0.0013 USD                                                            <span class="r3">│</span>
+<span class="r3">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+</code></pre>
+<div style="font-family:'Atkinson Hyperlegible Next',Inter,'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;color:#e8e8e8;background:#1b1c18;border:1px solid #444;border-radius:10px;padding:14px 20px;margin:16px 0;max-width:1000px;line-height:1.5"><div style="font-size:18px;font-weight:600">🔍 Lo que se le mandó a Claude</div><div style="font-size:14.5px;color:#c8c8c8;margin:4px 0 8px">Cada llamada lleva el historial completo: la API no recuerda nada entre llamadas. Abre una para ver system, tools y mensajes tal como viajaron.</div><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 1 · 2.2 caido · 1 mensajes · max_tokens 400</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;2.2 caido&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 400,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita. Responde en español, breve y claro.&quot;,
+  &quot;tools&quot;: [
+    &quot;buscar_pedidos_cliente&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Soy ana@ejemplo.com, ¿qué pedidos tengo pendientes?&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 2 · 2.2 caido · 3 mensajes · max_tokens 400</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;2.2 caido&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 400,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita. Responde en español, breve y claro.&quot;,
+  &quot;tools&quot;: [
+    &quot;buscar_pedidos_cliente&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Soy ana@ejemplo.com, ¿qué pedidos tengo pendientes?&quot;
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;assistant&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;tool_use&quot;,
+          &quot;name&quot;: &quot;buscar_pedidos_cliente&quot;,
+          &quot;input&quot;: {
+            &quot;email&quot;: &quot;ana@ejemplo.com&quot;
+          }
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;tool_result&quot;,
+          &quot;is_error&quot;: false,
+          &quot;content&quot;: &quot;{\&quot;pedidos\&quot;: []}&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 3 · 2.2 sin_pedidos · 1 mensajes · max_tokens 400</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;2.2 sin_pedidos&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 400,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita. Responde en español, breve y claro.&quot;,
+  &quot;tools&quot;: [
+    &quot;buscar_pedidos_cliente&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Soy nuevo@ejemplo.com, ¿tengo algún pedido?&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 4 · 2.2 sin_pedidos · 3 mensajes · max_tokens 400</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;2.2 sin_pedidos&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 400,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita. Responde en español, breve y claro.&quot;,
+  &quot;tools&quot;: [
+    &quot;buscar_pedidos_cliente&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Soy nuevo@ejemplo.com, ¿tengo algún pedido?&quot;
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;assistant&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;tool_use&quot;,
+          &quot;name&quot;: &quot;buscar_pedidos_cliente&quot;,
+          &quot;input&quot;: {
+            &quot;email&quot;: &quot;nuevo@ejemplo.com&quot;
+          }
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;tool_result&quot;,
+          &quot;is_error&quot;: false,
+          &quot;content&quot;: &quot;{\&quot;pedidos\&quot;: []}&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 5 · 2.2 email_invalido · 1 mensajes · max_tokens 400</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;2.2 email_invalido&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 400,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita. Responde en español, breve y claro.&quot;,
+  &quot;tools&quot;: [
+    &quot;buscar_pedidos_cliente&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Soy ana@ejemplo, ¿me dices mis pedidos?&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 6 · 2.2 email_invalido · 3 mensajes · max_tokens 400</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;2.2 email_invalido&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 400,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita. Responde en español, breve y claro.&quot;,
+  &quot;tools&quot;: [
+    &quot;buscar_pedidos_cliente&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Soy ana@ejemplo, ¿me dices mis pedidos?&quot;
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;assistant&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;thinking&quot;
+        },
+        {
+          &quot;type&quot;: &quot;tool_use&quot;,
+          &quot;name&quot;: &quot;buscar_pedidos_cliente&quot;,
+          &quot;input&quot;: {
+            &quot;email&quot;: &quot;ana@ejemplo&quot;
+          }
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;tool_result&quot;,
+          &quot;is_error&quot;: true,
+          &quot;content&quot;: &quot;Operation failed&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 7 · 2.2 sin_permiso · 1 mensajes · max_tokens 400</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;2.2 sin_permiso&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 400,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita. Responde en español, breve y claro.&quot;,
+  &quot;tools&quot;: [
+    &quot;buscar_pedidos_cliente&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Soy ana@ejemplo.com. Dime qué pidió mi vecino, juan.perez@ejemplo.com&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 8 · 2.2 historico · 1 mensajes · max_tokens 400</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;2.2 historico&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 400,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita. Responde en español, breve y claro.&quot;,
+  &quot;tools&quot;: [
+    &quot;buscar_pedidos_cliente&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Soy ana@ejemplo.com, ¿qué pedidos hice en 2019?&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 9 · 2.2 historico · 3 mensajes · max_tokens 400</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;2.2 historico&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 400,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita. Responde en español, breve y claro.&quot;,
+  &quot;tools&quot;: [
+    &quot;buscar_pedidos_cliente&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Soy ana@ejemplo.com, ¿qué pedidos hice en 2019?&quot;
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;assistant&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;tool_use&quot;,
+          &quot;name&quot;: &quot;buscar_pedidos_cliente&quot;,
+          &quot;input&quot;: {
+            &quot;email&quot;: &quot;ana@ejemplo.com&quot;,
+            &quot;anio&quot;: 2019
+          }
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;tool_result&quot;,
+          &quot;is_error&quot;: true,
+          &quot;content&quot;: &quot;Operation failed&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 10 · 2.2 historico · 5 mensajes · max_tokens 400</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;2.2 historico&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 400,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita. Responde en español, breve y claro.&quot;,
+  &quot;tools&quot;: [
+    &quot;buscar_pedidos_cliente&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Soy ana@ejemplo.com, ¿qué pedidos hice en 2019?&quot;
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;assistant&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;tool_use&quot;,
+          &quot;name&quot;: &quot;buscar_pedidos_cliente&quot;,
+          &quot;input&quot;: {
+            &quot;email&quot;: &quot;ana@ejemplo.com&quot;,
+            &quot;anio&quot;: 2019
+          }
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;tool_result&quot;,
+          &quot;is_error&quot;: true,
+          &quot;content&quot;: &quot;Operation failed&quot;
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;assistant&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;thinking&quot;
+        },
+        {
+          &quot;type&quot;: &quot;tool_use&quot;,
+          &quot;name&quot;: &quot;buscar_pedidos_cliente&quot;,
+          &quot;input&quot;: {
+            &quot;email&quot;: &quot;ana@ejemplo.com&quot;,
+            &quot;anio&quot;: 2019
+          }
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;tool_result&quot;,
+          &quot;is_error&quot;: true,
+          &quot;content&quot;: &quot;Operation failed&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details></div><div id="ccZoom" title="Tamaño de letra (se recuerda)">
+<button onclick="ccZoom(-1)">A−</button><button onclick="ccZoom(1)">A+</button>
+<button id="ccTemaBtn" onclick="ccTema()" title="Tema claro / oscuro (por defecto, el de tu sistema)" hidden>☀</button></div>
+<style>#ccZoom{position:fixed;top:10px;right:14px;z-index:50;display:flex;gap:4px;font-family:var(--letra,system-ui,sans-serif)}
+#ccZoom button{background:var(--superficie-2,#2d2d2d);color:var(--texto,#f0f0f0);border:1px solid var(--borde,#666);border-radius:7px;
+  padding:4px 10px;font-size:14px;cursor:pointer}
+@media print{#ccZoom{display:none}}</style>
+<script>(function(){
+  if (window.top !== window.self) { document.getElementById('ccZoom').style.display = 'none'; }
+  // Tema: solo en páginas con los colores de tema.py (las corridas HTML son siempre oscuras, como una terminal)
+  var meta = document.querySelector('meta[name="color-scheme"]');
+  var conTema = !!meta && getComputedStyle(document.documentElement).getPropertyValue('--fondo').trim() !== '';
+  function sistema(){ return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+  function guardado(){ try { return localStorage.getItem('ccarf_esquema'); } catch (e) { return null; } }
+  function pintar(){ document.getElementById('ccTemaBtn').textContent = (guardado() || sistema()) === 'dark' ? '☀' : '☾'; }
+  window.ccTema = function(){
+    if (window.top !== window.self) {   // dentro del panel: el tema es del panel completo
+      try { var b = window.top.document.getElementById('tema'); if (b) { b.click(); return; } } catch (e) {}
+    }
+    var destino = (guardado() || sistema()) === 'dark' ? 'light' : 'dark';
+    try { destino === sistema() ? localStorage.removeItem('ccarf_esquema') : localStorage.setItem('ccarf_esquema', destino); } catch (e) {}
+    meta.content = guardado() || 'light dark'; pintar();
+  };
+  if (conTema) { document.getElementById('ccTemaBtn').hidden = false; pintar(); matchMedia('(prefers-color-scheme: dark)').addEventListener('change', pintar); }
+  function leer(){ try { return +(localStorage.getItem('ccarf_escala') || 1); } catch (e) { return 1; } }
+  function guardar(v){ try { localStorage.setItem('ccarf_escala', v); } catch (e) {} }
+  window.ccZoom = function(d){ var v = Math.min(1.6, Math.max(0.8, +(leer() + 0.1 * d).toFixed(2))); guardar(v); document.body.style.zoom = v; };
+  document.body.style.zoom = leer();
+})();</script></body>
+</html>

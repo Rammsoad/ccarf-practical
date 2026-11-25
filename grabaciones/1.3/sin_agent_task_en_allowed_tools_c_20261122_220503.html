@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+.r1 {color: #727272; text-decoration-color: #727272}
+.r2 {color: #326e7b; text-decoration-color: #326e7b; font-weight: bold}
+.r3 {color: #9d65ff; text-decoration-color: #9d65ff}
+.r4 {color: #c4c5b5; text-decoration-color: #c4c5b5; background-color: #000087; font-weight: bold}
+.r5 {color: #527618; text-decoration-color: #527618}
+.r6 {color: #fd971f; text-decoration-color: #fd971f}
+.r7 {color: #58d1eb; text-decoration-color: #58d1eb; font-weight: bold}
+.r8 {color: #727272; text-decoration-color: #727272; font-weight: bold}
+.r9 {color: #800635; text-decoration-color: #800635; font-weight: bold}
+.r10 {color: #845115; text-decoration-color: #845115}
+.r11 {color: #f4005f; text-decoration-color: #f4005f; font-weight: bold}
+.r12 {font-weight: bold}
+.r13 {color: #767036; text-decoration-color: #767036}
+.r14 {color: #800635; text-decoration-color: #800635}
+.r15 {color: #98e024; text-decoration-color: #98e024}
+body {
+    color: #d9d9d9;
+    background-color: #0c0c0c;
+}
+</style>
+<style>
+@font-face{font-family:'Atkinson Hyperlegible Next';font-style:italic;font-weight:400;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-italic-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:italic;font-weight:400;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-italic-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-normal-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-normal-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}@font-face{font-family:'Recursive';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/recursive-normal-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Recursive';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/recursive-normal-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+body{max-width:1100px;margin:0 auto !important;padding:8px 24px 48px;font-family:'Atkinson Hyperlegible Next',Inter,system-ui,sans-serif !important}
+pre,code{font-family:'Recursive',Menlo,'DejaVu Sans Mono',monospace !important}
+.diagrama svg{max-width:100%;height:auto}
+.diagrama{max-width:100% !important;box-sizing:border-box;overflow-x:auto}
+pre{font-size:14px !important;line-height:1.5 !important}
+abbr.termino{text-decoration:underline dotted #8ab4f8;text-underline-offset:3px;cursor:help}
+</style></head>
+<body><div style="font-family:'Atkinson Hyperlegible Next',Inter,'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;color:#e8e8e8;background:#1b1c18;line-height:1.5;border:1px solid #444;border-radius:10px;padding:14px 20px;margin:14px 0;max-width:1000px"><div style="font-size:19px;font-weight:600">Dominio 1 · demo 1.3 · 22/11/2026 22:05:02</div><div style="font-size:15px;color:#e6e6e6;margin:6px 0">📝 Grabación «❌ Sin Agent/Task en allowed_tools (C)». Resultado: allowed_tools con Agent/Task: no · subagentes lanzados: 0</div><div style="font-size:14px;color:#bbb;margin:0 0 6px">💲 1 llamada a la API · 1,248 tokens (2 entrada + 1,246 salida + 765 de caché) · ≈ $0.0007 USD</div><div style="font-size:14px;color:#bbb;margin:8px 0 6px">Variables de esta corrida (<a style="color:#58a6ff" href="/archivos/salidas_html/dominio1/index.html">recorrer todas las corridas</a>)</div><table style="font-size:14px;border-collapse:collapse"><tr><td style="padding:3px 16px 3px 0;color:#bbb">MODELO</td><td>&quot;claude-haiku-5-5&quot;</td></tr><tr><td style="padding:3px 16px 3px 0;color:#bbb">D13_FORMATO</td><td>&quot;estructurado&quot;</td></tr><tr><td style="padding:3px 16px 3px 0;color:#bbb">D13_PARALELO</td><td>true</td></tr><tr><td style="padding:3px 16px 3px 0;color:#bbb">D13_PARTE</td><td>&quot;C&quot;</td></tr><tr><td style="padding:3px 16px 3px 0;color:#bbb">D13_PERMITIR_AGENT</td><td>false</td></tr></table></div>
+    <pre style="font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><code style="font-family:inherit">🎛  Ajustes del panel para esta corrida: D13_PARTE = &quot;C&quot; · D13_PERMITIR_AGENT = false
+<span class="r1">   Modelo: claude-haiku-</span><span class="r2">5</span><span class="r1">-</span><span class="r2">5</span>
+<span class="r1">   Modo HTML: encendido → salidas_html/dominio1/</span>
+
+<span class="r3">───────────────────────────────── </span><span class="r4"> DEMO </span><span class="r4">1.3</span><span class="r4"> · Context passing y paralelismo </span><span class="r3"> ─────────────────────────────────</span>
+
+<span class="r1">📖 Guía de esta demo: python lab_dominio1.py guia </span><span class="r2">1.3</span><span class="r1">  ·  más detalle: pon DETALLE = </span><span class="r5">&quot;completo&quot;</span><span class="r1"> arriba del </span>
+<span class="r1">archivo</span>
+<span class="r6">╭────────────────────────────────────────── 💡 Concepto del examen ──────────────────────────────────────────╮</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">│</span>  El subagente solo sabe lo que le pasas en su prompt. Y lo que regresa también es solo texto: si quieres   <span class="r6">│</span>
+<span class="r6">│</span>  conservar fuentes y fechas, pídelas en formato estructurado.                                              <span class="r6">│</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+
+<span class="r7">▶ PARTE C · Subagentes reales con el Agent SDK: AgentDefinition + la tool Agent (Task)</span>
+<span class="r1">   agents = </span><span class="r8">{</span><span class="r5">&#x27;investigador&#x27;</span><span class="r1">: </span><span class="r9">AgentDefinition</span><span class="r8">(</span><span class="r10">...</span><span class="r8">)}</span><span class="r1"> · allowed_tools = </span><span class="r8">[]</span><span class="r1"> </span><span class="r8">(</span><span class="r1">sin Agent/Task</span><span class="r8">)</span>
+
+<span class="r11">→ Agent SDK (coordinator)</span> prompt: Compara los precios de los proveedores. Los datos de cada uno son:
+- SRC-<span class="r7">0101</span> <span class="r12">(</span><span class="r7">2026</span>-<span class="r7">09</span>-<span class="r7">15</span><span class="r12">)</span>: Catálogo Barro Fino <span class="r7">2026</span>: Barro Fino vende tazas artesanales a $<span class="r7">85</span> por pieza en 
+pedidos de <span class="r7">100</span> o más. Entrega en <span class="r7">10</span> días hábiles.
+- SRC-<span class="r7">0102</span> <span class="r12">(</span><span class="r7">2025</span>-<span class="r7">03</span>-<span class="r7">02</span><span class="r12">)</span>: Reseñas Mercado Artesano: Varios clientes reportan que Barro Fino tuvo retrasos de <span class="r7">3</span> 
+semanas en la temporada alta de <span class="r7">2024</span>.
+- SRC-<span class="r7">0201</span> <span class="r12">(</span><span class="r7">2026</span>-<span class="r7">08</span>-<span class="r7">01</span><span class="r12">)</span>: Lista de precios Textiles Oaxaca: Manteles bordados a $<span class="r7">210</span> por pieza, mínimo <span class="r7">50</span> 
+piezas. Envío gratis en compras mayores a $<span class="r7">10</span>,<span class="r7">000</span>.
+<span class="r1">   sesión iniciada · </span><span class="r10">session_id</span><span class="r1">=</span><span class="r13">14b16442</span><span class="r13">-7023-41fa-9d7e-ab5bc5c3d623</span><span class="r1"> · </span><span class="r10">modelo</span><span class="r1">=</span><span class="r14">claude</span><span class="r1">-haiku-</span><span class="r2">5</span><span class="r1">-</span><span class="r2">5</span>
+<span class="r1">   tools disponibles: </span>
+<span class="r1">   </span><span class="r8">(</span><span class="r1">thinking oculto</span><span class="r8">)</span>
+<span class="r15">╭───────────────────────────────────────────── texto del agente ─────────────────────────────────────────────╮</span>
+<span class="r15">│</span> 1. **Precios:** Barro Fino vende tazas artesanales a $85/pieza (mínimo 100). Textiles Oaxaca vende         <span class="r15">│</span>
+<span class="r15">│</span> manteles bordados a $210/pieza (mínimo 50). Son productos distintos, así que solo son comparables si       <span class="r15">│</span>
+<span class="r15">│</span> buscas el mismo tipo de artículo.                                                                          <span class="r15">│</span>
+<span class="r15">│</span> 2. **Entrega y riesgo:** Barro Fino promete entrega en 10 días hábiles, pero reseñas de 2025 (SRC-0102)    <span class="r15">│</span>
+<span class="r15">│</span> reportan retrasos de 3 semanas en la temporada alta de 2024. Textiles Oaxaca no informa tiempos de         <span class="r15">│</span>
+<span class="r15">│</span> entrega, y su envío es gratis en compras mayores a $10,000.                                                <span class="r15">│</span>
+<span class="r15">│</span> 3. **Conclusión:** Barro Fino es más barato por pieza, pero conviene confirmar sus plazos actuales antes   <span class="r15">│</span>
+<span class="r15">│</span> de pedir, sobre todo en temporada alta. Fuentes: SRC-0101 (2026-09-15), SRC-0201 (2026-08-01) y SRC-0102   <span class="r15">│</span>
+<span class="r15">│</span> (2025-03-02, reseña antigua).                                                                              <span class="r15">│</span>
+<span class="r15">│</span>                                                                                                            <span class="r15">│</span>
+<span class="r15">│</span> Nota: no tengo una herramienta para invocar subagentes en esta sesión, así que trabajé directamente con    <span class="r15">│</span>
+<span class="r15">│</span> los datos que me diste.                                                                                    <span class="r15">│</span>
+<span class="r15">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r3">╭─────────────────────────────────── 🏁 ResultMessage (fin de la corrida) ───────────────────────────────────╮</span>
+<span class="r3">│</span> subtype: success                                                                                           <span class="r3">│</span>
+<span class="r3">│</span> turnos: 1                                                                                                  <span class="r3">│</span>
+<span class="r3">│</span> session_id: 14b16442-7023-41fa-9d7e-ab5bc5c3d623                                                           <span class="r3">│</span>
+<span class="r3">│</span> costo reportado: $0.0007 USD                                                                               <span class="r3">│</span>
+<span class="r3">│</span> error: False                                                                                               <span class="r3">│</span>
+<span class="r3">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r11">   ✘ Subagentes lanzados por el coordinator: </span><span class="r11">0</span>
+<span class="r1">   Sin Agent/Task en allowed_tools, el coordinator no puede delegar: hace todo él solo </span><span class="r8">(</span><span class="r1">o se queda corto</span><span class="r8">)</span><span class="r1">. </span>
+<span class="r1">Definir el subagente no basta: hay que permitir la tool que lo lanza.</span>
+<span class="r3">╭──────────────────────────────── 📊 Uso de la Messages API en esta corrida ─────────────────────────────────╮</span>
+<span class="r3">│</span> Llamadas a la API: 0                                                                                       <span class="r3">│</span>
+<span class="r3">│</span> Tokens de entrada: 0                                                                                       <span class="r3">│</span>
+<span class="r3">│</span> Tokens de salida:  0                                                                                       <span class="r3">│</span>
+<span class="r3">│</span> Costo estimado (con el precio de cada modelo usado): ~$0.0000 USD                                          <span class="r3">│</span>
+<span class="r3">│</span> Agent SDK / claude -p: 1 turnos · 1,248 tokens · $0.0007 USD (costo que reporta)                           <span class="r3">│</span>
+<span class="r3">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+</code></pre>
+<div id="ccZoom" title="Tamaño de letra (se recuerda)">
+<button onclick="ccZoom(-1)">A−</button><button onclick="ccZoom(1)">A+</button>
+<button id="ccTemaBtn" onclick="ccTema()" title="Tema claro / oscuro (por defecto, el de tu sistema)" hidden>☀</button></div>
+<style>#ccZoom{position:fixed;top:10px;right:14px;z-index:50;display:flex;gap:4px;font-family:var(--letra,system-ui,sans-serif)}
+#ccZoom button{background:var(--superficie-2,#2d2d2d);color:var(--texto,#f0f0f0);border:1px solid var(--borde,#666);border-radius:7px;
+  padding:4px 10px;font-size:14px;cursor:pointer}
+@media print{#ccZoom{display:none}}</style>
+<script>(function(){
+  if (window.top !== window.self) { document.getElementById('ccZoom').style.display = 'none'; }
+  // Tema: solo en páginas con los colores de tema.py (las corridas HTML son siempre oscuras, como una terminal)
+  var meta = document.querySelector('meta[name="color-scheme"]');
+  var conTema = !!meta && getComputedStyle(document.documentElement).getPropertyValue('--fondo').trim() !== '';
+  function sistema(){ return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+  function guardado(){ try { return localStorage.getItem('ccarf_esquema'); } catch (e) { return null; } }
+  function pintar(){ document.getElementById('ccTemaBtn').textContent = (guardado() || sistema()) === 'dark' ? '☀' : '☾'; }
+  window.ccTema = function(){
+    if (window.top !== window.self) {   // dentro del panel: el tema es del panel completo
+      try { var b = window.top.document.getElementById('tema'); if (b) { b.click(); return; } } catch (e) {}
+    }
+    var destino = (guardado() || sistema()) === 'dark' ? 'light' : 'dark';
+    try { destino === sistema() ? localStorage.removeItem('ccarf_esquema') : localStorage.setItem('ccarf_esquema', destino); } catch (e) {}
+    meta.content = guardado() || 'light dark'; pintar();
+  };
+  if (conTema) { document.getElementById('ccTemaBtn').hidden = false; pintar(); matchMedia('(prefers-color-scheme: dark)').addEventListener('change', pintar); }
+  function leer(){ try { return +(localStorage.getItem('ccarf_escala') || 1); } catch (e) { return 1; } }
+  function guardar(v){ try { localStorage.setItem('ccarf_escala', v); } catch (e) {} }
+  window.ccZoom = function(d){ var v = Math.min(1.6, Math.max(0.8, +(leer() + 0.1 * d).toFixed(2))); guardar(v); document.body.style.zoom = v; };
+  document.body.style.zoom = leer();
+})();</script></body>
+</html>

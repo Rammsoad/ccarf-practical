@@ -1,0 +1,125 @@
+<!DOCTYPE html><html lang='es'><head><meta charset='UTF-8'><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="text-scale" content="scale">
+<meta name="color-scheme" content="light dark">
+<meta name="referrer" content="no-referrer">
+<script>try{document.querySelector('meta[name="color-scheme"]').content=localStorage.getItem('ccarf_esquema')||'light dark'}catch(e){}</script>
+
+<style>@font-face{font-family:'Atkinson Hyperlegible Next';font-style:italic;font-weight:400;font-display:swap;src:url('fuentes/atkinson-hyperlegible-next-italic-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:italic;font-weight:400;font-display:swap;src:url('fuentes/atkinson-hyperlegible-next-italic-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:400 700;font-display:swap;src:url('fuentes/atkinson-hyperlegible-next-normal-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:400 700;font-display:swap;src:url('fuentes/atkinson-hyperlegible-next-normal-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}@font-face{font-family:'Recursive';font-style:normal;font-weight:400 700;font-display:swap;src:url('fuentes/recursive-normal-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Recursive';font-style:normal;font-weight:400 700;font-display:swap;src:url('fuentes/recursive-normal-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}</style><title>CCAR-F · Escenarios del examen</title><style>
+:root{
+  color-scheme:light dark;
+  &:has(> head > meta[name="color-scheme"][content="dark"]){color-scheme:dark}
+  &:has(> head > meta[name="color-scheme"][content="light"]){color-scheme:light}
+
+  /* Superficies: grafito azulado en oscuro, gris frío en claro */
+  --fondo:light-dark(#f4f5f7,#14161b);
+  --superficie:light-dark(#ffffff,#1b1e25);
+  --superficie-2:light-dark(#eceef2,#232730);
+  --borde:light-dark(#d3d7de,#323744);
+  --borde-suave:light-dark(#e3e6eb,#262a34);
+  --texto:light-dark(#1a1c22,#ebe8e2);
+  --texto-2:light-dark(#545966,#a6a9b3);
+  --texto-3:light-dark(#62676f,#9a9ea9);
+  --borde-control:light-dark(#959ba6,#5c6271);
+
+  /* Acento: rosa mexicano (La Tiendita) */
+  --acento:light-dark(#c4006a,#ff5aa8);
+  --acento-suave:light-dark(#fde7f2,#3a1a2b);
+  --sobre-acento:light-dark(#ffffff,#24000f);
+  --enlace:light-dark(#a3005a,#ff8cc6);
+
+  /* Significado: solo para ✅ / ❌ 🎓 trampa / 🔧 producto */
+  --bien:light-dark(#17724a,#5fd39c);
+  --bien-suave:light-dark(#e3f4ec,#173226);
+  --trampa:light-dark(#b3311b,#ff7d68);
+  --trampa-suave:light-dark(#fbe9e5,#3a1d19);
+  --producto:light-dark(#835600,#f0bf4c);
+  --producto-suave:light-dark(#fbf1d9,#352b14);
+
+  --tinta:light-dark(#2f5d8f,#8fb5e6);
+  --codigo-fondo:light-dark(#eceef2,#262a33);
+  --resaltado:light-dark(#fff0bf,#3b3420);
+  --terminal:#0f1115;
+  --terminal-texto:#d9d9d9;
+  --velo:rgb(10 12 16 / .5);
+
+  --letra:'Atkinson Hyperlegible Next',system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+  --mono:'Recursive',ui-monospace,Menlo,Consolas,'DejaVu Sans Mono',monospace;
+
+  accent-color:var(--acento);
+  scrollbar-color:var(--texto-3) transparent;
+}
+body{font-family:var(--letra);font-size-adjust:from-font}
+code,pre,kbd,samp,textarea{font-family:var(--mono)}
+:focus-visible{outline:2px solid var(--acento);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important;scroll-behavior:auto !important}}
+
+*{box-sizing:border-box}
+body{margin:0 auto;max-width:62rem;padding:2rem 1.75rem 5.5rem;background:var(--fondo);color:var(--texto);font-size:1.0625rem;line-height:1.6}
+a{color:var(--enlace)} h1{font-size:1.85rem;line-height:1.25;margin:0 0 .5rem} h2{font-size:1.45rem;margin:2.5rem 0 .6rem;
+  padding-top:.9rem;border-top:3px solid var(--acento)} h3{font-size:1.2rem;margin:1.5rem 0 .4rem}
+p,li{max-width:76ch} .ayuda{color:var(--texto-2);font-size:.95rem}
+code{background:var(--codigo-fondo);padding:.05em .35em;border-radius:.3em;font-size:.88em}
+table{border-collapse:collapse;width:100%;margin:.6rem 0;font-size:.95rem}
+th,td{border:1px solid var(--borde);padding:.5rem .75rem;vertical-align:top;text-align:left}
+th{background:var(--superficie-2);position:sticky;top:0} tr:nth-child(even) td{background:var(--superficie)}
+.tarjeta{background:var(--superficie);border:1px solid var(--borde);border-radius:.75rem;padding:.9rem 1.1rem;margin:.9rem 0}
+.boton{display:inline-block;padding:.35rem .75rem;border:1px solid var(--borde);border-radius:.5rem;text-decoration:none;color:var(--texto);
+  font-size:.94rem;margin:.25rem .4rem .25rem 0;background:var(--superficie);cursor:pointer;font-family:inherit}
+.boton:hover{border-color:var(--acento)} .boton.activo{border-color:var(--acento);background:var(--acento-suave)}
+.chip{font-size:.8rem;font-weight:600;color:var(--trampa);background:var(--trampa-suave);border-radius:999px;padding:.05rem .55rem;margin-left:.3rem}
+.idea{background:var(--acento-suave);border-left:4px solid var(--acento);border-radius:0 .5rem .5rem 0;padding:.75rem 1rem;font-size:1.15rem;margin:.6rem 0 1.1rem}
+.mal{color:var(--trampa)} .bien{color:var(--bien)}
+abbr.termino{text-decoration:underline dotted var(--tinta);text-underline-offset:3px;cursor:help}
+details summary{cursor:pointer}
+input.buscar{width:100%;font:inherit;font-size:1.0625rem;padding:.6rem .9rem;background:var(--superficie);color:var(--texto);
+  border:1px solid var(--borde);border-radius:.6rem}
+.tapado tr:not(.visto) td.resp{color:transparent;background:var(--codigo-fondo);cursor:pointer}
+.tapado tr:not(.visto) td.resp *{color:transparent;background:transparent;text-decoration:none}
+.tapado tr:not(.visto) .tit{color:transparent;background:var(--codigo-fondo);border-radius:.25em}
+.tabla{overflow-x:auto}
+.mapa{overflow-x:auto;background:#1b1c18;border-radius:.6rem;padding:.6rem;margin-top:.6rem}
+.mapa svg{min-width:40rem;width:100%;height:auto}
+.tarjeta.principal{border:2px solid var(--acento)}
+.boton.principal{background:var(--acento);color:var(--sobre-acento);border-color:var(--acento);font-weight:700}
+.terminal:empty::before{content:attr(data-vacio);color:#8a8f99;font-family:var(--letra)}
+.terminal{color-scheme:dark;background:var(--terminal);color:var(--terminal-texto);border-radius:.6rem;padding:.9rem;min-height:12rem;
+  overflow:auto;white-space:pre;font-family:var(--mono);font-size:.85rem;line-height:1.45}
+@media print{:root{color-scheme:light !important} body{background:#fff;color:#000;max-width:none;padding:0 12px;font-size:12.5px}
+  #ccZoom,.no-imprimir{display:none !important} th{background:#eee;position:static} td,th{border-color:#999}
+  tr:nth-child(even) td{background:#f6f6f6} h2{border-color:#999;break-before:auto} a{color:#000}
+  .tapado td.resp,.tapado .tit{color:#000 !important;background:none !important}}
+</style></head><body><p class='ayuda no-imprimir'><a href='../EMPIEZA_AQUI.html'>← Empieza aquí</a></p><div class='tapado'><h1>Los 6 escenarios del examen</h1><p class='ayuda'>Según los sitios de preparación, las preguntas del examen se basan en estos escenarios y en cada examen salen 4 de los 6, al azar. Los nombres no vienen de la guía oficial; qué demos van con cada uno lo decidimos nosotros. Las demos van en el orden sugerido para practicar. Clic en una demo para ver su ejemplo.</p><table><tr><th style='width:26%'>Escenario</th><th>Qué se pregunta</th><th style='width:30%'>Demos</th></tr><tr><td><b>1. Agente de soporte al cliente</b><br><small>Customer Support Resolution Agent</small></td><td>Conversación de varios turnos, tools para consultar cuentas, cuándo escalar a una persona, reglas que se cumplen siempre.</td><td><a class='boton' href='../ejemplos_html/dominio1/index.html'>1.1</a><a class='boton' href='../ejemplos_html/dominio1/index.html'>1.4</a><a class='boton' href='../ejemplos_html/dominio5/index.html'>5.2</a><a class='boton' href='../ejemplos_html/dominio1/index.html'>1.5</a><a class='boton' href='../ejemplos_html/dominio2/index.html'>2.1</a><a class='boton' href='../ejemplos_html/dominio2/index.html'>2.2</a><a class='boton' href='../ejemplos_html/dominio5/index.html'>5.1</a></td></tr><tr><td><b>2. Generar código con Claude Code</b><br><small>Code Generation with Claude Code</small></td><td>CLAUDE.md, skills y slash commands, rules por ruta, plan mode, iterar con ejemplos y tests.</td><td><a class='boton' href='../ejemplos_html/dominio3/index.html'>3.1</a><a class='boton' href='../ejemplos_html/dominio3/index.html'>3.2</a><a class='boton' href='../ejemplos_html/dominio3/index.html'>3.3</a><a class='boton' href='../ejemplos_html/dominio3/index.html'>3.4</a><a class='boton' href='../ejemplos_html/dominio3/index.html'>3.5</a><a class='boton' href='../ejemplos_html/dominio2/index.html'>2.5</a></td></tr><tr><td><b>3. Sistema de investigación multiagente</b><br><small>Multi-Agent Research System</small></td><td>Dividir el trabajo, aislar a cada subagente, juntar resultados con fuentes y manejar un subagente que falla.</td><td><a class='boton' href='../ejemplos_html/dominio1/index.html'>1.2</a><a class='boton' href='../ejemplos_html/dominio1/index.html'>1.3</a><a class='boton' href='../ejemplos_html/dominio1/index.html'>1.6</a><a class='boton' href='../ejemplos_html/dominio2/index.html'>2.2</a><a class='boton' href='../ejemplos_html/dominio2/index.html'>2.3</a><a class='boton' href='../ejemplos_html/dominio5/index.html'>5.3</a><a class='boton' href='../ejemplos_html/dominio5/index.html'>5.6</a></td></tr><tr><td><b>4. Productividad del desarrollador</b><br><small>Developer Productivity with Claude</small></td><td>Configurar Claude Code y MCP, memoria entre sesiones, qué es del equipo y qué es personal, explorar código grande.</td><td><a class='boton' href='../ejemplos_html/dominio1/index.html'>1.7</a><a class='boton' href='../ejemplos_html/dominio2/index.html'>2.4</a><a class='boton' href='../ejemplos_html/dominio2/index.html'>2.5</a><a class='boton' href='../ejemplos_html/dominio3/index.html'>3.1</a><a class='boton' href='../ejemplos_html/dominio5/index.html'>5.4</a></td></tr><tr><td><b>5. Claude Code en CI/CD</b><br><small>Claude Code for CI/CD</small></td><td>Modo no interactivo (-p), salida JSON con schema, comentarios de PR, criterios de revisión y revisión independiente.</td><td><a class='boton' href='../ejemplos_html/dominio3/index.html'>3.6</a><a class='boton' href='../ejemplos_html/dominio4/index.html'>4.1</a><a class='boton' href='../ejemplos_html/dominio4/index.html'>4.6</a><a class='boton' href='../ejemplos_html/dominio1/index.html'>1.6</a><a class='boton' href='../ejemplos_html/dominio4/index.html'>4.5</a></td></tr><tr><td><b>6. Extracción de datos estructurados</b><br><small>Structured Data Extraction</small></td><td>JSON schema, validar y reintentar, ejemplos few-shot, documentos que no encajan y revisión humana por confianza.</td><td><a class='boton' href='../ejemplos_html/dominio4/index.html'>4.2</a><a class='boton' href='../ejemplos_html/dominio4/index.html'>4.3</a><a class='boton' href='../ejemplos_html/dominio4/index.html'>4.4</a><a class='boton' href='../ejemplos_html/dominio4/index.html'>4.5</a><a class='boton' href='../ejemplos_html/dominio5/index.html'>5.5</a><a class='boton' href='../ejemplos_html/dominio2/index.html'>2.3</a></td></tr></table><h2>Practica cada escenario</h2><p class='ayuda'>Situaciones cortas como las del examen. Contesta en voz alta y da clic (o Enter) en la respuesta para verla.</p><h3>1. Agente de soporte al cliente</h3><div class='tabla'><table><tr><th style='width:55%'>Situación</th><th>Respuesta</th><th style='width:70px'>Tema</th></tr><tr><td>Tu agente de soporte escribe “Déjame revisar tu pedido…” y termina sin consultar nada. ¿Qué revisas en el loop?</td><td class='resp' tabindex='0' role='button' aria-label='Ver la respuesta'>Revisar <abbr class="termino" title="Campo de cada respuesta que dice POR QUÉ Claude dejó de escribir: tool_use, end_turn, max_tokens…  ·  En inglés (examen): stop reason">stop_reason</abbr></td><td>1.1</td></tr><tr><td>Un reembolso de más de $10,000 nunca debe salir sin verificar al cliente, y el prompt a veces no se respeta. ¿Qué pones?</td><td class='resp' tabindex='0' role='button' aria-label='Ver la respuesta'><abbr class="termino" title="Un chequeo en tu código que bloquea una tool hasta que se cumpla un requisito (p. ej. verificar al cliente).  ·  En inglés (examen): prerequisite gate">Prerequisite gate</abbr> / PreToolUse</td><td>1.4,1.5</td></tr><tr><td>El cliente escribe “quiero hablar con una persona”, aunque el caso es sencillo. ¿Qué hace el agente?</td><td class='resp' tabindex='0' role='button' aria-label='Ver la respuesta'>Escalar de inmediato</td><td>5.2</td></tr><tr><td>Una tool devuelve fechas como 2026-03-01, otra como 01/03/26 y otra en timestamp. ¿Dónde lo normalizas?</td><td class='resp' tabindex='0' role='button' aria-label='Ver la respuesta'>PostToolUse</td><td>1.5</td></tr></table></div><h3>2. Generar código con Claude Code</h3><div class='tabla'><table><tr><th style='width:55%'>Situación</th><th>Respuesta</th><th style='width:70px'>Tema</th></tr><tr><td>Un compañero nuevo clona el repo y Claude no sigue las convenciones que tú sí ves. ¿Dónde estaban?</td><td class='resp' tabindex='0' role='button' aria-label='Ver la respuesta'>Estaban en ~/.claude/ → moverlas al proyecto</td><td>3.1</td></tr><tr><td>Un skill genera un análisis enorme que llena la conversación principal. ¿Qué agregas al skill?</td><td class='resp' tabindex='0' role='button' aria-label='Ver la respuesta'>context: fork</td><td>3.2</td></tr><tr><td>Las convenciones de los tests aplican a archivos repartidos en más de 50 carpetas. ¿Cómo las cargas solo cuando hacen falta?</td><td class='resp' tabindex='0' role='button' aria-label='Ver la respuesta'>.claude/rules/ con paths</td><td>3.3</td></tr><tr><td>Te piden migrar la autenticación y hay varias formas razonables de hacerlo. ¿Cómo empiezas?</td><td class='resp' tabindex='0' role='button' aria-label='Ver la respuesta'>Plan mode</td><td>3.4</td></tr></table></div><h3>3. Sistema de investigación multiagente</h3><div class='tabla'><table><tr><th style='width:55%'>Situación</th><th>Respuesta</th><th style='width:70px'>Tema</th></tr><tr><td>Pides un reporte sobre la tienda y solo habla de marketing; nadie investigó inventario ni logística. ¿Dónde está la causa?</td><td class='resp' tabindex='0' role='button' aria-label='Ver la respuesta'>Descomposición del <abbr class="termino" title="El agente que divide el trabajo, lo reparte a subagentes y junta los resultados.  ·  En inglés (examen): coordinator">coordinator</abbr></td><td>1.2</td></tr><tr><td>El reporte final tiene buenos datos, pero nadie sabe de qué documento salió cada uno. ¿Qué cambias en lo que devuelven los subagentes?</td><td class='resp' tabindex='0' role='button' aria-label='Ver la respuesta'>Metadatos estructurados (afirmación + fuente)</td><td>1.3</td></tr><tr><td>En una revisión de 14 archivos, los primeros salen bien y los últimos casi sin comentarios. ¿Qué cambias?</td><td class='resp' tabindex='0' role='button' aria-label='Ver la respuesta'>Multi-pass</td><td>1.6</td></tr><tr><td>El cliente no tiene pedidos en 2024, pero el agente reintenta la búsqueda una y otra vez. ¿Qué falta en la respuesta de la tool?</td><td class='resp' tabindex='0' role='button' aria-label='Ver la respuesta'>Separar falla de acceso de vacío válido</td><td>2.2</td></tr></table></div><h3>4. Productividad del desarrollador</h3><div class='tabla'><table><tr><th style='width:55%'>Situación</th><th>Respuesta</th><th style='width:70px'>Tema</th></tr><tr><td>Ayer el agente analizó el repo; hoy alguien cambió varios archivos. ¿Reanudas o empiezas de nuevo?</td><td class='resp' tabindex='0' role='button' aria-label='Ver la respuesta'>Cambió mucho: nueva sesión + resumen. Cambió poco: --resume y avisar qué cambió</td><td>1.7</td></tr><tr><td>Todo el equipo debe tener el mismo servidor <abbr class="termino" title="Protocolo estándar para conectar tools y datos externos a Claude.  ·  En inglés (examen): Model Context Protocol">MCP</abbr> sin compartir el token en git. ¿Dónde y cómo lo configuras?</td><td class='resp' tabindex='0' role='button' aria-label='Ver la respuesta'>.<abbr class="termino" title="Protocolo estándar para conectar tools y datos externos a Claude.  ·  En inglés (examen): Model Context Protocol">mcp</abbr>.json + ${TOKEN}</td><td>2.4</td></tr><tr><td>Vas a cambiar calcular_total() y necesitas saber desde dónde la llaman. ¿Qué tool usas?</td><td class='resp' tabindex='0' role='button' aria-label='Ver la respuesta'>Grep (no Glob)</td><td>2.5</td></tr><tr><td>“Nunca hagas push a main” está en el CLAUDE.md y a veces no se respeta. ¿Qué usas para que sea obligatorio?</td><td class='resp' tabindex='0' role='button' aria-label='Ver la respuesta'>settings.json o <abbr class="termino" title="Código que se ejecuta automáticamente antes o después de una tool, para revisar o bloquear algo siempre, sin depender de lo que decida el modelo.  ·  En inglés (examen): hook">hook</abbr>, no CLAUDE.md</td><td>3.1</td></tr></table></div><h3>5. Claude Code en CI/CD</h3><div class='tabla'><table><tr><th style='width:55%'>Situación</th><th>Respuesta</th><th style='width:70px'>Tema</th></tr><tr><td>El <abbr class="termino" title="Serie de pasos automáticos (por ejemplo: probar, revisar, desplegar) que corre sin que nadie la vigile.  ·  En inglés (examen): pipeline">pipeline</abbr> llama a Claude Code y el <abbr class="termino" title="Un paso del pipeline de CI que corre en una máquina aparte, sin nadie que conteste preguntas.  ·  En inglés (examen): job">job</abbr> se queda colgado hasta el <abbr class="termino" title="Límite de tiempo: si algo no responde antes, se corta y se marca como falla.  ·  En inglés (examen): timeout">timeout</abbr>. ¿Qué falta?</td><td class='resp' tabindex='0' role='button' aria-label='Ver la respuesta'>claude -p</td><td>3.6</td></tr><tr><td>Le pusiste “sé conservador” al revisor y sigue reportando cosas sin importancia. ¿Qué cambias en el prompt?</td><td class='resp' tabindex='0' role='button' aria-label='Ver la respuesta'>Criterios: qué reportar y qué ignorar</td><td>4.1</td></tr><tr><td>Un <abbr class="termino" title="Propuesta de cambios al código que el equipo revisa antes de unirla (merge).  ·  En inglés (examen): pull request">PR</abbr> de 30 archivos recibe una revisión buena al inicio y floja al final. ¿Cómo lo divides?</td><td class='resp' tabindex='0' role='button' aria-label='Ver la respuesta'>Por archivo + integración</td><td>4.6</td></tr><tr><td>En una revisión de 14 archivos, los primeros salen bien y los últimos casi sin comentarios. ¿Qué cambias?</td><td class='resp' tabindex='0' role='button' aria-label='Ver la respuesta'>Multi-pass</td><td>1.6</td></tr></table></div><h3>6. Extracción de datos estructurados</h3><div class='tabla'><table><tr><th style='width:55%'>Situación</th><th>Respuesta</th><th style='width:70px'>Tema</th></tr><tr><td>Las extracciones salen con un formato distinto cada vez, sobre todo en casos ambiguos. ¿Qué agregas?</td><td class='resp' tabindex='0' role='button' aria-label='Ver la respuesta'>2–4 ejemplos few-shot</td><td>4.2</td></tr><tr><td>Pides JSON en el prompt y a veces llega con comas de más o sin cerrar. ¿Cómo lo garantizas?</td><td class='resp' tabindex='0' role='button' aria-label='Ver la respuesta'><abbr class="termino" title="Bloque con el que Claude PIDE ejecutar una tool. También es el stop_reason cuando espera ese resultado para seguir.  ·  En inglés (examen): tool use">tool_use</abbr> con schema</td><td>4.3</td></tr><tr><td>La extracción dice total 1,250 pero las líneas suman 1,205. ¿Cómo reintentas?</td><td class='resp' tabindex='0' role='button' aria-label='Ver la respuesta'>Reintentar con el error específico</td><td>4.4</td></tr><tr><td>Cada noche se procesan 10,000 documentos y nadie espera el resultado en el momento. ¿Qué API usas?</td><td class='resp' tabindex='0' role='button' aria-label='Ver la respuesta'>Batch API</td><td>4.5</td></tr></table></div></div><script>
+document.querySelectorAll('td.resp').forEach(td => {
+  const ver = () => td.closest('tr').classList.toggle('visto');
+  td.addEventListener('click', ver);
+  td.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); ver(); } });
+});
+</script><div id="ccZoom" title="Tamaño de letra (se recuerda)">
+<button onclick="ccZoom(-1)">A−</button><button onclick="ccZoom(1)">A+</button>
+<button id="ccTemaBtn" onclick="ccTema()" title="Tema claro / oscuro (por defecto, el de tu sistema)" hidden>☀</button></div>
+<style>#ccZoom{position:fixed;top:10px;right:14px;z-index:50;display:flex;gap:4px;font-family:var(--letra,system-ui,sans-serif)}
+#ccZoom button{background:var(--superficie-2,#2d2d2d);color:var(--texto,#f0f0f0);border:1px solid var(--borde,#666);border-radius:7px;
+  padding:4px 10px;font-size:14px;cursor:pointer}
+@media print{#ccZoom{display:none}}</style>
+<script>(function(){
+  if (window.top !== window.self) { document.getElementById('ccZoom').style.display = 'none'; }
+  // Tema: solo en páginas con los colores de tema.py (las corridas HTML son siempre oscuras, como una terminal)
+  var meta = document.querySelector('meta[name="color-scheme"]');
+  var conTema = !!meta && getComputedStyle(document.documentElement).getPropertyValue('--fondo').trim() !== '';
+  function sistema(){ return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+  function guardado(){ try { return localStorage.getItem('ccarf_esquema'); } catch (e) { return null; } }
+  function pintar(){ document.getElementById('ccTemaBtn').textContent = (guardado() || sistema()) === 'dark' ? '☀' : '☾'; }
+  window.ccTema = function(){
+    if (window.top !== window.self) {   // dentro del panel: el tema es del panel completo
+      try { var b = window.top.document.getElementById('tema'); if (b) { b.click(); return; } } catch (e) {}
+    }
+    var destino = (guardado() || sistema()) === 'dark' ? 'light' : 'dark';
+    try { destino === sistema() ? localStorage.removeItem('ccarf_esquema') : localStorage.setItem('ccarf_esquema', destino); } catch (e) {}
+    meta.content = guardado() || 'light dark'; pintar();
+  };
+  if (conTema) { document.getElementById('ccTemaBtn').hidden = false; pintar(); matchMedia('(prefers-color-scheme: dark)').addEventListener('change', pintar); }
+  function leer(){ try { return +(localStorage.getItem('ccarf_escala') || 1); } catch (e) { return 1; } }
+  function guardar(v){ try { localStorage.setItem('ccarf_escala', v); } catch (e) {} }
+  window.ccZoom = function(d){ var v = Math.min(1.6, Math.max(0.8, +(leer() + 0.1 * d).toFixed(2))); guardar(v); document.body.style.zoom = v; };
+  document.body.style.zoom = leer();
+})();</script></body></html>

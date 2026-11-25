@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+.r1 {color: #727272; text-decoration-color: #727272}
+.r2 {color: #326e7b; text-decoration-color: #326e7b; font-weight: bold}
+.r3 {color: #9d65ff; text-decoration-color: #9d65ff}
+.r4 {color: #c4c5b5; text-decoration-color: #c4c5b5; background-color: #000087; font-weight: bold}
+.r5 {color: #527618; text-decoration-color: #527618}
+.r6 {color: #fd971f; text-decoration-color: #fd971f}
+.r7 {color: #f4005f; text-decoration-color: #f4005f; font-weight: bold}
+.r8 {color: #58d1eb; text-decoration-color: #58d1eb; font-weight: bold}
+.r9 {color: #f4005f; text-decoration-color: #f4005f}
+.r10 {color: #fd971f; text-decoration-color: #fd971f; font-weight: bold}
+.r11 {color: #98e024; text-decoration-color: #98e024; font-weight: bold}
+.r12 {font-style: italic}
+.r13 {font-weight: bold}
+.r14 {color: #98e024; text-decoration-color: #98e024}
+.r15 {color: #727272; text-decoration-color: #727272; font-weight: bold}
+body {
+    color: #d9d9d9;
+    background-color: #0c0c0c;
+}
+</style>
+<style>
+@font-face{font-family:'Atkinson Hyperlegible Next';font-style:italic;font-weight:400;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-italic-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:italic;font-weight:400;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-italic-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-normal-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-normal-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}@font-face{font-family:'Recursive';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/recursive-normal-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Recursive';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/recursive-normal-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+body{max-width:1100px;margin:0 auto !important;padding:8px 24px 48px;font-family:'Atkinson Hyperlegible Next',Inter,system-ui,sans-serif !important}
+pre,code{font-family:'Recursive',Menlo,'DejaVu Sans Mono',monospace !important}
+.diagrama svg{max-width:100%;height:auto}
+.diagrama{max-width:100% !important;box-sizing:border-box;overflow-x:auto}
+pre{font-size:14px !important;line-height:1.5 !important}
+abbr.termino{text-decoration:underline dotted #8ab4f8;text-underline-offset:3px;cursor:help}
+</style></head>
+<body><div style="font-family:'Atkinson Hyperlegible Next',Inter,'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;color:#e8e8e8;background:#1b1c18;line-height:1.5;border:1px solid #444;border-radius:10px;padding:14px 20px;margin:14px 0;max-width:1000px"><div style="font-size:19px;font-weight:600">Dominio 1 · demo 1.2 · 22/11/2026 22:04:24</div><div style="font-size:15px;color:#e6e6e6;margin:6px 0">📝 Grabación «❌ Descomposición estrecha». Resultado: Áreas cubiertas: 1/5</div><div style="font-size:14px;color:#bbb;margin:0 0 6px">💲 5 llamadas a la API · 6,846 tokens (3,829 entrada + 3,017 salida) · ≈ $0.0019 USD</div><div style="font-size:14px;color:#bbb;margin:8px 0 6px">Variables de esta corrida (<a style="color:#58a6ff" href="/archivos/salidas_html/dominio1/index.html">recorrer todas las corridas</a>)</div><table style="font-size:14px;border-collapse:collapse"><tr><td style="padding:3px 16px 3px 0;color:#bbb">MODELO</td><td>&quot;claude-haiku-5-5&quot;</td></tr><tr><td style="padding:3px 16px 3px 0;color:#bbb">D12_TEMA</td><td>&quot;Cómo puede La Tiendita vender más en la temporada navideña de este año&quot;</td></tr><tr><td style="padding:3px 16px 3px 0;color:#bbb">D12_DESCOMPOSICION</td><td>&quot;estrecha&quot;</td></tr><tr><td style="padding:3px 16px 3px 0;color:#bbb">D12_AREAS_ESPERADAS</td><td>[&quot;inventario&quot;, &quot;logística&quot;, &quot;precios&quot;, &quot;marketing&quot;, &quot;atención&quot;]</td></tr></table></div>
+    <pre style="font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><code style="font-family:inherit">🎛  Ajustes del panel para esta corrida: D12_DESCOMPOSICION = &quot;estrecha&quot;
+<span class="r1">   Modelo: claude-haiku-</span><span class="r2">5</span><span class="r1">-</span><span class="r2">5</span>
+<span class="r1">   Modo HTML: encendido → salidas_html/dominio1/</span>
+
+<span class="r3">─────────────────────────── </span><span class="r4"> DEMO </span><span class="r4">1.2</span><span class="r4"> · Coordinator y subagentes (hub-and-spoke) </span><span class="r3"> ────────────────────────────</span>
+
+<span class="r1">📖 Guía de esta demo: python lab_dominio1.py guia </span><span class="r2">1.2</span><span class="r1">  ·  más detalle: pon DETALLE = </span><span class="r5">&quot;completo&quot;</span><span class="r1"> arriba del </span>
+<span class="r1">archivo</span>
+<span class="r6">╭────────────────────────────────────────── 💡 Concepto del examen ──────────────────────────────────────────╮</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">│</span>  Un coordinator descompone la tarea, delega cada subtema a un subagente y luego sintetiza. Toda la         <span class="r6">│</span>
+<span class="r6">│</span>  comunicación pasa por el coordinator. Cada subagente arranca con contexto vacío.                          <span class="r6">│</span>
+<span class="r6">│</span>  Pregunta clásica: si al reporte final le falta un tema entero, la causa suele ser la descomposición del   <span class="r6">│</span>
+<span class="r6">│</span>  coordinator, no los subagentes.                                                                           <span class="r6">│</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r7">   ✘ Modo </span><span class="r7">&#x27;estrecha&#x27;</span><span class="r7">: el system prompt del coordinator está sesgado a propósito.</span>
+
+<span class="r8">▶ Coordinator · vuelta </span><span class="r8">1</span>
+
+<span class="r7">→ Llamada a Claude</span> <span class="r7">(</span><span class="r9">coordinator vuelta </span><span class="r7">1</span><span class="r7">)</span> <span class="r1">· </span><span class="r2">1</span><span class="r1"> mensajes en el historial · tools: delegar_subagente</span>
+<span class="r10">← stop_reason = </span><span class="r10">&#x27;tool_use&#x27;</span>  · pide: <span class="r6">delegar_subagente, delegar_subagente, delegar_subagente</span>
+
+<span class="r8">▶ Subagente para: Estrategias de redes sociales orgánicas (Instagram, Facebook, TikTok, Pinterest) para </span>
+<span class="r8">impulsar ventas navideñas de artesanías mexicanas en La Tiendita: tipos de contenido, frecuencia de </span>
+<span class="r8">publicación, calendario de temporada y formatos (Reels, Stories, carruseles) con mayor alcance.</span>
+<span class="r3">╭───────────── 📦 ESTO es TODO lo que ve el subagente (no hereda el historial del coordinator) ──────────────╮</span>
+<span class="r3">│</span> Subtema: Estrategias de redes sociales orgánicas (Instagram, Facebook, TikTok, Pinterest) para impulsar    <span class="r3">│</span>
+<span class="r3">│</span> ventas navideñas de artesanías mexicanas en La Tiendita: tipos de contenido, frecuencia de publicación,    <span class="r3">│</span>
+<span class="r3">│</span> calendario de temporada y formatos (Reels, Stories, carruseles) con mayor alcance.                         <span class="r3">│</span>
+<span class="r3">│</span>                                                                                                            <span class="r3">│</span>
+<span class="r3">│</span> Contexto que te pasó el coordinator:                                                                       <span class="r3">│</span>
+<span class="r3">│</span> La Tiendita es una tienda en línea de artesanías mexicanas que envía a todo México. Presupuesto total de   <span class="r3">│</span>
+<span class="r3">│</span> campaña: $40,000 MXN. Objetivo: vender más en la temporada navideña de este año. Enfócate solo en          <span class="r3">│</span>
+<span class="r3">│</span> marketing digital de redes sociales. Entrega recomendaciones concretas y accionables para un equipo        <span class="r3">│</span>
+<span class="r3">│</span> pequeño, en español, con ejemplos aplicables al mercado mexicano.                                          <span class="r3">│</span>
+<span class="r3">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+
+<span class="r7">→ Llamada a Claude</span> <span class="r7">(</span><span class="r9">subagente: Estrategias de redes sociales orgánicas </span><span class="r7">(</span><span class="r9">Instagram, Facebook, TikTok, </span>
+<span class="r9">Pinterest</span><span class="r7">)</span><span class="r9"> para impulsar ventas navideñas de artesanías mexicanas en La Tiendita: tipos de contenido, </span>
+<span class="r9">frecuencia de publicación, calendario de temporada y formatos </span><span class="r7">(</span><span class="r9">Reels, Stories, carruseles</span><span class="r7">)</span><span class="r9"> con mayor alcance.</span><span class="r7">)</span>
+<span class="r1">· </span><span class="r2">1</span><span class="r1"> mensajes en el historial</span>
+<span class="r7">← stop_reason = </span><span class="r7">&#x27;max_tokens&#x27;</span>
+
+<span class="r8">▶ Subagente para: Anuncios pagados en plataformas digitales (Meta Ads, TikTok Ads, Google Ads/Shopping, </span>
+<span class="r8">Pinterest Ads) para campaña navideña de artesanías mexicanas: distribución de presupuesto, segmentación en </span>
+<span class="r8">México, tipos de campaña y métricas clave (CPA, ROAS) con un presupuesto total de $</span><span class="r8">40</span><span class="r8">,</span><span class="r8">000</span><span class="r8"> MXN.</span>
+<span class="r3">╭───────────── 📦 ESTO es TODO lo que ve el subagente (no hereda el historial del coordinator) ──────────────╮</span>
+<span class="r3">│</span> Subtema: Anuncios pagados en plataformas digitales (Meta Ads, TikTok Ads, Google Ads/Shopping, Pinterest   <span class="r3">│</span>
+<span class="r3">│</span> Ads) para campaña navideña de artesanías mexicanas: distribución de presupuesto, segmentación en México,   <span class="r3">│</span>
+<span class="r3">│</span> tipos de campaña y métricas clave (CPA, ROAS) con un presupuesto total de $40,000 MXN.                     <span class="r3">│</span>
+<span class="r3">│</span>                                                                                                            <span class="r3">│</span>
+<span class="r3">│</span> Contexto que te pasó el coordinator:                                                                       <span class="r3">│</span>
+<span class="r3">│</span> La Tiendita es una tienda en línea de artesanías mexicanas que envía a todo México. Presupuesto total de   <span class="r3">│</span>
+<span class="r3">│</span> campaña: $40,000 MXN (incluye pauta publicitaria). Objetivo: aumentar ventas en temporada navideña.        <span class="r3">│</span>
+<span class="r3">│</span> Enfócate solo en marketing digital de anuncios pagados. Propón un reparto aproximado del presupuesto por   <span class="r3">│</span>
+<span class="r3">│</span> plataforma y fase (antes, durante y después de diciembre), en español.                                     <span class="r3">│</span>
+<span class="r3">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+
+<span class="r7">→ Llamada a Claude</span> <span class="r7">(</span><span class="r9">subagente: Anuncios pagados en plataformas digitales </span><span class="r7">(</span><span class="r9">Meta Ads, TikTok Ads, Google </span>
+<span class="r9">Ads/Shopping, Pinterest Ads</span><span class="r7">)</span><span class="r9"> para campaña navideña de artesanías mexicanas: distribución de presupuesto, </span>
+<span class="r9">segmentación en México, tipos de campaña y métricas clave </span><span class="r7">(</span><span class="r9">CPA, ROAS</span><span class="r7">)</span><span class="r9"> con un presupuesto total de $</span><span class="r7">40</span><span class="r9">,</span><span class="r7">000</span><span class="r9"> </span>
+<span class="r9">MXN.</span><span class="r7">)</span> <span class="r1">· </span><span class="r2">1</span><span class="r1"> mensajes en el historial</span>
+<span class="r7">← stop_reason = </span><span class="r7">&#x27;max_tokens&#x27;</span>
+
+<span class="r8">▶ Subagente para: Colaboraciones con influencers y creadores de contenido (macro, micro y nano) en México para</span>
+<span class="r8">promover artesanías en temporada navideña: cómo elegir perfiles, esquemas de pago (canje, comisión, tarifa </span>
+<span class="r8">fija), rangos de costo aproximados en MXN y forma de medir resultados con códigos de descuento o enlaces.</span>
+<span class="r3">╭───────────── 📦 ESTO es TODO lo que ve el subagente (no hereda el historial del coordinator) ──────────────╮</span>
+<span class="r3">│</span> Subtema: Colaboraciones con influencers y creadores de contenido (macro, micro y nano) en México para      <span class="r3">│</span>
+<span class="r3">│</span> promover artesanías en temporada navideña: cómo elegir perfiles, esquemas de pago (canje, comisión, tarifa <span class="r3">│</span>
+<span class="r3">│</span> fija), rangos de costo aproximados en MXN y forma de medir resultados con códigos de descuento o enlaces.  <span class="r3">│</span>
+<span class="r3">│</span>                                                                                                            <span class="r3">│</span>
+<span class="r3">│</span> Contexto que te pasó el coordinator:                                                                       <span class="r3">│</span>
+<span class="r3">│</span> La Tiendita es una tienda en línea de artesanías mexicanas que envía a todo México. Presupuesto total de   <span class="r3">│</span>
+<span class="r3">│</span> campaña: $40,000 MXN. Objetivo: vender más en la temporada navideña de este año. Enfócate solo en          <span class="r3">│</span>
+<span class="r3">│</span> marketing digital de influencers y creadores. Incluye recomendaciones para no exceder el presupuesto, en   <span class="r3">│</span>
+<span class="r3">│</span> español.                                                                                                   <span class="r3">│</span>
+<span class="r3">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+
+<span class="r7">→ Llamada a Claude</span> <span class="r7">(</span><span class="r9">subagente: Colaboraciones con influencers y creadores de contenido </span><span class="r7">(</span><span class="r9">macro, micro y nano</span><span class="r7">)</span><span class="r9"> </span>
+<span class="r9">en México para promover artesanías en temporada navideña: cómo elegir perfiles, esquemas de pago </span><span class="r7">(</span><span class="r9">canje, </span>
+<span class="r9">comisión, tarifa fija</span><span class="r7">)</span><span class="r9">, rangos de costo aproximados en MXN y forma de medir resultados con códigos de </span>
+<span class="r9">descuento o enlaces.</span><span class="r7">)</span> <span class="r1">· </span><span class="r2">1</span><span class="r1"> mensajes en el historial</span>
+<span class="r7">← stop_reason = </span><span class="r7">&#x27;max_tokens&#x27;</span>
+
+<span class="r8">▶ Coordinator · vuelta </span><span class="r8">2</span>
+
+<span class="r7">→ Llamada a Claude</span> <span class="r7">(</span><span class="r9">coordinator vuelta </span><span class="r7">2</span><span class="r7">)</span> <span class="r1">· </span><span class="r2">3</span><span class="r1"> mensajes en el historial · tools: delegar_subagente</span>
+<span class="r11">← stop_reason = </span><span class="r11">&#x27;end_turn&#x27;</span>  · dice: <span class="r1">“No recibí resultados de los tres subagentes: las llamadas se ejecutaron, </span>
+<span class="r1">pero no devolvier…”</span>
+<span class="r12">¿El reporte final cubre todas</span>
+<span class="r12">         las áreas?          </span>
+┏━━━━━━━━━━━━━━━┳━━━━━━━━━━━┓
+┃<span class="r13"> Área esperada </span>┃<span class="r13"> ¿Aparece? </span>┃
+┡━━━━━━━━━━━━━━━╇━━━━━━━━━━━┩
+│ inventario    │ <span class="r9">NO</span>        │
+│ logística     │ <span class="r9">NO</span>        │
+│ precios       │ <span class="r9">NO</span>        │
+│ marketing     │ <span class="r14">sí</span>        │
+│ atención      │ <span class="r9">NO</span>        │
+└───────────────┴───────────┘
+</code></pre><div class="diagrama" style="font-family:'Atkinson Hyperlegible Next',Inter,'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;background:#1b1c18;color:#f0f0f0;border:1px solid #444;border-radius:10px;padding:16px 20px;margin:16px 0;max-width:1000px;white-space:normal"><div style="font-size:18px;font-weight:600;color:#f0f0f0;margin-bottom:6px">📊 Demo 1.2 · Qué delegó el coordinator y qué cubrió el reporte</div><div style="font-size:15px;line-height:1.55;color:#d0d0d0;margin-bottom:12px;max-width:80ch">Fila 3: un <abbr class="termino" title="Un agente al que el coordinator le delega una parte del trabajo; no ve el contexto de los demás.  ·  En inglés (examen): subagent">subagente</abbr> por subtema (no se ven entre sí). Última fila: áreas esperadas; en rojo, las que el reporte no menciona.</div><!--tipos:bloqueo,claude,codigo,nota,ok--><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 457" width="1000" height="457" font-family="Atkinson Hyperlegible Next, Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13"><defs><marker id="punta_a2a02415" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bbbbbb"/></marker></defs><g><line x1="500" y1="70" x2="500" y2="116" stroke="#bbbbbb" stroke-width="1.6" marker-end="url(#punta_a2a02415)"/></g><g><line x1="500" y1="166" x2="180" y2="212" stroke="#bbbbbb" stroke-width="1.6" marker-end="url(#punta_a2a02415)"/></g><g><line x1="180" y1="279" x2="500" y2="325" stroke="#bbbbbb" stroke-width="1.6" marker-end="url(#punta_a2a02415)"/></g><g><line x1="500" y1="166" x2="500" y2="212" stroke="#bbbbbb" stroke-width="1.6" marker-end="url(#punta_a2a02415)"/></g><g><line x1="500" y1="279" x2="500" y2="325" stroke="#bbbbbb" stroke-width="1.6" marker-end="url(#punta_a2a02415)"/></g><g><line x1="500" y1="166" x2="820" y2="212" stroke="#bbbbbb" stroke-width="1.6" marker-end="url(#punta_a2a02415)"/></g><g><line x1="820" y1="279" x2="500" y2="325" stroke="#bbbbbb" stroke-width="1.6" marker-end="url(#punta_a2a02415)"/></g><g><line x1="500" y1="358" x2="116" y2="404" stroke="#bbbbbb" stroke-width="1.6" marker-end="url(#punta_a2a02415)"/></g><g><line x1="500" y1="358" x2="308" y2="404" stroke="#bbbbbb" stroke-width="1.6" marker-end="url(#punta_a2a02415)"/></g><g><line x1="500" y1="358" x2="500" y2="404" stroke="#bbbbbb" stroke-width="1.6" marker-end="url(#punta_a2a02415)"/></g><g><line x1="500" y1="358" x2="692" y2="404" stroke="#bbbbbb" stroke-width="1.6" marker-end="url(#punta_a2a02415)"/></g><g><line x1="500" y1="358" x2="884" y2="404" stroke="#bbbbbb" stroke-width="1.6" marker-end="url(#punta_a2a02415)"/></g><g><rect x="40" y="20" width="920" height="50" rx="9" fill="#3a3420" stroke="#d29922" stroke-width="1.6"/><text x="500" y="41" fill="#f0f0f0" text-anchor="middle" font-weight="600">Tema</text><text x="500" y="58" fill="#f0f0f0" text-anchor="middle">Cómo puede La Tiendita vender más en la temporada navideña de este año</text></g><g><rect x="40" y="116" width="920" height="50" rx="9" fill="#1f3b57" stroke="#58a6ff" stroke-width="1.6"/><text x="500" y="137" fill="#f0f0f0" text-anchor="middle" font-weight="600">Coordinator</text><text x="500" y="154" fill="#f0f0f0" text-anchor="middle">descomposición: estrecha</text></g><g><rect x="60" y="212" width="240" height="67" rx="9" fill="#2d2d2d" stroke="#9e9e9e" stroke-width="1.6"/><text x="180" y="233" fill="#f0f0f0" text-anchor="middle" font-weight="600">Subagente</text><text x="180" y="250" fill="#f0f0f0" text-anchor="middle">Estrategias de redes sociales</text><text x="180" y="267" fill="#f0f0f0" text-anchor="middle">orgánicas (Instagra…</text></g><g><rect x="380" y="212" width="240" height="67" rx="9" fill="#2d2d2d" stroke="#9e9e9e" stroke-width="1.6"/><text x="500" y="233" fill="#f0f0f0" text-anchor="middle" font-weight="600">Subagente</text><text x="500" y="250" fill="#f0f0f0" text-anchor="middle">Anuncios pagados en</text><text x="500" y="267" fill="#f0f0f0" text-anchor="middle">plataformas digitales (Meta A…</text></g><g><rect x="700" y="212" width="240" height="67" rx="9" fill="#2d2d2d" stroke="#9e9e9e" stroke-width="1.6"/><text x="820" y="233" fill="#f0f0f0" text-anchor="middle" font-weight="600">Subagente</text><text x="820" y="250" fill="#f0f0f0" text-anchor="middle">Colaboraciones con influencers</text><text x="820" y="267" fill="#f0f0f0" text-anchor="middle">y creadores de con…</text></g><g><rect x="40" y="325" width="920" height="33" rx="9" fill="#1f3b57" stroke="#58a6ff" stroke-width="1.6"/><text x="500" y="346" fill="#f0f0f0" text-anchor="middle" font-weight="600">Coordinator escribe el reporte final</text></g><g><rect x="60" y="404" width="112" height="33" rx="9" fill="#4a1f1f" stroke="#f85149" stroke-width="1.6"/><text x="116" y="425" fill="#f0f0f0" text-anchor="middle" font-weight="600">✘ inventario</text></g><g><rect x="252" y="404" width="112" height="33" rx="9" fill="#4a1f1f" stroke="#f85149" stroke-width="1.6"/><text x="308" y="425" fill="#f0f0f0" text-anchor="middle" font-weight="600">✘ logística</text></g><g><rect x="444" y="404" width="112" height="33" rx="9" fill="#4a1f1f" stroke="#f85149" stroke-width="1.6"/><text x="500" y="425" fill="#f0f0f0" text-anchor="middle" font-weight="600">✘ precios</text></g><g><rect x="636" y="404" width="112" height="33" rx="9" fill="#1e3d2a" stroke="#3fb950" stroke-width="1.6"/><text x="692" y="425" fill="#f0f0f0" text-anchor="middle" font-weight="600">✔ marketing</text></g><g><rect x="828" y="404" width="112" height="33" rx="9" fill="#4a1f1f" stroke="#f85149" stroke-width="1.6"/><text x="884" y="425" fill="#f0f0f0" text-anchor="middle" font-weight="600">✘ atención</text></g></svg><div style="font-size:12px;color:#c8c8c8;margin-top:8px"><span style="display:inline-flex;align-items:center;gap:5px;margin-right:14px"><span style="width:14px;height:14px;border-radius:4px;background:#1f3b57;border:1.5px solid #58a6ff;display:inline-block"></span>Claude: lo que responde o pide</span><span style="display:inline-flex;align-items:center;gap:5px;margin-right:14px"><span style="width:14px;height:14px;border-radius:4px;background:#2d2d2d;border:1.5px solid #9e9e9e;display:inline-block"></span>Tu código o una tool</span><span style="display:inline-flex;align-items:center;gap:5px;margin-right:14px"><span style="width:14px;height:14px;border-radius:4px;background:#1e3d2a;border:1.5px solid #3fb950;display:inline-block"></span>Salió bien / permitido / cubierto</span><span style="display:inline-flex;align-items:center;gap:5px;margin-right:14px"><span style="width:14px;height:14px;border-radius:4px;background:#4a1f1f;border:1.5px solid #f85149;display:inline-block"></span>Bloqueado / falló / faltó</span><span style="display:inline-flex;align-items:center;gap:5px;margin-right:14px"><span style="width:14px;height:14px;border-radius:4px;background:#3a3420;border:1.5px solid #d29922;display:inline-block"></span>Datos de entrada</span></div><div style="font-size:15.5px;line-height:1.55;color:#f3f3f3;background:#26331f;border-left:4px solid #3fb950;border-radius:6px;padding:10px 14px;margin-top:12px">👉 El reporte no menciona inventario, logística, precios, atención. Antes de culpar a los subagentes, revisa qué les asignó el <abbr class="termino" title="El agente que divide el trabajo, lo reparte a subagentes y junta los resultados.  ·  En inglés (examen): coordinator">coordinator</abbr>: la causa suele ser la descomposición.</div></div><pre style="font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><code style="font-family:inherit">
+<span class="r1">   Subtemas que delegó el coordinator: Estrategias de redes sociales orgánicas </span><span class="r15">(</span><span class="r1">Instagram, Facebook, TikTok, </span>
+<span class="r1">Pinterest</span><span class="r15">)</span><span class="r1"> para impulsar ventas navideñas de artesanías mexicanas en La Tiendita: tipos de contenido, </span>
+<span class="r1">frecuencia de publicación, calendario de temporada y formatos </span><span class="r15">(</span><span class="r1">Reels, Stories, carruseles</span><span class="r15">)</span><span class="r1"> con mayor alcance. </span>
+<span class="r1">| Anuncios pagados en plataformas digitales </span><span class="r15">(</span><span class="r1">Meta Ads, TikTok Ads, Google Ads/Shopping, Pinterest Ads</span><span class="r15">)</span><span class="r1"> para </span>
+<span class="r1">campaña navideña de artesanías mexicanas: distribución de presupuesto, segmentación en México, tipos de </span>
+<span class="r1">campaña y métricas clave </span><span class="r15">(</span><span class="r1">CPA, ROAS</span><span class="r15">)</span><span class="r1"> con un presupuesto total de $</span><span class="r2">40</span><span class="r1">,</span><span class="r2">000</span><span class="r1"> MXN. | Colaboraciones con influencers</span>
+<span class="r1">y creadores de contenido </span><span class="r15">(</span><span class="r1">macro, micro y nano</span><span class="r15">)</span><span class="r1"> en México para promover artesanías en temporada navideña: cómo </span>
+<span class="r1">elegir perfiles, esquemas de pago </span><span class="r15">(</span><span class="r1">canje, comisión, tarifa fija</span><span class="r15">)</span><span class="r1">, rangos de costo aproximados en MXN y forma </span>
+<span class="r1">de medir resultados con códigos de descuento o enlaces.</span>
+<span class="r6">╭────────────────────────────────────────────── 🧪 Experimenta ──────────────────────────────────────────────╮</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">│</span>  Corre de nuevo con D12_DESCOMPOSICION = &#x27;estrecha&#x27;: los subagentes harán bien su parte, pero el reporte   <span class="r6">│</span>
+<span class="r6">│</span>  quedará incompleto. La falla está en cómo el coordinator dividió el trabajo.                              <span class="r6">│</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r3">╭──────────────────────────────── 📊 Uso de la Messages API en esta corrida ─────────────────────────────────╮</span>
+<span class="r3">│</span> Llamadas a la API: 5                                                                                       <span class="r3">│</span>
+<span class="r3">│</span> Tokens de entrada: 3,829                                                                                   <span class="r3">│</span>
+<span class="r3">│</span> Tokens de salida:  3,017                                                                                   <span class="r3">│</span>
+<span class="r3">│</span> Costo estimado (con el precio de cada modelo usado): ~$0.0019 USD                                          <span class="r3">│</span>
+<span class="r3">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+</code></pre>
+<div style="font-family:'Atkinson Hyperlegible Next',Inter,'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;color:#e8e8e8;background:#1b1c18;border:1px solid #444;border-radius:10px;padding:14px 20px;margin:16px 0;max-width:1000px;line-height:1.5"><div style="font-size:18px;font-weight:600">🔍 Lo que se le mandó a Claude</div><div style="font-size:14.5px;color:#c8c8c8;margin:4px 0 8px">Cada llamada lleva el historial completo: la API no recuerda nada entre llamadas. Abre una para ver system, tools y mensajes tal como viajaron.</div><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 1 · coordinator vuelta 1 · 1 mensajes · max_tokens 1500</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;coordinator vuelta 1&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 1500,
+  &quot;system&quot;: &quot;Eres el coordinator de investigación de La Tiendita (tienda en línea de artesanías mexicanas, presupuesto de campaña $40,000 MXN, envíos a todo México). Divide el tema en 3 a 5 subtemas y llama delegar_subagente para cada uno, todos en la misma respuesta. Cuando tengas los resultados, escribe un reporte final de máximo 12 líneas. Divide el tema SOLO en subtemas de marketing digital (redes sociales, anuncios, influencers).&quot;,
+  &quot;tools&quot;: [
+    &quot;delegar_subagente&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Cómo puede La Tiendita vender más en la temporada navideña de este año&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 2 · subagente: Estrategias de redes sociales orgánicas (Instagram, Facebook, TikTok, Pinterest) para impulsar ventas navideñas de artesanías mexicanas en La Tiendita: tipos de contenido, frecuencia de publicación, calendario de temporada y formatos (Reels, Stories, carruseles) con mayor alcance. · 1 mensajes · max_tokens 400</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;subagente: Estrategias de redes sociales orgánicas (Instagram, Facebook, TikTok, Pinterest) para impulsar ventas navideñas de artesanías mexicanas en La Tiendita: tipos de contenido, frecuencia de publicación, calendario de temporada y formatos (Reels, Stories, carruseles) con mayor alcance.&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 400,
+  &quot;system&quot;: &quot;Eres un subagente investigador. Responde con máximo 4 viñetas cortas y concretas.&quot;,
+  &quot;tools&quot;: [],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Subtema: Estrategias de redes sociales orgánicas (Instagram, Facebook, TikTok, Pinterest) para impulsar ventas navideñas de artesanías mexicanas en La Tiendita: tipos de contenido, frecuencia de publicación, calendario de temporada y formatos (Reels, Stories, carruseles) con mayor alcance. Contexto que te pasó el coordinator: La Tiendita es una tienda en línea de artesanías mexicanas que envía a …&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 3 · subagente: Anuncios pagados en plataformas digitales (Meta Ads, TikTok Ads, Google Ads/Shopping, Pinterest Ads) para campaña navideña de artesanías mexicanas: distribución de presupuesto, segmentación en México, tipos de campaña y métricas clave (CPA, ROAS) con un presupuesto total de $40,000 MXN. · 1 mensajes · max_tokens 400</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;subagente: Anuncios pagados en plataformas digitales (Meta Ads, TikTok Ads, Google Ads/Shopping, Pinterest Ads) para campaña navideña de artesanías mexicanas: distribución de presupuesto, segmentación en México, tipos de campaña y métricas clave (CPA, ROAS) con un presupuesto total de $40,000 MXN.&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 400,
+  &quot;system&quot;: &quot;Eres un subagente investigador. Responde con máximo 4 viñetas cortas y concretas.&quot;,
+  &quot;tools&quot;: [],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Subtema: Anuncios pagados en plataformas digitales (Meta Ads, TikTok Ads, Google Ads/Shopping, Pinterest Ads) para campaña navideña de artesanías mexicanas: distribución de presupuesto, segmentación en México, tipos de campaña y métricas clave (CPA, ROAS) con un presupuesto total de $40,000 MXN. Contexto que te pasó el coordinator: La Tiendita es una tienda en línea de artesanías mexicanas que en…&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 4 · subagente: Colaboraciones con influencers y creadores de contenido (macro, micro y nano) en México para promover artesanías en temporada navideña: cómo elegir perfiles, esquemas de pago (canje, comisión, tarifa fija), rangos de costo aproximados en MXN y forma de medir resultados con códigos de descuento o enlaces. · 1 mensajes · max_tokens 400</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;subagente: Colaboraciones con influencers y creadores de contenido (macro, micro y nano) en México para promover artesanías en temporada navideña: cómo elegir perfiles, esquemas de pago (canje, comisión, tarifa fija), rangos de costo aproximados en MXN y forma de medir resultados con códigos de descuento o enlaces.&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 400,
+  &quot;system&quot;: &quot;Eres un subagente investigador. Responde con máximo 4 viñetas cortas y concretas.&quot;,
+  &quot;tools&quot;: [],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Subtema: Colaboraciones con influencers y creadores de contenido (macro, micro y nano) en México para promover artesanías en temporada navideña: cómo elegir perfiles, esquemas de pago (canje, comisión, tarifa fija), rangos de costo aproximados en MXN y forma de medir resultados con códigos de descuento o enlaces. Contexto que te pasó el coordinator: La Tiendita es una tienda en línea de artesanía…&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 5 · coordinator vuelta 2 · 3 mensajes · max_tokens 1500</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;coordinator vuelta 2&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 1500,
+  &quot;system&quot;: &quot;Eres el coordinator de investigación de La Tiendita (tienda en línea de artesanías mexicanas, presupuesto de campaña $40,000 MXN, envíos a todo México). Divide el tema en 3 a 5 subtemas y llama delegar_subagente para cada uno, todos en la misma respuesta. Cuando tengas los resultados, escribe un reporte final de máximo 12 líneas. Divide el tema SOLO en subtemas de marketing digital (redes sociales, anuncios, influencers).&quot;,
+  &quot;tools&quot;: [
+    &quot;delegar_subagente&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Cómo puede La Tiendita vender más en la temporada navideña de este año&quot;
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;assistant&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;thinking&quot;
+        },
+        {
+          &quot;type&quot;: &quot;tool_use&quot;,
+          &quot;name&quot;: &quot;delegar_subagente&quot;,
+          &quot;input&quot;: {
+            &quot;subtema&quot;: &quot;Estrategias de redes sociales orgánicas (Instagram, Facebook, TikTok, Pinterest) para impulsar ventas navideñas de artesanías mexicanas en La Tiendita: tipos de contenido, frecuencia de publicación, calendario de temporada y formatos (Reels, Stories, carruseles) con mayor alcance.&quot;,
+            &quot;contexto&quot;: &quot;La Tiendita es una tienda en línea de artesanías mexicanas que envía a todo México. Presupuesto total de campaña: $40,000 MXN. Objetivo: vender más en la temporada navideña de este año. Enfócate solo en marketing digital de redes sociales. Entrega recomendaciones concretas y accionables para un equipo pequeño, en español, con ejemplos aplicables al mercado mexicano.&quot;
+          }
+        },
+        {
+          &quot;type&quot;: &quot;tool_use&quot;,
+          &quot;name&quot;: &quot;delegar_subagente&quot;,
+          &quot;input&quot;: {
+            &quot;subtema&quot;: &quot;Anuncios pagados en plataformas digitales (Meta Ads, TikTok Ads, Google Ads/Shopping, Pinterest Ads) para campaña navideña de artesanías mexicanas: distribución de presupuesto, segmentación en México, tipos de campaña y métricas clave (CPA, ROAS) con un presupuesto total de $40,000 MXN.&quot;,
+            &quot;contexto&quot;: &quot;La Tiendita es una tienda en línea de artesanías mexicanas que envía a todo México. Presupuesto total de campaña: $40,000 MXN (incluye pauta publicitaria). Objetivo: aumentar ventas en temporada navideña. Enfócate solo en marketing digital de anuncios pagados. Propón un reparto aproximado del presupuesto por plataforma y fase (antes, durante y después de diciembre), en español.&quot;
+          }
+        },
+        {
+          &quot;type&quot;: &quot;tool_use&quot;,
+          &quot;name&quot;: &quot;delegar_subagente&quot;,
+          &quot;input&quot;: {
+            &quot;subtema&quot;: &quot;Colaboraciones con influencers y creadores de contenido (macro, micro y nano) en México para promover artesanías en temporada navideña: cómo elegir perfiles, esquemas de pago (canje, comisión, tarifa fija), rangos de costo aproximados en MXN y forma de medir resultados con códigos de descuento o enlaces.&quot;,
+            &quot;contexto&quot;: &quot;La Tiendita es una tienda en línea de artesanías mexicanas que envía a todo México. Presupuesto total de campaña: $40,000 MXN. Objetivo: vender más en la temporada navideña de este año. Enfócate solo en marketing digital de influencers y creadores. Incluye recomendaciones para no exceder el presupuesto, en español.&quot;
+          }
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;tool_result&quot;,
+          &quot;is_error&quot;: false,
+          &quot;content&quot;: &quot;&quot;
+        },
+        {
+          &quot;type&quot;: &quot;tool_result&quot;,
+          &quot;is_error&quot;: false,
+          &quot;content&quot;: &quot;&quot;
+        },
+        {
+          &quot;type&quot;: &quot;tool_result&quot;,
+          &quot;is_error&quot;: false,
+          &quot;content&quot;: &quot;&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details></div><div id="ccZoom" title="Tamaño de letra (se recuerda)">
+<button onclick="ccZoom(-1)">A−</button><button onclick="ccZoom(1)">A+</button>
+<button id="ccTemaBtn" onclick="ccTema()" title="Tema claro / oscuro (por defecto, el de tu sistema)" hidden>☀</button></div>
+<style>#ccZoom{position:fixed;top:10px;right:14px;z-index:50;display:flex;gap:4px;font-family:var(--letra,system-ui,sans-serif)}
+#ccZoom button{background:var(--superficie-2,#2d2d2d);color:var(--texto,#f0f0f0);border:1px solid var(--borde,#666);border-radius:7px;
+  padding:4px 10px;font-size:14px;cursor:pointer}
+@media print{#ccZoom{display:none}}</style>
+<script>(function(){
+  if (window.top !== window.self) { document.getElementById('ccZoom').style.display = 'none'; }
+  // Tema: solo en páginas con los colores de tema.py (las corridas HTML son siempre oscuras, como una terminal)
+  var meta = document.querySelector('meta[name="color-scheme"]');
+  var conTema = !!meta && getComputedStyle(document.documentElement).getPropertyValue('--fondo').trim() !== '';
+  function sistema(){ return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+  function guardado(){ try { return localStorage.getItem('ccarf_esquema'); } catch (e) { return null; } }
+  function pintar(){ document.getElementById('ccTemaBtn').textContent = (guardado() || sistema()) === 'dark' ? '☀' : '☾'; }
+  window.ccTema = function(){
+    if (window.top !== window.self) {   // dentro del panel: el tema es del panel completo
+      try { var b = window.top.document.getElementById('tema'); if (b) { b.click(); return; } } catch (e) {}
+    }
+    var destino = (guardado() || sistema()) === 'dark' ? 'light' : 'dark';
+    try { destino === sistema() ? localStorage.removeItem('ccarf_esquema') : localStorage.setItem('ccarf_esquema', destino); } catch (e) {}
+    meta.content = guardado() || 'light dark'; pintar();
+  };
+  if (conTema) { document.getElementById('ccTemaBtn').hidden = false; pintar(); matchMedia('(prefers-color-scheme: dark)').addEventListener('change', pintar); }
+  function leer(){ try { return +(localStorage.getItem('ccarf_escala') || 1); } catch (e) { return 1; } }
+  function guardar(v){ try { localStorage.setItem('ccarf_escala', v); } catch (e) {} }
+  window.ccZoom = function(d){ var v = Math.min(1.6, Math.max(0.8, +(leer() + 0.1 * d).toFixed(2))); guardar(v); document.body.style.zoom = v; };
+  document.body.style.zoom = leer();
+})();</script></body>
+</html>

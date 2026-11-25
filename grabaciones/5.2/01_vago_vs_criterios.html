@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+.r1 {color: #727272; text-decoration-color: #727272}
+.r2 {color: #326e7b; text-decoration-color: #326e7b; font-weight: bold}
+.r3 {color: #9d65ff; text-decoration-color: #9d65ff}
+.r4 {color: #c4c5b5; text-decoration-color: #c4c5b5; background-color: #000087; font-weight: bold}
+.r5 {color: #527618; text-decoration-color: #527618}
+.r6 {color: #fd971f; text-decoration-color: #fd971f}
+.r7 {color: #58d1eb; text-decoration-color: #58d1eb; font-weight: bold}
+.r8 {color: #f4005f; text-decoration-color: #f4005f}
+.r9 {font-weight: bold}
+.r10 {color: #800635; text-decoration-color: #800635; font-weight: bold}
+.r11 {color: #727272; text-decoration-color: #727272; font-weight: bold}
+.r12 {color: #98e024; text-decoration-color: #98e024}
+.r13 {color: #98e024; text-decoration-color: #98e024; font-weight: bold}
+.r14 {font-style: italic}
+.r15 {color: #58d1eb; text-decoration-color: #58d1eb}
+body {
+    color: #d9d9d9;
+    background-color: #0c0c0c;
+}
+</style>
+<style>@font-face{font-family:'Atkinson Hyperlegible Next';font-style:italic;font-weight:400;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-italic-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:italic;font-weight:400;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-italic-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-normal-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-normal-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}@font-face{font-family:'Recursive';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/recursive-normal-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Recursive';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/recursive-normal-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+body{max-width:1100px;margin:0 auto !important;padding:8px 24px 48px;font-family:'Atkinson Hyperlegible Next',Inter,system-ui,sans-serif !important}
+pre,code{font-family:'Recursive',Menlo,'DejaVu Sans Mono',monospace !important}
+.diagrama svg{max-width:100%;height:auto}
+.diagrama{max-width:100% !important;box-sizing:border-box;overflow-x:auto}
+pre{font-size:14px !important;line-height:1.5 !important}
+abbr.termino{text-decoration:underline dotted #8ab4f8;text-underline-offset:3px;cursor:help}
+</style></head>
+<body><div style="font-family:'Atkinson Hyperlegible Next',Inter,'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;color:#e8e8e8;background:#1b1c18;line-height:1.5;border:1px solid #444;border-radius:10px;padding:14px 20px;margin:14px 0;max-width:1000px"><div style="font-size:19px;font-weight:600">Dominio 5 · demo 5.2 · 23/11/2026 12:47:11</div><div style="font-size:15px;color:#e6e6e6;margin:6px 0">📝 Grabación «⚖ Los dos (comparación)». Resultado: vago: 4/5 · criterios: 5/5</div><div style="font-size:14px;color:#bbb;margin:0 0 6px">💲 18 llamadas a la API · 19,788 tokens (15,947 entrada + 3,841 salida) · ≈ $0.0035 USD</div><div style="font-size:14px;color:#bbb;margin:8px 0 6px">Variables de esta corrida (<a style="color:#58a6ff" href="/archivos/salidas_html/dominio5/index.html">recorrer todas las corridas</a>)</div><table style="font-size:14px;border-collapse:collapse"><tr><td style="padding:3px 16px 3px 0;color:#bbb">MODELO</td><td>&quot;claude-haiku-5-5&quot;</td></tr><tr><td style="padding:3px 16px 3px 0;color:#bbb">D52_MODO</td><td>&quot;ambos&quot;</td></tr></table></div>
+    <pre style="font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><code style="font-family:inherit"><span class="r1">   Modelo: claude-haiku-</span><span class="r2">5</span><span class="r1">-</span><span class="r2">5</span>
+<span class="r1">   Modo HTML: encendido → salidas_html/dominio5/</span>
+
+<span class="r3">─────────────────────────── </span><span class="r4"> DEMO </span><span class="r4">5.2</span><span class="r4"> · Escalamiento: cuándo pasar a una persona </span><span class="r3"> ────────────────────────────</span>
+
+<span class="r1">📖 Guía de esta demo: python lab_dominio5.py guia </span><span class="r2">5.2</span><span class="r1">  ·  más detalle: pon DETALLE = </span><span class="r5">&quot;completo&quot;</span><span class="r1"> arriba del </span>
+<span class="r1">archivo</span>
+<span class="r6">╭────────────────────────────────────────── 💡 Concepto del examen ──────────────────────────────────────────╮</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">│</span>  Escala cuando: (1) el cliente lo pide explícitamente, (2) la política no cubre el caso, (3) no puedes     <span class="r6">│</span>
+<span class="r6">│</span>  avanzar.                                                                                                  <span class="r6">│</span>
+<span class="r6">│</span>  NO son buenos disparadores: el sentimiento por sí solo, ni la &#x27;confianza&#x27; que el modelo dice tener.       <span class="r6">│</span>
+<span class="r6">│</span>  Ambigüedad: si hay varios clientes posibles, pide un dato más; nunca elijas con una heurística.           <span class="r6">│</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+</code></pre><div class="diagrama" style="font-family:'Atkinson Hyperlegible Next',Inter,'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;background:#1b1c18;color:#f0f0f0;border:1px solid #444;border-radius:10px;padding:16px 20px;margin:16px 0;max-width:1000px;white-space:normal"><div style="font-size:18px;font-weight:600;color:#f0f0f0;margin-bottom:6px">📊 Demo 5.2 · Los system prompts tal cual</div><div style="font-size:15px;line-height:1.55;color:#d0d0d0;margin-bottom:12px;max-width:80ch">Mismos escenarios, mismas tools y mismo modelo: solo cambia el <abbr class="termino" title="Instrucciones generales para Claude (rol, reglas) que van aparte de los mensajes.  ·  En inglés (examen): system prompt">system prompt</abbr>. La tercera columna agrega ejemplos de cuándo escalar y cuándo resolver a los mismos criterios.</div><table style="width:100%;border-collapse:separate;border-spacing:8px 4px;table-layout:fixed"><tr><th style="text-align:left;color:#ff9b9b;width:33%">❌ Vago</th><th style="text-align:left;color:#8fe0a0;width:33%">✅ Criterios</th><th style="text-align:left;color:#7fd7ff;width:33%">✅ Criterios + ejemplos</th></tr><tr><td style="background:#24251f;border:1px solid #444;border-radius:8px;padding:10px 12px;vertical-align:top;white-space:pre-wrap;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;line-height:1.5">Eres el agente de soporte de La Tiendita. Escala a un humano cuando sea necesario.</td><td style="background:#24251f;border:1px solid #444;border-radius:8px;padding:10px 12px;vertical-align:top;white-space:pre-wrap;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;line-height:1.5">Eres el agente de soporte de La Tiendita.
+Escala con escalar_a_humano SOLO si:
+1. El cliente pide explícitamente hablar con una persona → escala de inmediato, sin intentar resolver primero.
+2. La política no cubre el caso (por ejemplo, igualar precios de otras tiendas: NO existe esa política).
+3. No puedes avanzar después de intentarlo.
+NO escales solo porque el cliente esté molesto: si el problema es simple, resuélvelo.
+Si una búsqueda devuelve VARIOS clientes posibles, pide un dato más (email o número de pedido); nunca elijas uno.</td><td style="background:#24251f;border:1px solid #444;border-radius:8px;padding:10px 12px;vertical-align:top;white-space:pre-wrap;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;line-height:1.5">Ejemplos:
+- &quot;¡Estoy harto! ¿Dónde está mi pedido #12001?&quot; → NO escales: busca el pedido y contesta. Molesto no es complejo.
+- &quot;Pásame con alguien de verdad.&quot; → Escala de inmediato, aunque puedas resolverlo.
+- Ya le diste la solución y responde &quot;Aun así quiero hablar con una persona&quot; → Escala: lo pidió explícitamente.
+- &quot;¿Me hacen 50% de descuento si compro dos?&quot; → Escala: la política no cubre descuentos especiales.
+- &quot;Soy María, quiero mi factura&quot; y hay dos Marías → Pregunta el email o el número de pedido; no escales ni elijas.
+
+(+ los criterios de la columna anterior)</td></tr></table><div style="font-size:15.5px;line-height:1.55;color:#f3f3f3;background:#26331f;border-left:4px solid #3fb950;border-radius:6px;padding:10px 14px;margin-top:12px">👉 «Cuando sea necesario» deja que el tono del cliente decida. Los criterios dan los 3 motivos válidos (pide una persona, la política no cubre, no avanza) y dicen qué NO es motivo: el enojo. Los ejemplos muestran los casos frontera.</div></div><pre style="font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><code style="font-family:inherit">
+
+<span class="r7">▶ System prompt VAGO</span>
+<span class="r8">╭────────────────────────────────────────────────────────────────────────────────────────────────────────────╮</span>
+<span class="r8">│</span> Eres el agente de soporte de La Tiendita. Escala a un humano cuando sea necesario.                         <span class="r8">│</span>
+<span class="r8">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+
+<span class="r9">🗣   Quiero hablar con una persona, no con un bot. Ya.</span>
+<span class="r1">      </span><span class="r10">escalar_a_humano</span><span class="r11">({</span><span class="r5">&quot;motivo&quot;</span><span class="r1">: </span><span class="r5">&quot;El cliente solicita hablar con una persona de forma inmediata, no con un </span>
+<span class="r5">bot.&quot;</span><span class="r1">, </span><span class="r5">&quot;resumen&quot;</span><span class="r1">: </span><span class="r5">&quot;El cliente escribió \&quot;Quiero hablar con una persona, no con un bot. Ya.\&quot; No ha indicado </span>
+<span class="r5">todavía su consulta, pedido ni datos de contacto. Se solicita atención humana inmediata.&quot;</span><span class="r11">})</span><span class="r1"> → </span><span class="r11">{</span><span class="r5">&quot;ok&quot;</span><span class="r1">: true, </span>
+<span class="r5">&quot;ticket&quot;</span><span class="r1">: </span><span class="r5">&quot;HUM-0077&quot;</span><span class="r11">}</span>
+<span class="r12">╭────────────────────────────────────────────── Acción: escaló ──────────────────────────────────────────────╮</span>
+<span class="r12">│</span> Te he transferido a una persona del equipo de La Tiendita. Tu número de caso es **HUM-0077**. Un agente    <span class="r12">│</span>
+<span class="r12">│</span> humano continuará la conversación contigo desde aquí; no hace falta que vuelvas a explicar nada.           <span class="r12">│</span>
+<span class="r12">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+
+<span class="r9">🗣   ¡¡Estoy furioso!! Mi pedido #</span><span class="r7">12347</span><span class="r9"> dice </span><span class="r13">&#x27;en tránsito&#x27;</span><span class="r9"> desde hace </span><span class="r7">2</span><span class="r9"> días. ¿Dónde va?</span>
+<span class="r1">      </span><span class="r10">lookup_order</span><span class="r11">({</span><span class="r5">&quot;order_id&quot;</span><span class="r1">: </span><span class="r5">&quot;12347&quot;</span><span class="r11">})</span><span class="r1"> → </span><span class="r11">{</span><span class="r5">&quot;order_id&quot;</span><span class="r1">: </span><span class="r5">&quot;#12347&quot;</span><span class="r1">, </span><span class="r5">&quot;estado&quot;</span><span class="r1">: </span><span class="r5">&quot;en tránsito&quot;</span><span class="r1">, </span>
+<span class="r5">&quot;ultima_actualizacion&quot;</span><span class="r1">: </span><span class="r5">&quot;hace 2 días&quot;</span><span class="r1">, </span><span class="r5">&quot;entrega_estimada&quot;</span><span class="r1">: </span><span class="r5">&quot;mañana&quot;</span><span class="r11">}</span>
+<span class="r12">╭───────────────────────────────────────────── Acción: resolvió ─────────────────────────────────────────────╮</span>
+<span class="r12">│</span> Entiendo que estés molesto, y tienes razón en preocuparte: el pedido #12347 figura &quot;en tránsito&quot;, pero la  <span class="r12">│</span>
+<span class="r12">│</span> última actualización fue hace 2 días.                                                                      <span class="r12">│</span>
+<span class="r12">│</span>                                                                                                            <span class="r12">│</span>
+<span class="r12">│</span> Según nuestro sistema, la entrega estimada es **mañana**. Lo que no puedo ver es la ubicación exacta del   <span class="r12">│</span>
+<span class="r12">│</span> paquete, porque el sistema no muestra ese detalle.                                                         <span class="r12">│</span>
+<span class="r12">│</span>                                                                                                            <span class="r12">│</span>
+<span class="r12">│</span> Si mañana no llega, dime y lo escalo a una persona del equipo para que haga seguimiento con la             <span class="r12">│</span>
+<span class="r12">│</span> transportista.                                                                                             <span class="r12">│</span>
+<span class="r12">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+
+<span class="r9">🗣   Soy Juan Pérez, quiero el reembolso de mi pedido.</span>
+<span class="r12">╭───────────────────────────────────────── Acción: pidió aclaración ─────────────────────────────────────────╮</span>
+<span class="r12">│</span> Hola Juan, con gusto te ayudo con el reembolso. Para localizar tu pedido, ¿me puedes indicar el número de  <span class="r12">│</span>
+<span class="r12">│</span> pedido (formato #NNNNN)? Si no lo tienes a mano, también me sirve el email asociado a tu cuenta.           <span class="r12">│</span>
+<span class="r12">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+
+<span class="r9">🗣   Quiero que me igualen el precio de Amazon, allá está </span><span class="r7">30</span><span class="r9">% más barato.</span>
+<span class="r12">╭───────────────────────────────────────── Acción: pidió aclaración ─────────────────────────────────────────╮</span>
+<span class="r12">│</span> Entiendo que quiera el mejor precio. No tengo forma de verificar precios de Amazon ni de aprobar           <span class="r12">│</span>
+<span class="r12">│</span> igualaciones de precio, así que esa decisión la tiene que revisar una persona de nuestro equipo.           <span class="r12">│</span>
+<span class="r12">│</span>                                                                                                            <span class="r12">│</span>
+<span class="r12">│</span> Para pasar su caso con todo lo necesario, ¿me puede compartir?                                             <span class="r12">│</span>
+<span class="r12">│</span>                                                                                                            <span class="r12">│</span>
+<span class="r12">│</span> 1. **El producto** que quiere comprar o que ya compró.                                                     <span class="r12">│</span>
+<span class="r12">│</span> 2. **El enlace o la captura** del precio en Amazon.                                                        <span class="r12">│</span>
+<span class="r12">│</span> 3. **Su número de pedido** (#NNNNN), si ya compró el producto aquí.                                        <span class="r12">│</span>
+<span class="r12">│</span>                                                                                                            <span class="r12">│</span>
+<span class="r12">│</span> Con esa información le transfiero el caso a un humano que lo revise.                                       <span class="r12">│</span>
+<span class="r12">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+
+<span class="r9">🗣   No me sirve. Quiero que me atienda una persona, por favor. (después de que el agente ya ofreció resolver)</span>
+<span class="r1">      </span><span class="r10">escalar_a_humano</span><span class="r11">({</span><span class="r5">&quot;motivo&quot;</span><span class="r1">: </span><span class="r5">&quot;Solicitud explícita del cliente de atención humana. Pedido #12347 no ha </span>
+<span class="r5">llegado.&quot;</span><span class="r1">, </span><span class="r5">&quot;resumen&quot;</span><span class="r1">: </span><span class="r5">&quot;El cliente indica que su pedido #12347 no ha llegado y pidió hablar con una persona. </span>
+<span class="r5">Corrección importante: en mi respuesta anterior le informé que el pedido estaba en tránsito y llegaría mañana,</span>
+<span class="r5">pero NO consulté el estado del pedido en el sistema, así que esa información no está verificada. Se requiere </span>
+<span class="r5">revisar el estado real del pedido #12347 y ayudar al cliente con la entrega.&quot;</span><span class="r11">})</span><span class="r1"> → </span><span class="r11">{</span><span class="r5">&quot;ok&quot;</span><span class="r1">: true, </span><span class="r5">&quot;ticket&quot;</span><span class="r1">: </span>
+<span class="r5">&quot;HUM-0077&quot;</span><span class="r11">}</span>
+<span class="r12">╭────────────────────────────────────────────── Acción: escaló ──────────────────────────────────────────────╮</span>
+<span class="r12">│</span> Te transferí a una persona del equipo con el número de caso HUM-0077. Le dejé un resumen de tu situación   <span class="r12">│</span>
+<span class="r12">│</span> para que no tengas que repetir todo.                                                                       <span class="r12">│</span>
+<span class="r12">│</span>                                                                                                            <span class="r12">│</span>
+<span class="r12">│</span> También tengo que corregir algo: en mi respuesta anterior te dije que el pedido #12347 estaba en tránsito  <span class="r12">│</span>
+<span class="r12">│</span> y que llegaría mañana, pero no había consultado su estado en el sistema. Esa información no era confiable. <span class="r12">│</span>
+<span class="r12">│</span> La persona que te atienda va a revisar el estado real del pedido.                                          <span class="r12">│</span>
+<span class="r12">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+
+<span class="r7">▶ System prompt CRITERIOS</span>
+<span class="r8">╭────────────────────────────────────────────────────────────────────────────────────────────────────────────╮</span>
+<span class="r8">│</span> Eres el agente de soporte de La Tiendita.                                                                  <span class="r8">│</span>
+<span class="r8">│</span> Escala con escalar_a_humano SOLO si:                                                                       <span class="r8">│</span>
+<span class="r8">│</span> 1. El cliente pide explícitamente hablar con una persona → escala de inmediato, sin intentar resolver      <span class="r8">│</span>
+<span class="r8">│</span> primero.                                                                                                   <span class="r8">│</span>
+<span class="r8">│</span> 2. La política no cubre el caso (por ejemplo, igualar precios de otras tiendas: NO existe esa política).   <span class="r8">│</span>
+<span class="r8">│</span> 3. No puedes avanzar después de intentarlo.                                                                <span class="r8">│</span>
+<span class="r8">│</span> NO escales solo porque el cliente esté molesto: si el problema es simple, resuélvelo.                      <span class="r8">│</span>
+<span class="r8">│</span> Si una búsqueda devuelve VARIOS clientes posibles, pide un dato más (email o número de pedido); nunca      <span class="r8">│</span>
+<span class="r8">│</span> elijas uno.                                                                                                <span class="r8">│</span>
+<span class="r8">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+
+<span class="r9">🗣   Quiero hablar con una persona, no con un bot. Ya.</span>
+<span class="r1">      </span><span class="r10">escalar_a_humano</span><span class="r11">({</span><span class="r5">&quot;motivo&quot;</span><span class="r1">: </span><span class="r5">&quot;El cliente pide explícitamente hablar con una persona, no con un bot.&quot;</span><span class="r1">, </span>
+<span class="r5">&quot;resumen&quot;</span><span class="r1">: </span><span class="r5">&quot;El cliente escribió \&quot;Quiero hablar con una persona, no con un bot. Ya.\&quot; No se ha recopilado </span>
+<span class="r5">ningún dato adicional (nombre, email o número de pedido) ni se ha intentado resolver un problema, por petición</span>
+<span class="r5">explícita del cliente.&quot;</span><span class="r11">})</span><span class="r1"> → </span><span class="r11">{</span><span class="r5">&quot;ok&quot;</span><span class="r1">: true, </span><span class="r5">&quot;ticket&quot;</span><span class="r1">: </span><span class="r5">&quot;HUM-0077&quot;</span><span class="r11">}</span>
+<span class="r12">╭────────────────────────────────────────────── Acción: escaló ──────────────────────────────────────────────╮</span>
+<span class="r12">│</span> Tu caso fue transferido a una persona del equipo (ticket HUM-0077). Te atenderán en breve. Gracias por tu  <span class="r12">│</span>
+<span class="r12">│</span> paciencia.                                                                                                 <span class="r12">│</span>
+<span class="r12">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+
+<span class="r9">🗣   ¡¡Estoy furioso!! Mi pedido #</span><span class="r7">12347</span><span class="r9"> dice </span><span class="r13">&#x27;en tránsito&#x27;</span><span class="r9"> desde hace </span><span class="r7">2</span><span class="r9"> días. ¿Dónde va?</span>
+<span class="r1">      </span><span class="r10">lookup_order</span><span class="r11">({</span><span class="r5">&quot;order_id&quot;</span><span class="r1">: </span><span class="r5">&quot;12347&quot;</span><span class="r11">})</span><span class="r1"> → </span><span class="r11">{</span><span class="r5">&quot;order_id&quot;</span><span class="r1">: </span><span class="r5">&quot;#12347&quot;</span><span class="r1">, </span><span class="r5">&quot;estado&quot;</span><span class="r1">: </span><span class="r5">&quot;en tránsito&quot;</span><span class="r1">, </span>
+<span class="r5">&quot;ultima_actualizacion&quot;</span><span class="r1">: </span><span class="r5">&quot;hace 2 días&quot;</span><span class="r1">, </span><span class="r5">&quot;entrega_estimada&quot;</span><span class="r1">: </span><span class="r5">&quot;mañana&quot;</span><span class="r11">}</span>
+<span class="r12">╭───────────────────────────────────────────── Acción: resolvió ─────────────────────────────────────────────╮</span>
+<span class="r12">│</span> Entiendo que estés molesto, y lamento la espera. Revisé tu pedido #12347: sigue **en tránsito** y la       <span class="r12">│</span>
+<span class="r12">│</span> entrega estimada es **mañana**. El último movimiento registrado fue hace 2 días, así que el paquete aún no <span class="r12">│</span>
+<span class="r12">│</span> tiene una actualización más reciente en el sistema.                                                        <span class="r12">│</span>
+<span class="r12">│</span>                                                                                                            <span class="r12">│</span>
+<span class="r12">│</span> Si mañana no llega o el estado no cambia, avísame y te ayudo con los siguientes pasos.                     <span class="r12">│</span>
+<span class="r12">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+
+<span class="r9">🗣   Soy Juan Pérez, quiero el reembolso de mi pedido.</span>
+<span class="r1">      </span><span class="r10">get_customer</span><span class="r11">({</span><span class="r5">&quot;consulta&quot;</span><span class="r1">: </span><span class="r5">&quot;Juan Pérez&quot;</span><span class="r11">})</span><span class="r1"> → </span><span class="r11">{</span><span class="r5">&quot;coincidencias&quot;</span><span class="r1">: </span><span class="r11">[{</span><span class="r5">&quot;id&quot;</span><span class="r1">: </span><span class="r5">&quot;C-002&quot;</span><span class="r1">, </span><span class="r5">&quot;nombre&quot;</span><span class="r1">: </span><span class="r5">&quot;Juan Pérez&quot;</span><span class="r1">, </span>
+<span class="r5">&quot;email&quot;</span><span class="r1">: </span><span class="r5">&quot;juan@ejemplo.com&quot;</span><span class="r11">}</span><span class="r1">, </span><span class="r11">{</span><span class="r5">&quot;id&quot;</span><span class="r1">: </span><span class="r5">&quot;C-003&quot;</span><span class="r1">, </span><span class="r5">&quot;nombre&quot;</span><span class="r1">: &quot;Juan… </span><span class="r11">(</span><span class="r1">+</span><span class="r2">41</span><span class="r1"> caracteres</span><span class="r11">)</span>
+<span class="r12">╭───────────────────────────────────────── Acción: pidió aclaración ─────────────────────────────────────────╮</span>
+<span class="r12">│</span> Hola Juan. Encontré dos cuentas a nombre de Juan Pérez, así que necesito confirmar cuál es la tuya. Por    <span class="r12">│</span>
+<span class="r12">│</span> favor, indícame:                                                                                           <span class="r12">│</span>
+<span class="r12">│</span>                                                                                                            <span class="r12">│</span>
+<span class="r12">│</span> 1. El email asociado a tu cuenta (¿juan@ejemplo.com o jperez@ejemplo.com?, o uno distinto).                <span class="r12">│</span>
+<span class="r12">│</span> 2. El número de pedido para el que quieres el reembolso (formato #NNNNN).                                  <span class="r12">│</span>
+<span class="r12">│</span>                                                                                                            <span class="r12">│</span>
+<span class="r12">│</span> Con eso reviso el estado del pedido y te digo qué sigue.                                                   <span class="r12">│</span>
+<span class="r12">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+
+<span class="r9">🗣   Quiero que me igualen el precio de Amazon, allá está </span><span class="r7">30</span><span class="r9">% más barato.</span>
+<span class="r1">      </span><span class="r10">escalar_a_humano</span><span class="r11">({</span><span class="r5">&quot;motivo&quot;</span><span class="r1">: </span><span class="r5">&quot;Solicitud de igualar precio de Amazon. La política de La Tiendita no cubre </span>
+<span class="r5">igualar precios de otras tiendas.&quot;</span><span class="r1">, </span><span class="r5">&quot;resumen&quot;</span><span class="r1">: </span><span class="r5">&quot;El cliente pide que La Tiendita iguale el precio de un </span>
+<span class="r5">producto que, según indica, está 30% más barato en Amazon. No se especificó producto ni número de pedido. No </span>
+<span class="r5">existe política de igualación de precios con otras tiendas, por lo que el caso queda fuera de la política y se</span>
+<span class="r5">transfiere a una persona para revisión.&quot;</span><span class="r11">})</span><span class="r1"> → </span><span class="r11">{</span><span class="r5">&quot;ok&quot;</span><span class="r1">: true, </span><span class="r5">&quot;ticket&quot;</span><span class="r1">: </span><span class="r5">&quot;HUM-0077&quot;</span><span class="r11">}</span>
+<span class="r12">╭────────────────────────────────────────────── Acción: escaló ──────────────────────────────────────────────╮</span>
+<span class="r12">│</span> Lo siento, La Tiendita no iguala precios de otras tiendas, así que no puedo aplicar esa solicitud          <span class="r12">│</span>
+<span class="r12">│</span> directamente. Ya transferí tu caso a una persona de nuestro equipo con el número de ticket **HUM-0077**    <span class="r12">│</span>
+<span class="r12">│</span> para que lo revisen. Si me compartes el producto o el número de pedido, también lo incluiré en el caso.    <span class="r12">│</span>
+<span class="r12">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+
+<span class="r9">🗣   No me sirve. Quiero que me atienda una persona, por favor. (después de que el agente ya ofreció resolver)</span>
+<span class="r1">      </span><span class="r10">escalar_a_humano</span><span class="r11">({</span><span class="r5">&quot;motivo&quot;</span><span class="r1">: </span><span class="r5">&quot;El cliente pidió explícitamente hablar con una persona.&quot;</span><span class="r1">, </span><span class="r5">&quot;resumen&quot;</span><span class="r1">: </span><span class="r5">&quot;El </span>
+<span class="r5">cliente reporta que su pedido #12347 no ha llegado. Pidió atención humana tras la primera respuesta del </span>
+<span class="r5">agente. Advertencia: en la respuesta anterior el agente indicó que el pedido iba en tránsito y llegaría </span>
+<span class="r5">mañana, pero no consultó el estado del pedido con la herramienta, así que esa información no está verificada. </span>
+<span class="r5">Se debe revisar el estado real del pedido #12347.&quot;</span><span class="r11">})</span><span class="r1"> → </span><span class="r11">{</span><span class="r5">&quot;ok&quot;</span><span class="r1">: true, </span><span class="r5">&quot;ticket&quot;</span><span class="r1">: </span><span class="r5">&quot;HUM-0077&quot;</span><span class="r11">}</span>
+<span class="r12">╭────────────────────────────────────────────── Acción: escaló ──────────────────────────────────────────────╮</span>
+<span class="r12">│</span> Entendido, te transfiero con una persona del equipo. Tu número de caso es HUM-0077.                        <span class="r12">│</span>
+<span class="r12">│</span>                                                                                                            <span class="r12">│</span>
+<span class="r12">│</span> Además, quiero corregir algo: en mi respuesta anterior te dije que tu pedido #12347 va en tránsito y llega <span class="r12">│</span>
+<span class="r12">│</span> mañana, pero no consulté su estado en el sistema, así que esa información no está verificada. La persona   <span class="r12">│</span>
+<span class="r12">│</span> que te atienda revisará el estado real del pedido.                                                         <span class="r12">│</span>
+<span class="r12">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r14">                              ¿Hizo lo correcto?                              </span>
+┏━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┓
+┃<span class="r9"> Escenario         </span>┃<span class="r9"> Esperado         </span>┃<span class="r9"> vago             </span>┃<span class="r9"> criterios        </span>┃
+┡━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━┩
+│ pide_humano       │<span class="r15"> escaló           </span>│ <span class="r12">escaló</span>           │ <span class="r12">escaló</span>           │
+├───────────────────┼──────────────────┼──────────────────┼──────────────────┤
+│ molesto_simple    │<span class="r15"> resolvió         </span>│ <span class="r12">resolvió</span>         │ <span class="r12">resolvió</span>         │
+├───────────────────┼──────────────────┼──────────────────┼──────────────────┤
+│ cliente_ambiguo   │<span class="r15"> pidió aclaración </span>│ <span class="r12">pidió aclaración</span> │ <span class="r12">pidió aclaración</span> │
+├───────────────────┼──────────────────┼──────────────────┼──────────────────┤
+│ fuera_de_politica │<span class="r15"> escaló           </span>│ <span class="r8">pidió aclaración</span> │ <span class="r12">escaló</span>           │
+├───────────────────┼──────────────────┼──────────────────┼──────────────────┤
+│ insiste           │<span class="r15"> escaló           </span>│ <span class="r12">escaló</span>           │ <span class="r12">escaló</span>           │
+└───────────────────┴──────────────────┴──────────────────┴──────────────────┘
+<span class="r6">╭────────────────────────────────────────────── 🧪 Experimenta ──────────────────────────────────────────────╮</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">│</span>  Fíjate en &#x27;molesto_simple&#x27; (no hay que escalar solo por el enojo) y &#x27;cliente_ambiguo&#x27; (no debe elegir a   <span class="r6">│</span>
+<span class="r6">│</span>  uno de los dos Juan Pérez). La acción se detecta por heurística: lee las respuestas.                      <span class="r6">│</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r3">╭──────────────────────────────── 📊 Uso de la Messages API en esta corrida ─────────────────────────────────╮</span>
+<span class="r3">│</span> Llamadas a la API: 18                                                                                      <span class="r3">│</span>
+<span class="r3">│</span> Tokens de entrada: 15,947                                                                                  <span class="r3">│</span>
+<span class="r3">│</span> Tokens de salida:  3,841                                                                                   <span class="r3">│</span>
+<span class="r3">│</span> Costo estimado (con el precio de cada modelo usado): ~$0.0035 USD                                          <span class="r3">│</span>
+<span class="r3">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+</code></pre>
+<div style="font-family:'Atkinson Hyperlegible Next',Inter,'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;color:#e8e8e8;background:#1b1c18;border:1px solid #444;border-radius:10px;padding:14px 20px;margin:16px 0;max-width:1000px;line-height:1.5"><div style="font-size:18px;font-weight:600">🔍 Lo que se le mandó a Claude</div><div style="font-size:14.5px;color:#c8c8c8;margin:4px 0 8px">Cada llamada lleva el historial completo: la API no recuerda nada entre llamadas. Abre una para ver system, tools y mensajes tal como viajaron.</div><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 1 · escenario · 1 mensajes · max_tokens 500</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;escenario&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 500,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita. Escala a un humano cuando sea necesario.&quot;,
+  &quot;tools&quot;: [
+    &quot;get_customer&quot;,
+    &quot;lookup_order&quot;,
+    &quot;escalar_a_humano&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Quiero hablar con una persona, no con un bot. Ya.&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 2 · escenario · 3 mensajes · max_tokens 500</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;escenario&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 500,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita. Escala a un humano cuando sea necesario.&quot;,
+  &quot;tools&quot;: [
+    &quot;get_customer&quot;,
+    &quot;lookup_order&quot;,
+    &quot;escalar_a_humano&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Quiero hablar con una persona, no con un bot. Ya.&quot;
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;assistant&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;thinking&quot;
+        },
+        {
+          &quot;type&quot;: &quot;tool_use&quot;,
+          &quot;name&quot;: &quot;escalar_a_humano&quot;,
+          &quot;input&quot;: {
+            &quot;motivo&quot;: &quot;El cliente solicita hablar con una persona de forma inmediata, no con un bot.&quot;,
+            &quot;resumen&quot;: &quot;El cliente escribió \&quot;Quiero hablar con una persona, no con un bot. Ya.\&quot; No ha indicado todavía su consulta, pedido ni datos de contacto. Se solicita atención humana inmediata.&quot;
+          }
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;tool_result&quot;,
+          &quot;is_error&quot;: false,
+          &quot;content&quot;: &quot;{\&quot;ok\&quot;: true, \&quot;ticket\&quot;: \&quot;HUM-0077\&quot;}&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 3 · escenario · 1 mensajes · max_tokens 500</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;escenario&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 500,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita. Escala a un humano cuando sea necesario.&quot;,
+  &quot;tools&quot;: [
+    &quot;get_customer&quot;,
+    &quot;lookup_order&quot;,
+    &quot;escalar_a_humano&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;¡¡Estoy furioso!! Mi pedido #12347 dice 'en tránsito' desde hace 2 días. ¿Dónde va?&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 4 · escenario · 3 mensajes · max_tokens 500</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;escenario&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 500,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita. Escala a un humano cuando sea necesario.&quot;,
+  &quot;tools&quot;: [
+    &quot;get_customer&quot;,
+    &quot;lookup_order&quot;,
+    &quot;escalar_a_humano&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;¡¡Estoy furioso!! Mi pedido #12347 dice 'en tránsito' desde hace 2 días. ¿Dónde va?&quot;
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;assistant&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;tool_use&quot;,
+          &quot;name&quot;: &quot;lookup_order&quot;,
+          &quot;input&quot;: {
+            &quot;order_id&quot;: &quot;12347&quot;
+          }
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;tool_result&quot;,
+          &quot;is_error&quot;: false,
+          &quot;content&quot;: &quot;{\&quot;order_id\&quot;: \&quot;#12347\&quot;, \&quot;estado\&quot;: \&quot;en tránsito\&quot;, \&quot;ultima_actualizacion\&quot;: \&quot;hace 2 días\&quot;, \&quot;entrega_estimada\&quot;: \&quot;mañana\&quot;}&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 5 · escenario · 1 mensajes · max_tokens 500</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;escenario&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 500,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita. Escala a un humano cuando sea necesario.&quot;,
+  &quot;tools&quot;: [
+    &quot;get_customer&quot;,
+    &quot;lookup_order&quot;,
+    &quot;escalar_a_humano&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Soy Juan Pérez, quiero el reembolso de mi pedido.&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 6 · escenario · 1 mensajes · max_tokens 500</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;escenario&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 500,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita. Escala a un humano cuando sea necesario.&quot;,
+  &quot;tools&quot;: [
+    &quot;get_customer&quot;,
+    &quot;lookup_order&quot;,
+    &quot;escalar_a_humano&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Quiero que me igualen el precio de Amazon, allá está 30% más barato.&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 7 · escenario · 3 mensajes · max_tokens 500</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;escenario&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 500,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita. Escala a un humano cuando sea necesario.&quot;,
+  &quot;tools&quot;: [
+    &quot;get_customer&quot;,
+    &quot;lookup_order&quot;,
+    &quot;escalar_a_humano&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Mi pedido #12347 no llega.&quot;
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;assistant&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Lo revisé: va en tránsito y llega mañana. ¿Te ayudo con algo más?&quot;
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;No me sirve. Quiero que me atienda una persona, por favor.&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 8 · escenario · 5 mensajes · max_tokens 500</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;escenario&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 500,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita. Escala a un humano cuando sea necesario.&quot;,
+  &quot;tools&quot;: [
+    &quot;get_customer&quot;,
+    &quot;lookup_order&quot;,
+    &quot;escalar_a_humano&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Mi pedido #12347 no llega.&quot;
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;assistant&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Lo revisé: va en tránsito y llega mañana. ¿Te ayudo con algo más?&quot;
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;No me sirve. Quiero que me atienda una persona, por favor.&quot;
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;assistant&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;thinking&quot;
+        },
+        {
+          &quot;type&quot;: &quot;tool_use&quot;,
+          &quot;name&quot;: &quot;escalar_a_humano&quot;,
+          &quot;input&quot;: {
+            &quot;motivo&quot;: &quot;Solicitud explícita del cliente de atención humana. Pedido #12347 no ha llegado.&quot;,
+            &quot;resumen&quot;: &quot;El cliente indica que su pedido #12347 no ha llegado y pidió hablar con una persona. Corrección importante: en mi respuesta anterior le informé que el pedido estaba en tránsito y llegaría mañana, pero NO consulté el estado del pedido en el sistema, así que esa información no está verificada. Se requiere revisar el estado real del pedido #12347 y ayudar al cliente con la entrega.&quot;
+          }
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;tool_result&quot;,
+          &quot;is_error&quot;: false,
+          &quot;content&quot;: &quot;{\&quot;ok\&quot;: true, \&quot;ticket\&quot;: \&quot;HUM-0077\&quot;}&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 9 · escenario · 1 mensajes · max_tokens 500</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;escenario&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 500,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita.\nEscala con escalar_a_humano SOLO si:\n1. El cliente pide explícitamente hablar con una persona → escala de inmediato, sin intentar resolver primero.\n2. La política no cubre el caso (por ejemplo, igualar precios de otras tiendas: NO existe esa política).\n3. No puedes avanzar después de intentarlo.\nNO escales solo porque el cliente esté molesto: si el problema es simple, resuélvelo.\nSi una búsqueda devuelve VARIOS clientes posibles, pide un dato más (email o número de pedido); nunca elijas uno.&quot;,
+  &quot;tools&quot;: [
+    &quot;get_customer&quot;,
+    &quot;lookup_order&quot;,
+    &quot;escalar_a_humano&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Quiero hablar con una persona, no con un bot. Ya.&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 10 · escenario · 3 mensajes · max_tokens 500</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;escenario&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 500,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita.\nEscala con escalar_a_humano SOLO si:\n1. El cliente pide explícitamente hablar con una persona → escala de inmediato, sin intentar resolver primero.\n2. La política no cubre el caso (por ejemplo, igualar precios de otras tiendas: NO existe esa política).\n3. No puedes avanzar después de intentarlo.\nNO escales solo porque el cliente esté molesto: si el problema es simple, resuélvelo.\nSi una búsqueda devuelve VARIOS clientes posibles, pide un dato más (email o número de pedido); nunca elijas uno.&quot;,
+  &quot;tools&quot;: [
+    &quot;get_customer&quot;,
+    &quot;lookup_order&quot;,
+    &quot;escalar_a_humano&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Quiero hablar con una persona, no con un bot. Ya.&quot;
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;assistant&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Entendido. Te transfiero a una persona del equipo de La Tiendita ahora mismo.&quot;
+        },
+        {
+          &quot;type&quot;: &quot;tool_use&quot;,
+          &quot;name&quot;: &quot;escalar_a_humano&quot;,
+          &quot;input&quot;: {
+            &quot;motivo&quot;: &quot;El cliente pide explícitamente hablar con una persona, no con un bot.&quot;,
+            &quot;resumen&quot;: &quot;El cliente escribió \&quot;Quiero hablar con una persona, no con un bot. Ya.\&quot; No se ha recopilado ningún dato adicional (nombre, email o número de pedido) ni se ha intentado resolver un problema, por petición explícita del cliente.&quot;
+          }
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;tool_result&quot;,
+          &quot;is_error&quot;: false,
+          &quot;content&quot;: &quot;{\&quot;ok\&quot;: true, \&quot;ticket\&quot;: \&quot;HUM-0077\&quot;}&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 11 · escenario · 1 mensajes · max_tokens 500</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;escenario&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 500,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita.\nEscala con escalar_a_humano SOLO si:\n1. El cliente pide explícitamente hablar con una persona → escala de inmediato, sin intentar resolver primero.\n2. La política no cubre el caso (por ejemplo, igualar precios de otras tiendas: NO existe esa política).\n3. No puedes avanzar después de intentarlo.\nNO escales solo porque el cliente esté molesto: si el problema es simple, resuélvelo.\nSi una búsqueda devuelve VARIOS clientes posibles, pide un dato más (email o número de pedido); nunca elijas uno.&quot;,
+  &quot;tools&quot;: [
+    &quot;get_customer&quot;,
+    &quot;lookup_order&quot;,
+    &quot;escalar_a_humano&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;¡¡Estoy furioso!! Mi pedido #12347 dice 'en tránsito' desde hace 2 días. ¿Dónde va?&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 12 · escenario · 3 mensajes · max_tokens 500</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;escenario&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 500,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita.\nEscala con escalar_a_humano SOLO si:\n1. El cliente pide explícitamente hablar con una persona → escala de inmediato, sin intentar resolver primero.\n2. La política no cubre el caso (por ejemplo, igualar precios de otras tiendas: NO existe esa política).\n3. No puedes avanzar después de intentarlo.\nNO escales solo porque el cliente esté molesto: si el problema es simple, resuélvelo.\nSi una búsqueda devuelve VARIOS clientes posibles, pide un dato más (email o número de pedido); nunca elijas uno.&quot;,
+  &quot;tools&quot;: [
+    &quot;get_customer&quot;,
+    &quot;lookup_order&quot;,
+    &quot;escalar_a_humano&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;¡¡Estoy furioso!! Mi pedido #12347 dice 'en tránsito' desde hace 2 días. ¿Dónde va?&quot;
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;assistant&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;tool_use&quot;,
+          &quot;name&quot;: &quot;lookup_order&quot;,
+          &quot;input&quot;: {
+            &quot;order_id&quot;: &quot;12347&quot;
+          }
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;tool_result&quot;,
+          &quot;is_error&quot;: false,
+          &quot;content&quot;: &quot;{\&quot;order_id\&quot;: \&quot;#12347\&quot;, \&quot;estado\&quot;: \&quot;en tránsito\&quot;, \&quot;ultima_actualizacion\&quot;: \&quot;hace 2 días\&quot;, \&quot;entrega_estimada\&quot;: \&quot;mañana\&quot;}&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 13 · escenario · 1 mensajes · max_tokens 500</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;escenario&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 500,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita.\nEscala con escalar_a_humano SOLO si:\n1. El cliente pide explícitamente hablar con una persona → escala de inmediato, sin intentar resolver primero.\n2. La política no cubre el caso (por ejemplo, igualar precios de otras tiendas: NO existe esa política).\n3. No puedes avanzar después de intentarlo.\nNO escales solo porque el cliente esté molesto: si el problema es simple, resuélvelo.\nSi una búsqueda devuelve VARIOS clientes posibles, pide un dato más (email o número de pedido); nunca elijas uno.&quot;,
+  &quot;tools&quot;: [
+    &quot;get_customer&quot;,
+    &quot;lookup_order&quot;,
+    &quot;escalar_a_humano&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Soy Juan Pérez, quiero el reembolso de mi pedido.&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 14 · escenario · 3 mensajes · max_tokens 500</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;escenario&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 500,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita.\nEscala con escalar_a_humano SOLO si:\n1. El cliente pide explícitamente hablar con una persona → escala de inmediato, sin intentar resolver primero.\n2. La política no cubre el caso (por ejemplo, igualar precios de otras tiendas: NO existe esa política).\n3. No puedes avanzar después de intentarlo.\nNO escales solo porque el cliente esté molesto: si el problema es simple, resuélvelo.\nSi una búsqueda devuelve VARIOS clientes posibles, pide un dato más (email o número de pedido); nunca elijas uno.&quot;,
+  &quot;tools&quot;: [
+    &quot;get_customer&quot;,
+    &quot;lookup_order&quot;,
+    &quot;escalar_a_humano&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Soy Juan Pérez, quiero el reembolso de mi pedido.&quot;
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;assistant&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;thinking&quot;
+        },
+        {
+          &quot;type&quot;: &quot;tool_use&quot;,
+          &quot;name&quot;: &quot;get_customer&quot;,
+          &quot;input&quot;: {
+            &quot;consulta&quot;: &quot;Juan Pérez&quot;
+          }
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;tool_result&quot;,
+          &quot;is_error&quot;: false,
+          &quot;content&quot;: &quot;{\&quot;coincidencias\&quot;: [{\&quot;id\&quot;: \&quot;C-002\&quot;, \&quot;nombre\&quot;: \&quot;Juan Pérez\&quot;, \&quot;email\&quot;: \&quot;juan@ejemplo.com\&quot;}, {\&quot;id\&quot;: \&quot;C-003\&quot;, \&quot;nombre\&quot;: \&quot;Juan Pérez\&quot;, \&quot;email\&quot;: \&quot;jperez@ejemplo.com\&quot;}]}&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 15 · escenario · 1 mensajes · max_tokens 500</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;escenario&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 500,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita.\nEscala con escalar_a_humano SOLO si:\n1. El cliente pide explícitamente hablar con una persona → escala de inmediato, sin intentar resolver primero.\n2. La política no cubre el caso (por ejemplo, igualar precios de otras tiendas: NO existe esa política).\n3. No puedes avanzar después de intentarlo.\nNO escales solo porque el cliente esté molesto: si el problema es simple, resuélvelo.\nSi una búsqueda devuelve VARIOS clientes posibles, pide un dato más (email o número de pedido); nunca elijas uno.&quot;,
+  &quot;tools&quot;: [
+    &quot;get_customer&quot;,
+    &quot;lookup_order&quot;,
+    &quot;escalar_a_humano&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Quiero que me igualen el precio de Amazon, allá está 30% más barato.&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 16 · escenario · 3 mensajes · max_tokens 500</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;escenario&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 500,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita.\nEscala con escalar_a_humano SOLO si:\n1. El cliente pide explícitamente hablar con una persona → escala de inmediato, sin intentar resolver primero.\n2. La política no cubre el caso (por ejemplo, igualar precios de otras tiendas: NO existe esa política).\n3. No puedes avanzar después de intentarlo.\nNO escales solo porque el cliente esté molesto: si el problema es simple, resuélvelo.\nSi una búsqueda devuelve VARIOS clientes posibles, pide un dato más (email o número de pedido); nunca elijas uno.&quot;,
+  &quot;tools&quot;: [
+    &quot;get_customer&quot;,
+    &quot;lookup_order&quot;,
+    &quot;escalar_a_humano&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Quiero que me igualen el precio de Amazon, allá está 30% más barato.&quot;
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;assistant&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;thinking&quot;
+        },
+        {
+          &quot;type&quot;: &quot;tool_use&quot;,
+          &quot;name&quot;: &quot;escalar_a_humano&quot;,
+          &quot;input&quot;: {
+            &quot;motivo&quot;: &quot;Solicitud de igualar precio de Amazon. La política de La Tiendita no cubre igualar precios de otras tiendas.&quot;,
+            &quot;resumen&quot;: &quot;El cliente pide que La Tiendita iguale el precio de un producto que, según indica, está 30% más barato en Amazon. No se especificó producto ni número de pedido. No existe política de igualación de precios con otras tiendas, por lo que el caso queda fuera de la política y se transfiere a una persona para revisión.&quot;
+          }
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;tool_result&quot;,
+          &quot;is_error&quot;: false,
+          &quot;content&quot;: &quot;{\&quot;ok\&quot;: true, \&quot;ticket\&quot;: \&quot;HUM-0077\&quot;}&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 17 · escenario · 3 mensajes · max_tokens 500</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;escenario&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 500,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita.\nEscala con escalar_a_humano SOLO si:\n1. El cliente pide explícitamente hablar con una persona → escala de inmediato, sin intentar resolver primero.\n2. La política no cubre el caso (por ejemplo, igualar precios de otras tiendas: NO existe esa política).\n3. No puedes avanzar después de intentarlo.\nNO escales solo porque el cliente esté molesto: si el problema es simple, resuélvelo.\nSi una búsqueda devuelve VARIOS clientes posibles, pide un dato más (email o número de pedido); nunca elijas uno.&quot;,
+  &quot;tools&quot;: [
+    &quot;get_customer&quot;,
+    &quot;lookup_order&quot;,
+    &quot;escalar_a_humano&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Mi pedido #12347 no llega.&quot;
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;assistant&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Lo revisé: va en tránsito y llega mañana. ¿Te ayudo con algo más?&quot;
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;No me sirve. Quiero que me atienda una persona, por favor.&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 18 · escenario · 5 mensajes · max_tokens 500</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;escenario&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 500,
+  &quot;system&quot;: &quot;Eres el agente de soporte de La Tiendita.\nEscala con escalar_a_humano SOLO si:\n1. El cliente pide explícitamente hablar con una persona → escala de inmediato, sin intentar resolver primero.\n2. La política no cubre el caso (por ejemplo, igualar precios de otras tiendas: NO existe esa política).\n3. No puedes avanzar después de intentarlo.\nNO escales solo porque el cliente esté molesto: si el problema es simple, resuélvelo.\nSi una búsqueda devuelve VARIOS clientes posibles, pide un dato más (email o número de pedido); nunca elijas uno.&quot;,
+  &quot;tools&quot;: [
+    &quot;get_customer&quot;,
+    &quot;lookup_order&quot;,
+    &quot;escalar_a_humano&quot;
+  ],
+  &quot;tool_choice&quot;: null,
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Mi pedido #12347 no llega.&quot;
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;assistant&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Lo revisé: va en tránsito y llega mañana. ¿Te ayudo con algo más?&quot;
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;No me sirve. Quiero que me atienda una persona, por favor.&quot;
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;assistant&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;thinking&quot;
+        },
+        {
+          &quot;type&quot;: &quot;tool_use&quot;,
+          &quot;name&quot;: &quot;escalar_a_humano&quot;,
+          &quot;input&quot;: {
+            &quot;motivo&quot;: &quot;El cliente pidió explícitamente hablar con una persona.&quot;,
+            &quot;resumen&quot;: &quot;El cliente reporta que su pedido #12347 no ha llegado. Pidió atención humana tras la primera respuesta del agente. Advertencia: en la respuesta anterior el agente indicó que el pedido iba en tránsito y llegaría mañana, pero no consultó el estado del pedido con la herramienta, así que esa información no está verificada. Se debe revisar el estado real del pedido #12347.&quot;
+          }
+        }
+      ]
+    },
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;tool_result&quot;,
+          &quot;is_error&quot;: false,
+          &quot;content&quot;: &quot;{\&quot;ok\&quot;: true, \&quot;ticket\&quot;: \&quot;HUM-0077\&quot;}&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details></div><div id="ccZoom" title="Tamaño de letra (se recuerda)">
+<button onclick="ccZoom(-1)">A−</button><button onclick="ccZoom(1)">A+</button>
+<button id="ccTemaBtn" onclick="ccTema()" title="Tema claro / oscuro (por defecto, el de tu sistema)" hidden>☀</button></div>
+<style>#ccZoom{position:fixed;top:10px;right:14px;z-index:50;display:flex;gap:4px;font-family:var(--letra,system-ui,sans-serif)}
+#ccZoom button{background:var(--superficie-2,#2d2d2d);color:var(--texto,#f0f0f0);border:1px solid var(--borde,#666);border-radius:7px;
+  padding:4px 10px;font-size:14px;cursor:pointer}
+@media print{#ccZoom{display:none}}</style>
+<script>(function(){
+  if (window.top !== window.self) { document.getElementById('ccZoom').style.display = 'none'; }
+  // Tema: solo en páginas con los colores de tema.py (las corridas HTML son siempre oscuras, como una terminal)
+  var meta = document.querySelector('meta[name="color-scheme"]');
+  var conTema = !!meta && getComputedStyle(document.documentElement).getPropertyValue('--fondo').trim() !== '';
+  function sistema(){ return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+  function guardado(){ try { return localStorage.getItem('ccarf_esquema'); } catch (e) { return null; } }
+  function pintar(){ document.getElementById('ccTemaBtn').textContent = (guardado() || sistema()) === 'dark' ? '☀' : '☾'; }
+  window.ccTema = function(){
+    if (window.top !== window.self) {   // dentro del panel: el tema es del panel completo
+      try { var b = window.top.document.getElementById('tema'); if (b) { b.click(); return; } } catch (e) {}
+    }
+    var destino = (guardado() || sistema()) === 'dark' ? 'light' : 'dark';
+    try { destino === sistema() ? localStorage.removeItem('ccarf_esquema') : localStorage.setItem('ccarf_esquema', destino); } catch (e) {}
+    meta.content = guardado() || 'light dark'; pintar();
+  };
+  if (conTema) { document.getElementById('ccTemaBtn').hidden = false; pintar(); matchMedia('(prefers-color-scheme: dark)').addEventListener('change', pintar); }
+  function leer(){ try { return +(localStorage.getItem('ccarf_escala') || 1); } catch (e) { return 1; } }
+  function guardar(v){ try { localStorage.setItem('ccarf_escala', v); } catch (e) {} }
+  window.ccZoom = function(d){ var v = Math.min(1.6, Math.max(0.8, +(leer() + 0.1 * d).toFixed(2))); guardar(v); document.body.style.zoom = v; };
+  document.body.style.zoom = leer();
+})();</script></body>
+</html>

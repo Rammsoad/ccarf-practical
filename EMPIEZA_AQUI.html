@@ -1,0 +1,154 @@
+<!DOCTYPE html><html lang='es'><head><meta charset='UTF-8'><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="text-scale" content="scale">
+<meta name="color-scheme" content="light dark">
+<meta name="referrer" content="no-referrer">
+<script>try{document.querySelector('meta[name="color-scheme"]').content=localStorage.getItem('ccarf_esquema')||'light dark'}catch(e){}</script>
+
+<style>@font-face{font-family:'Atkinson Hyperlegible Next';font-style:italic;font-weight:400;font-display:swap;src:url('material/fuentes/atkinson-hyperlegible-next-italic-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:italic;font-weight:400;font-display:swap;src:url('material/fuentes/atkinson-hyperlegible-next-italic-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:400 700;font-display:swap;src:url('material/fuentes/atkinson-hyperlegible-next-normal-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:400 700;font-display:swap;src:url('material/fuentes/atkinson-hyperlegible-next-normal-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}@font-face{font-family:'Recursive';font-style:normal;font-weight:400 700;font-display:swap;src:url('material/fuentes/recursive-normal-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Recursive';font-style:normal;font-weight:400 700;font-display:swap;src:url('material/fuentes/recursive-normal-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}</style><title>CCAR-F · Empieza aquí</title><style>
+:root{
+  color-scheme:light dark;
+  &:has(> head > meta[name="color-scheme"][content="dark"]){color-scheme:dark}
+  &:has(> head > meta[name="color-scheme"][content="light"]){color-scheme:light}
+
+  /* Superficies: grafito azulado en oscuro, gris frío en claro */
+  --fondo:light-dark(#f4f5f7,#14161b);
+  --superficie:light-dark(#ffffff,#1b1e25);
+  --superficie-2:light-dark(#eceef2,#232730);
+  --borde:light-dark(#d3d7de,#323744);
+  --borde-suave:light-dark(#e3e6eb,#262a34);
+  --texto:light-dark(#1a1c22,#ebe8e2);
+  --texto-2:light-dark(#545966,#a6a9b3);
+  --texto-3:light-dark(#62676f,#9a9ea9);
+  --borde-control:light-dark(#959ba6,#5c6271);
+
+  /* Acento: rosa mexicano (La Tiendita) */
+  --acento:light-dark(#c4006a,#ff5aa8);
+  --acento-suave:light-dark(#fde7f2,#3a1a2b);
+  --sobre-acento:light-dark(#ffffff,#24000f);
+  --enlace:light-dark(#a3005a,#ff8cc6);
+
+  /* Significado: solo para ✅ / ❌ 🎓 trampa / 🔧 producto */
+  --bien:light-dark(#17724a,#5fd39c);
+  --bien-suave:light-dark(#e3f4ec,#173226);
+  --trampa:light-dark(#b3311b,#ff7d68);
+  --trampa-suave:light-dark(#fbe9e5,#3a1d19);
+  --producto:light-dark(#835600,#f0bf4c);
+  --producto-suave:light-dark(#fbf1d9,#352b14);
+
+  --tinta:light-dark(#2f5d8f,#8fb5e6);
+  --codigo-fondo:light-dark(#eceef2,#262a33);
+  --resaltado:light-dark(#fff0bf,#3b3420);
+  --terminal:#0f1115;
+  --terminal-texto:#d9d9d9;
+  --velo:rgb(10 12 16 / .5);
+
+  --letra:'Atkinson Hyperlegible Next',system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+  --mono:'Recursive',ui-monospace,Menlo,Consolas,'DejaVu Sans Mono',monospace;
+
+  accent-color:var(--acento);
+  scrollbar-color:var(--texto-3) transparent;
+}
+body{font-family:var(--letra);font-size-adjust:from-font}
+code,pre,kbd,samp,textarea{font-family:var(--mono)}
+:focus-visible{outline:2px solid var(--acento);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important;scroll-behavior:auto !important}}
+
+*{box-sizing:border-box}
+body{margin:0 auto;max-width:62rem;padding:2rem 1.75rem 5.5rem;background:var(--fondo);color:var(--texto);font-size:1.0625rem;line-height:1.6}
+a{color:var(--enlace)} h1{font-size:1.85rem;line-height:1.25;margin:0 0 .5rem} h2{font-size:1.45rem;margin:2.5rem 0 .6rem;
+  padding-top:.9rem;border-top:3px solid var(--acento)} h3{font-size:1.2rem;margin:1.5rem 0 .4rem}
+p,li{max-width:76ch} .ayuda{color:var(--texto-2);font-size:.95rem}
+code{background:var(--codigo-fondo);padding:.05em .35em;border-radius:.3em;font-size:.88em}
+table{border-collapse:collapse;width:100%;margin:.6rem 0;font-size:.95rem}
+th,td{border:1px solid var(--borde);padding:.5rem .75rem;vertical-align:top;text-align:left}
+th{background:var(--superficie-2);position:sticky;top:0} tr:nth-child(even) td{background:var(--superficie)}
+.tarjeta{background:var(--superficie);border:1px solid var(--borde);border-radius:.75rem;padding:.9rem 1.1rem;margin:.9rem 0}
+.boton{display:inline-block;padding:.35rem .75rem;border:1px solid var(--borde);border-radius:.5rem;text-decoration:none;color:var(--texto);
+  font-size:.94rem;margin:.25rem .4rem .25rem 0;background:var(--superficie);cursor:pointer;font-family:inherit}
+.boton:hover{border-color:var(--acento)} .boton.activo{border-color:var(--acento);background:var(--acento-suave)}
+.chip{font-size:.8rem;font-weight:600;color:var(--trampa);background:var(--trampa-suave);border-radius:999px;padding:.05rem .55rem;margin-left:.3rem}
+.idea{background:var(--acento-suave);border-left:4px solid var(--acento);border-radius:0 .5rem .5rem 0;padding:.75rem 1rem;font-size:1.15rem;margin:.6rem 0 1.1rem}
+.mal{color:var(--trampa)} .bien{color:var(--bien)}
+abbr.termino{text-decoration:underline dotted var(--tinta);text-underline-offset:3px;cursor:help}
+details summary{cursor:pointer}
+input.buscar{width:100%;font:inherit;font-size:1.0625rem;padding:.6rem .9rem;background:var(--superficie);color:var(--texto);
+  border:1px solid var(--borde);border-radius:.6rem}
+.tapado tr:not(.visto) td.resp{color:transparent;background:var(--codigo-fondo);cursor:pointer}
+.tapado tr:not(.visto) td.resp *{color:transparent;background:transparent;text-decoration:none}
+.tapado tr:not(.visto) .tit{color:transparent;background:var(--codigo-fondo);border-radius:.25em}
+.tabla{overflow-x:auto}
+.mapa{overflow-x:auto;background:#1b1c18;border-radius:.6rem;padding:.6rem;margin-top:.6rem}
+.mapa svg{min-width:40rem;width:100%;height:auto}
+.tarjeta.principal{border:2px solid var(--acento)}
+.boton.principal{background:var(--acento);color:var(--sobre-acento);border-color:var(--acento);font-weight:700}
+.terminal:empty::before{content:attr(data-vacio);color:#8a8f99;font-family:var(--letra)}
+.terminal{color-scheme:dark;background:var(--terminal);color:var(--terminal-texto);border-radius:.6rem;padding:.9rem;min-height:12rem;
+  overflow:auto;white-space:pre;font-family:var(--mono);font-size:.85rem;line-height:1.45}
+@media print{:root{color-scheme:light !important} body{background:#fff;color:#000;max-width:none;padding:0 12px;font-size:12.5px}
+  #ccZoom,.no-imprimir{display:none !important} th{background:#eee;position:static} td,th{border-color:#999}
+  tr:nth-child(even) td{background:#f6f6f6} h2{border-color:#999;break-before:auto} a{color:#000}
+  .tapado td.resp,.tapado .tit{color:#000 !important;background:none !important}}
+</style></head><body><p class='ayuda'><a href='EMPIEZA_AQUI_en.html'>English version</a></p>
+<h1>CCAR-F · Empieza aquí</h1>
+<p class='ayuda'>Todo lo de esta carpeta, en un solo lugar. Lo de la primera parte se abre con doble clic, sin instalar nada.</p>
+<h2>Sin instalar nada</h2>
+<div class='tarjeta principal'><b>Empieza aquí: grabaciones</b><p class='ayuda'>Corridas guardadas de los labs, como si las corrieras tú. No necesitas Python ni API key.</p>
+<a class='boton principal' href='grabaciones/reproductor.html'>Abrir grabaciones</a></div>
+<div class='tarjeta'><b>Ejemplos de los labs</b><p class='ayuda'>Qué muestra cada demo, con diagramas y su explicación.</p>
+<a class='boton' href='ejemplos_html/index.html'>Abrir ejemplos</a></div>
+<div class='tarjeta'><b>Los 6 escenarios del examen</b><p class='ayuda'>En qué situaciones pregunta el examen y qué demos practican cada una.</p>
+<a class='boton' href='material/escenarios.html'>Abrir escenarios</a></div>
+<div class='tarjeta'><b>Hoja de repaso</b><p class='ayuda'>Pequeñas situaciones del examen y qué responder, de los cinco dominios. Imprimible.</p>
+<a class='boton' href='material/repaso.html'>Abrir hoja de repaso</a></div>
+<div class='tarjeta'><b>Galería de antipatrones</b><p class='ayuda'>Lo que suena bien pero está mal, tema por tema.</p>
+<a class='boton' href='material/antipatrones.html'>Abrir galería</a></div>
+<div class='tarjeta'><b>Glosario</b><p class='ayuda'>Los términos de las guías, con buscador.</p>
+<a class='boton' href='material/glosario.html'>Abrir glosario</a></div>
+<div class='tarjeta'><b>Guías de estudio (PDF)</b><br><a class='boton' href='material/D1_guia_estudio.pdf'>D1</a><a class='boton' href='material/D2_guia_estudio.pdf'>D2</a><a class='boton' href='material/D3_guia_estudio.pdf'>D3</a><a class='boton' href='material/D4_guia_estudio.pdf'>D4</a><a class='boton' href='material/D5_guia_estudio.pdf'>D5</a></div>
+<div class='tarjeta'><b>Slides (PDF)</b><p class='ayuda'>Las presentaciones de cada dominio, en español y en inglés.</p><a class='boton' href='material/D1_slides.pdf'>D1</a><a class='boton' href='material/D2_slides.pdf'>D2</a><a class='boton' href='material/D3_slides.pdf'>D3</a><a class='boton' href='material/D4_slides.pdf'>D4</a><a class='boton' href='material/D5_slides.pdf'>D5</a><br><a class='boton' href='material/D1_slides_en.pdf'>D1 (EN)</a><a class='boton' href='material/D2_slides_en.pdf'>D2 (EN)</a><a class='boton' href='material/D3_slides_en.pdf'>D3 (EN)</a><a class='boton' href='material/D4_slides_en.pdf'>D4 (EN)</a><a class='boton' href='material/D5_slides_en.pdf'>D5 (EN)</a></div>
+<h2>Con Python: el panel</h2>
+<div class='tarjeta'><p>El panel corre las demos con controles, muestra la guía de cada tema junto al lab y compara corridas.</p>
+<ol><li>Instala Python 3.10 o más reciente.</li>
+<li>Abre una terminal en esta carpeta (Mac: clic derecho en la carpeta → <b>Nuevo terminal en la carpeta</b>; Windows: escribe <code>powershell</code> en la barra de dirección de la carpeta).</li>
+<li>Crea el entorno: <code>python3 -m venv .venv</code> (en Windows, <code>python -m venv .venv</code>), actívalo y corre <code>pip install -r requirements.txt</code>.</li>
+<li>Copia <code>.env.example</code> como <code>.env</code> (<code>cp .env.example .env</code>; en Windows, <code>copy</code>) y pega tu API key. Ojo: el archivo empieza con punto, está oculto, y no debe terminar en <code>.txt</code>.</li>
+<li>Corre <code>python panel.py</code>: se abre en tu navegador.</li></ol>
+<p class='ayuda'>Los pasos con más detalle (y qué hacer si algo falla) están en el archivo <code>README.md</code> de esta carpeta.</p></div>
+<h2>Cómo sacar tu API key</h2>
+<div class='tarjeta'><ol>
+<li>Entra a <a href='https://platform.claude.com/settings/keys'>platform.claude.com → Settings → API keys</a> (crea tu cuenta si no tienes).</li>
+<li>Pon primero un <b>límite de gasto</b> bajo (por ejemplo 5 USD al mes) en la sección de límites o de facturación.
+Correr todas las demos una vez cuesta centavos.</li>
+<li>Da clic en <b>Create key</b>, ponle un nombre (por ejemplo <i>labs-ccarf</i>) y, si te deja, una fecha de vencimiento corta.</li>
+<li>Copia la key en ese momento: <b>solo se muestra una vez</b>.</li>
+<li>Pégala en tu archivo <code>.env</code> después de <code>ANTHROPIC_API_KEY=</code>. No la pegues en chats, código ni capturas.</li>
+<li>Cuando termines de estudiar, bórrala en la misma página.</li></ol>
+<p class='ayuda'>¿Sin key? Usa las grabaciones: no gastan nada.</p></div><div id="ccZoom" title="Tamaño de letra (se recuerda)">
+<button onclick="ccZoom(-1)">A−</button><button onclick="ccZoom(1)">A+</button>
+<button id="ccTemaBtn" onclick="ccTema()" title="Tema claro / oscuro (por defecto, el de tu sistema)" hidden>☀</button></div>
+<style>#ccZoom{position:fixed;top:10px;right:14px;z-index:50;display:flex;gap:4px;font-family:var(--letra,system-ui,sans-serif)}
+#ccZoom button{background:var(--superficie-2,#2d2d2d);color:var(--texto,#f0f0f0);border:1px solid var(--borde,#666);border-radius:7px;
+  padding:4px 10px;font-size:14px;cursor:pointer}
+@media print{#ccZoom{display:none}}</style>
+<script>(function(){
+  if (window.top !== window.self) { document.getElementById('ccZoom').style.display = 'none'; }
+  // Tema: solo en páginas con los colores de tema.py (las corridas HTML son siempre oscuras, como una terminal)
+  var meta = document.querySelector('meta[name="color-scheme"]');
+  var conTema = !!meta && getComputedStyle(document.documentElement).getPropertyValue('--fondo').trim() !== '';
+  function sistema(){ return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+  function guardado(){ try { return localStorage.getItem('ccarf_esquema'); } catch (e) { return null; } }
+  function pintar(){ document.getElementById('ccTemaBtn').textContent = (guardado() || sistema()) === 'dark' ? '☀' : '☾'; }
+  window.ccTema = function(){
+    if (window.top !== window.self) {   // dentro del panel: el tema es del panel completo
+      try { var b = window.top.document.getElementById('tema'); if (b) { b.click(); return; } } catch (e) {}
+    }
+    var destino = (guardado() || sistema()) === 'dark' ? 'light' : 'dark';
+    try { destino === sistema() ? localStorage.removeItem('ccarf_esquema') : localStorage.setItem('ccarf_esquema', destino); } catch (e) {}
+    meta.content = guardado() || 'light dark'; pintar();
+  };
+  if (conTema) { document.getElementById('ccTemaBtn').hidden = false; pintar(); matchMedia('(prefers-color-scheme: dark)').addEventListener('change', pintar); }
+  function leer(){ try { return +(localStorage.getItem('ccarf_escala') || 1); } catch (e) { return 1; } }
+  function guardar(v){ try { localStorage.setItem('ccarf_escala', v); } catch (e) {} }
+  window.ccZoom = function(d){ var v = Math.min(1.6, Math.max(0.8, +(leer() + 0.1 * d).toFixed(2))); guardar(v); document.body.style.zoom = v; };
+  document.body.style.zoom = leer();
+})();</script></body></html>

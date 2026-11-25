@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+.r1 {color: #727272; text-decoration-color: #727272}
+.r2 {color: #326e7b; text-decoration-color: #326e7b; font-weight: bold}
+.r3 {color: #9d65ff; text-decoration-color: #9d65ff}
+.r4 {color: #c4c5b5; text-decoration-color: #c4c5b5; background-color: #000087; font-weight: bold}
+.r5 {color: #527618; text-decoration-color: #527618}
+.r6 {color: #fd971f; text-decoration-color: #fd971f}
+.r7 {font-weight: bold}
+.r8 {color: #9d65ff; text-decoration-color: #9d65ff; font-weight: bold}
+.r9 {color: #98e024; text-decoration-color: #98e024}
+.r10 {color: #58d1eb; text-decoration-color: #58d1eb; font-weight: bold}
+.r11 {color: #98e024; text-decoration-color: #98e024; font-weight: bold}
+.r12 {font-style: italic}
+body {
+    color: #d9d9d9;
+    background-color: #0c0c0c;
+}
+</style>
+<style>
+@font-face{font-family:'Atkinson Hyperlegible Next';font-style:italic;font-weight:400;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-italic-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:italic;font-weight:400;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-italic-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-normal-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/atkinson-hyperlegible-next-normal-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}@font-face{font-family:'Recursive';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/recursive-normal-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:'Recursive';font-style:normal;font-weight:400 700;font-display:swap;src:url('../../material/fuentes/recursive-normal-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+body{max-width:1100px;margin:0 auto !important;padding:8px 24px 48px;font-family:'Atkinson Hyperlegible Next',Inter,system-ui,sans-serif !important}
+pre,code{font-family:'Recursive',Menlo,'DejaVu Sans Mono',monospace !important}
+.diagrama svg{max-width:100%;height:auto}
+.diagrama{max-width:100% !important;box-sizing:border-box;overflow-x:auto}
+pre{font-size:14px !important;line-height:1.5 !important}
+abbr.termino{text-decoration:underline dotted #8ab4f8;text-underline-offset:3px;cursor:help}
+</style></head>
+<body><div style="font-family:'Atkinson Hyperlegible Next',Inter,'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;color:#e8e8e8;background:#1b1c18;line-height:1.5;border:1px solid #444;border-radius:10px;padding:14px 20px;margin:14px 0;max-width:1000px"><div style="font-size:19px;font-weight:600">Dominio 4 · demo 4.3 · 22/11/2026 22:05:54</div><div style="font-size:15px;color:#e6e6e6;margin:6px 0">📝 Grabación «✅ tool_use + schema». Resultado: JSON parseable 5/5 · cumple el schema 5/5</div><div style="font-size:14px;color:#bbb;margin:0 0 6px">💲 5 llamadas a la API · 5,407 tokens (4,357 entrada + 1,050 salida) · ≈ $0.0010 USD</div><div style="font-size:14px;color:#bbb;margin:8px 0 6px">Variables de esta corrida (<a style="color:#58a6ff" href="/archivos/salidas_html/dominio4/index.html">recorrer todas las corridas</a>)</div><table style="font-size:14px;border-collapse:collapse"><tr><td style="padding:3px 16px 3px 0;color:#bbb">MODELO</td><td>&quot;claude-haiku-5-5&quot;</td></tr><tr><td style="padding:3px 16px 3px 0;color:#bbb">D43_MODO</td><td>&quot;tool&quot;</td></tr></table></div>
+    <pre style="font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><code style="font-family:inherit">🎛  Ajustes del panel para esta corrida: D43_MODO = &quot;tool&quot;
+<span class="r1">   Modelo: claude-haiku-</span><span class="r2">5</span><span class="r1">-</span><span class="r2">5</span>
+<span class="r1">   Modo HTML: encendido → salidas_html/dominio4/</span>
+
+<span class="r3">────────────────────────── </span><span class="r4"> DEMO </span><span class="r4">4.3</span><span class="r4"> · Salida estructurada: tool use + JSON schema </span><span class="r3"> ──────────────────────────</span>
+
+<span class="r1">📖 Guía de esta demo: python lab_dominio4.py guia </span><span class="r2">4.3</span><span class="r1">  ·  más detalle: pon DETALLE = </span><span class="r5">&quot;completo&quot;</span><span class="r1"> arriba del </span>
+<span class="r1">archivo</span>
+<span class="r6">╭────────────────────────────────────────── 💡 Concepto del examen ──────────────────────────────────────────╮</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">│</span>  Pedir &#x27;responde solo en JSON&#x27; en el prompt funciona casi siempre… y &#x27;casi&#x27; rompe un pipeline: a veces     <span class="r6">│</span>
+<span class="r6">│</span>  llega con ```json, con una frase antes, o con campos de más o de menos.                                   <span class="r6">│</span>
+<span class="r6">│</span>  tool_use con input_schema + tool_choice forzado = el JSON siempre es parseable y sigue el esquema.        <span class="r6">│</span>
+<span class="r6">│</span>  Diseño del schema: campos opcionales como nullable (así no inventa), enum con &#x27;otro&#x27; + detalle.           <span class="r6">│</span>
+<span class="r6">│</span>  Ojo: el esquema garantiza la SINTAXIS, no la SEMÁNTICA (un total puede no cuadrar → demo 4.4).            <span class="r6">│</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r6">╭─────────────────────────────────── El esquema (input_schema de la tool) ───────────────────────────────────╮</span>
+<span class="r6">│</span> <span class="r7">{</span>                                                                                                          <span class="r6">│</span>
+<span class="r6">│</span>   <span class="r8">&quot;type&quot;</span>: <span class="r9">&quot;object&quot;</span>,                                                                                        <span class="r6">│</span>
+<span class="r6">│</span>   <span class="r8">&quot;properties&quot;</span>: <span class="r7">{</span>                                                                                          <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r8">&quot;tipo&quot;</span>: <span class="r7">{</span>                                                                                              <span class="r6">│</span>
+<span class="r6">│</span>       <span class="r8">&quot;type&quot;</span>: <span class="r9">&quot;string&quot;</span>,                                                                                    <span class="r6">│</span>
+<span class="r6">│</span>       <span class="r8">&quot;enum&quot;</span>: <span class="r7">[</span>                                                                                            <span class="r6">│</span>
+<span class="r6">│</span>         <span class="r9">&quot;pedido_nuevo&quot;</span>,                                                                                    <span class="r6">│</span>
+<span class="r6">│</span>         <span class="r9">&quot;cancelacion&quot;</span>,                                                                                     <span class="r6">│</span>
+<span class="r6">│</span>         <span class="r9">&quot;reclamo&quot;</span>,                                                                                         <span class="r6">│</span>
+<span class="r6">│</span>         <span class="r9">&quot;consulta&quot;</span>,                                                                                        <span class="r6">│</span>
+<span class="r6">│</span>         <span class="r9">&quot;otro&quot;</span>                                                                                             <span class="r6">│</span>
+<span class="r6">│</span>       <span class="r7">]</span>                                                                                                    <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r7">}</span>,                                                                                                     <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r8">&quot;tipo_detalle&quot;</span>: <span class="r7">{</span>                                                                                      <span class="r6">│</span>
+<span class="r6">│</span>       <span class="r8">&quot;type&quot;</span>: <span class="r7">[</span>                                                                                            <span class="r6">│</span>
+<span class="r6">│</span>         <span class="r9">&quot;string&quot;</span>,                                                                                          <span class="r6">│</span>
+<span class="r6">│</span>         <span class="r9">&quot;null&quot;</span>                                                                                             <span class="r6">│</span>
+<span class="r6">│</span>       <span class="r7">]</span>,                                                                                                   <span class="r6">│</span>
+<span class="r6">│</span>       <span class="r8">&quot;description&quot;</span>: <span class="r9">&quot;Solo si tipo = &#x27;otro&#x27;&quot;</span>                                                               <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r7">}</span>,                                                                                                     <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r8">&quot;cliente&quot;</span>: <span class="r7">{</span>                                                                                           <span class="r6">│</span>
+<span class="r6">│</span>       <span class="r8">&quot;type&quot;</span>: <span class="r7">[</span>                                                                                            <span class="r6">│</span>
+<span class="r6">│</span>         <span class="r9">&quot;string&quot;</span>,                                                                                          <span class="r6">│</span>
+<span class="r6">│</span>         <span class="r9">&quot;null&quot;</span>                                                                                             <span class="r6">│</span>
+<span class="r6">│</span>       <span class="r7">]</span>                                                                                                    <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r7">}</span>,                                                                                                     <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r8">&quot;pedido_id&quot;</span>: <span class="r7">{</span>                                                                                         <span class="r6">│</span>
+<span class="r6">│</span>       <span class="r8">&quot;type&quot;</span>: <span class="r7">[</span>                                                                                            <span class="r6">│</span>
+<span class="r6">│</span>         <span class="r9">&quot;string&quot;</span>,                                                                                          <span class="r6">│</span>
+<span class="r6">│</span>         <span class="r9">&quot;null&quot;</span>                                                                                             <span class="r6">│</span>
+<span class="r6">│</span>       <span class="r7">]</span>,                                                                                                   <span class="r6">│</span>
+<span class="r6">│</span>       <span class="r8">&quot;description&quot;</span>: <span class="r9">&quot;Formato #NNNNN si se menciona&quot;</span>                                                       <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r7">}</span>,                                                                                                     <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r8">&quot;productos&quot;</span>: <span class="r7">{</span>                                                                                         <span class="r6">│</span>
+<span class="r6">│</span>       <span class="r8">&quot;type&quot;</span>: <span class="r9">&quot;array&quot;</span>,                                                                                     <span class="r6">│</span>
+<span class="r6">│</span>       <span class="r8">&quot;items&quot;</span>: <span class="r7">{</span>                                                                                           <span class="r6">│</span>
+<span class="r6">│</span>         <span class="r8">&quot;type&quot;</span>: <span class="r9">&quot;object&quot;</span>,                                                                                  <span class="r6">│</span>
+<span class="r6">│</span>         <span class="r8">&quot;properties&quot;</span>: <span class="r7">{</span>                                                                                    <span class="r6">│</span>
+<span class="r6">│</span>           <span class="r8">&quot;nombre&quot;</span>: <span class="r7">{</span>                                                                                      <span class="r6">│</span>
+<span class="r6">│</span>             <span class="r8">&quot;type&quot;</span>: <span class="r9">&quot;string&quot;</span>                                                                               <span class="r6">│</span>
+<span class="r6">│</span>           <span class="r7">}</span>,                                                                                               <span class="r6">│</span>
+<span class="r6">│</span>           <span class="r8">&quot;cantidad&quot;</span>: <span class="r7">{</span>                                                                                    <span class="r6">│</span>
+<span class="r6">│</span>             <span class="r8">&quot;type&quot;</span>: <span class="r7">[</span>                                                                                      <span class="r6">│</span>
+<span class="r6">│</span>               <span class="r9">&quot;integer&quot;</span>,                                                                                   <span class="r6">│</span>
+<span class="r6">│</span>               <span class="r9">&quot;null&quot;</span>                                                                                       <span class="r6">│</span>
+<span class="r6">│</span>             <span class="r7">]</span>                                                                                              <span class="r6">│</span>
+<span class="r6">│</span>           <span class="r7">}</span>                                                                                                <span class="r6">│</span>
+<span class="r6">│</span>         <span class="r7">}</span>,                                                                                                 <span class="r6">│</span>
+<span class="r6">│</span>         <span class="r8">&quot;required&quot;</span>: <span class="r7">[</span>                                                                                      <span class="r6">│</span>
+<span class="r6">│</span>           <span class="r9">&quot;nombre&quot;</span>,                                                                                        <span class="r6">│</span>
+<span class="r6">│</span>           <span class="r9">&quot;cantidad&quot;</span>                                                                                       <span class="r6">│</span>
+<span class="r6">│</span>         <span class="r7">]</span>                                                                                                  <span class="r6">│</span>
+<span class="r6">│</span>       <span class="r7">}</span>                                                                                                    <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r7">}</span>,                                                                                                     <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r8">&quot;fecha_requerida&quot;</span>: <span class="r7">{</span>                                                                                   <span class="r6">│</span>
+<span class="r6">│</span>       <span class="r8">&quot;type&quot;</span>: <span class="r7">[</span>                                                                                            <span class="r6">│</span>
+<span class="r6">│</span>         <span class="r9">&quot;string&quot;</span>,                                                                                          <span class="r6">│</span>
+<span class="r6">│</span>         <span class="r9">&quot;null&quot;</span>                                                                                             <span class="r6">│</span>
+<span class="r6">│</span>       <span class="r7">]</span>,                                                                                                   <span class="r6">│</span>
+<span class="r6">│</span>       <span class="r8">&quot;description&quot;</span>: <span class="r9">&quot;YYYY-MM-DD o null si no se menciona&quot;</span>                                                 <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r7">}</span>,                                                                                                     <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r8">&quot;requiere_factura&quot;</span>: <span class="r7">{</span>                                                                                  <span class="r6">│</span>
+<span class="r6">│</span>       <span class="r8">&quot;type&quot;</span>: <span class="r9">&quot;boolean&quot;</span>                                                                                    <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r7">}</span>                                                                                                      <span class="r6">│</span>
+<span class="r6">│</span>   <span class="r7">}</span>,                                                                                                       <span class="r6">│</span>
+<span class="r6">│</span>   <span class="r8">&quot;required&quot;</span>: <span class="r7">[</span>                                                                                            <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r9">&quot;tipo&quot;</span>,                                                                                                <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r9">&quot;tipo_detalle&quot;</span>,                                                                                        <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r9">&quot;cliente&quot;</span>,                                                                                             <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r9">&quot;pedido_id&quot;</span>,                                                                                           <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r9">&quot;productos&quot;</span>,                                                                                           <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r9">&quot;fecha_requerida&quot;</span>,                                                                                     <span class="r6">│</span>
+<span class="r6">│</span>     <span class="r9">&quot;requiere_factura&quot;</span>                                                                                     <span class="r6">│</span>
+<span class="r6">│</span>   <span class="r7">]</span>                                                                                                        <span class="r6">│</span>
+<span class="r6">│</span> <span class="r7">}</span>                                                                                                          <span class="r6">│</span>
+<span class="r6">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+
+<span class="r10">▶ Modo tool</span>
+
+<span class="r7">✉  Hola, soy Marta Ruiz. Quiero </span><span class="r10">2</span><span class="r7"> manteles rojos para el </span><span class="r10">15</span><span class="r7"> de diciembre. Pago con tarjeta. Gracias!</span>
+<span class="r11">   ✔ {</span><span class="r11">&quot;tipo&quot;</span><span class="r11">: </span><span class="r11">&quot;pedido_nuevo&quot;</span><span class="r11">, </span><span class="r11">&quot;tipo_detalle&quot;</span><span class="r11">: null, </span><span class="r11">&quot;cliente&quot;</span><span class="r11">: </span><span class="r11">&quot;Marta Ruiz&quot;</span><span class="r11">, </span><span class="r11">&quot;pedido_id&quot;</span><span class="r11">: null, </span><span class="r11">&quot;productos&quot;</span><span class="r11">: </span>
+<span class="r11">[{</span><span class="r11">&quot;nombre&quot;</span><span class="r11">: </span><span class="r11">&quot;Mantel rojo&quot;</span><span class="r11">, </span><span class="r11">&quot;cantidad&quot;</span><span class="r11">: </span><span class="r11">2</span><span class="r11">}], </span><span class="r11">&quot;fecha_requerida&quot;</span><span class="r11">: </span><span class="r11">&quot;2025-12-15&quot;</span><span class="r11">, </span><span class="r11">&quot;requiere_factura&quot;</span><span class="r11">: false}</span>
+
+<span class="r7">✉  Buenas, pedido para la empresa Café Luna: </span><span class="r10">30</span><span class="r7"> tazas de talavera. ¿Facturan? RFC CLU201010AB1.</span>
+<span class="r11">   ✔ {</span><span class="r11">&quot;tipo&quot;</span><span class="r11">: </span><span class="r11">&quot;pedido_nuevo&quot;</span><span class="r11">, </span><span class="r11">&quot;tipo_detalle&quot;</span><span class="r11">: null, </span><span class="r11">&quot;cliente&quot;</span><span class="r11">: </span><span class="r11">&quot;Café Luna&quot;</span><span class="r11">, </span><span class="r11">&quot;pedido_id&quot;</span><span class="r11">: null, </span><span class="r11">&quot;productos&quot;</span><span class="r11">: </span>
+<span class="r11">[{</span><span class="r11">&quot;nombre&quot;</span><span class="r11">: </span><span class="r11">&quot;tazas de talavera&quot;</span><span class="r11">, </span><span class="r11">&quot;cantidad&quot;</span><span class="r11">: </span><span class="r11">30</span><span class="r11">}], </span><span class="r11">&quot;fecha_requerida&quot;</span><span class="r11">: null, </span><span class="r11">&quot;requiere_factura&quot;</span><span class="r11">: true}</span>
+
+<span class="r7">✉  me pueden mandar algo bonito para regalo? como unos </span><span class="r10">800</span><span class="r7"> pesos</span>
+<span class="r11">   ✔ {</span><span class="r11">&quot;tipo&quot;</span><span class="r11">: </span><span class="r11">&quot;consulta&quot;</span><span class="r11">, </span><span class="r11">&quot;tipo_detalle&quot;</span><span class="r11">: null, </span><span class="r11">&quot;cliente&quot;</span><span class="r11">: null, </span><span class="r11">&quot;pedido_id&quot;</span><span class="r11">: null, </span><span class="r11">&quot;productos&quot;</span><span class="r11">: [], </span>
+<span class="r11">&quot;fecha_requerida&quot;</span><span class="r11">: null, </span><span class="r11">&quot;requiere_factura&quot;</span><span class="r11">: false}</span>
+
+<span class="r7">✉  Necesito cancelar el #</span><span class="r10">12347</span><span class="r7">, ya no lo voy a ocupar.</span>
+<span class="r11">   ✔ {</span><span class="r11">&quot;tipo&quot;</span><span class="r11">: </span><span class="r11">&quot;cancelacion&quot;</span><span class="r11">, </span><span class="r11">&quot;tipo_detalle&quot;</span><span class="r11">: null, </span><span class="r11">&quot;cliente&quot;</span><span class="r11">: null, </span><span class="r11">&quot;pedido_id&quot;</span><span class="r11">: </span><span class="r11">&quot;#12347&quot;</span><span class="r11">, </span><span class="r11">&quot;productos&quot;</span><span class="r11">: [], </span>
+<span class="r11">&quot;fecha_requerida&quot;</span><span class="r11">: null, </span><span class="r11">&quot;requiere_factura&quot;</span><span class="r11">: false}</span>
+
+<span class="r7">✉  Reclamo: el pedido #</span><span class="r10">12346</span><span class="r7"> llegó incompleto, faltan </span><span class="r10">4</span><span class="r7"> platos. Quiero que me los manden.</span>
+<span class="r11">   ✔ {</span><span class="r11">&quot;tipo&quot;</span><span class="r11">: </span><span class="r11">&quot;reclamo&quot;</span><span class="r11">, </span><span class="r11">&quot;tipo_detalle&quot;</span><span class="r11">: null, </span><span class="r11">&quot;cliente&quot;</span><span class="r11">: null, </span><span class="r11">&quot;pedido_id&quot;</span><span class="r11">: </span><span class="r11">&quot;#12346&quot;</span><span class="r11">, </span><span class="r11">&quot;productos&quot;</span><span class="r11">: </span>
+<span class="r11">[{</span><span class="r11">&quot;nombre&quot;</span><span class="r11">: </span><span class="r11">&quot;platos (pedido incompleto, faltan 4)&quot;</span><span class="r11">, </span><span class="r11">&quot;cantidad&quot;</span><span class="r11">: </span><span class="r11">4</span><span class="r11">}], </span><span class="r11">&quot;fecha_requerida&quot;</span><span class="r11">: null, </span>
+<span class="r11">&quot;requiere_factura&quot;</span><span class="r11">: false}</span>
+<span class="r12">                 Resultado                  </span>
+┏━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┓
+┃<span class="r7"> Modo </span>┃<span class="r7"> JSON parseable </span>┃<span class="r7"> Cumple el schema </span>┃
+┡━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━┩
+│ tool │ 5/5            │ 5/5              │
+└──────┴────────────────┴──────────────────┘
+<span class="r6">╭────────────────────────────────────────────── 🧪 Experimenta ──────────────────────────────────────────────╮</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">│</span>  Mira el correo &#x27;algo bonito para regalo&#x27;: ¿qué puso en productos y en tipo? Con campos nullable y enum    <span class="r6">│</span>
+<span class="r6">│</span>  con &#x27;otro&#x27;, el modelo tiene una salida honesta en vez de inventar.                                        <span class="r6">│</span>
+<span class="r6">│</span>                                                                                                            <span class="r6">│</span>
+<span class="r6">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r3">╭──────────────────────────────── 📊 Uso de la Messages API en esta corrida ─────────────────────────────────╮</span>
+<span class="r3">│</span> Llamadas a la API: 5                                                                                       <span class="r3">│</span>
+<span class="r3">│</span> Tokens de entrada: 4,357                                                                                   <span class="r3">│</span>
+<span class="r3">│</span> Tokens de salida:  1,050                                                                                   <span class="r3">│</span>
+<span class="r3">│</span> Costo estimado (con el precio de cada modelo usado): ~$0.0010 USD                                          <span class="r3">│</span>
+<span class="r3">╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+</code></pre><div class="diagrama" style="font-family:'Atkinson Hyperlegible Next',Inter,'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;background:#1b1c18;color:#f0f0f0;border:1px solid #444;border-radius:10px;padding:16px 20px;margin:16px 0;max-width:1000px;white-space:normal"><div style="font-size:18px;font-weight:600;color:#f0f0f0;margin-bottom:6px">📊 El flujo de esta corrida</div><div style="font-size:15px;line-height:1.55;color:#d0d0d0;margin-bottom:12px;max-width:80ch">Izquierda: lo que mandó tu código (o lo que pidió Claude). Derecha: cómo respondió. Diagrama automático: muestra el flujo de llamadas, no el concepto de la demo.</div><!--tipos:claude,codigo--><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 474" width="1000" height="474" font-family="Atkinson Hyperlegible Next, Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13"><defs><marker id="punta_65b43517" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bbbbbb"/></marker></defs><g><line x1="460" y1="45" x2="540" y2="45" stroke="#bbbbbb" stroke-width="1.6" marker-end="url(#punta_65b43517)"/><rect x="464" y="22" width="73" height="18" rx="4" fill="#1b1c18"/><text x="500" y="35" fill="#d0d0d0" font-size="11.5" text-anchor="middle">respuesta</text></g><g><line x1="460" y1="141" x2="540" y2="141" stroke="#bbbbbb" stroke-width="1.6" marker-end="url(#punta_65b43517)"/><rect x="464" y="118" width="73" height="18" rx="4" fill="#1b1c18"/><text x="500" y="131" fill="#d0d0d0" font-size="11.5" text-anchor="middle">respuesta</text></g><g><line x1="460" y1="237" x2="540" y2="237" stroke="#bbbbbb" stroke-width="1.6" marker-end="url(#punta_65b43517)"/><rect x="464" y="214" width="73" height="18" rx="4" fill="#1b1c18"/><text x="500" y="227" fill="#d0d0d0" font-size="11.5" text-anchor="middle">respuesta</text></g><g><line x1="460" y1="333" x2="540" y2="333" stroke="#bbbbbb" stroke-width="1.6" marker-end="url(#punta_65b43517)"/><rect x="464" y="310" width="73" height="18" rx="4" fill="#1b1c18"/><text x="500" y="323" fill="#d0d0d0" font-size="11.5" text-anchor="middle">respuesta</text></g><g><line x1="460" y1="429" x2="540" y2="429" stroke="#bbbbbb" stroke-width="1.6" marker-end="url(#punta_65b43517)"/><rect x="464" y="406" width="73" height="18" rx="4" fill="#1b1c18"/><text x="500" y="419" fill="#d0d0d0" font-size="11.5" text-anchor="middle">respuesta</text></g><g><rect x="60" y="20" width="400" height="50" rx="9" fill="#2d2d2d" stroke="#9e9e9e" stroke-width="1.6"/><text x="260" y="41" fill="#f0f0f0" text-anchor="middle" font-weight="600">Llamada 1 · tool</text><text x="260" y="58" fill="#f0f0f0" text-anchor="middle">1 mensaje · max_tokens 600</text></g><g><rect x="540" y="20" width="400" height="50" rx="9" fill="#1f3b57" stroke="#58a6ff" stroke-width="1.6"/><text x="740" y="41" fill="#f0f0f0" text-anchor="middle" font-weight="600">Claude · stop_reason = tool_use</text><text x="740" y="58" fill="#f0f0f0" text-anchor="middle">pide: extraer_correo</text></g><g><rect x="60" y="116" width="400" height="50" rx="9" fill="#2d2d2d" stroke="#9e9e9e" stroke-width="1.6"/><text x="260" y="137" fill="#f0f0f0" text-anchor="middle" font-weight="600">Llamada 2 · tool</text><text x="260" y="154" fill="#f0f0f0" text-anchor="middle">1 mensaje · max_tokens 600</text></g><g><rect x="540" y="116" width="400" height="50" rx="9" fill="#1f3b57" stroke="#58a6ff" stroke-width="1.6"/><text x="740" y="137" fill="#f0f0f0" text-anchor="middle" font-weight="600">Claude · stop_reason = tool_use</text><text x="740" y="154" fill="#f0f0f0" text-anchor="middle">pide: extraer_correo</text></g><g><rect x="60" y="212" width="400" height="50" rx="9" fill="#2d2d2d" stroke="#9e9e9e" stroke-width="1.6"/><text x="260" y="233" fill="#f0f0f0" text-anchor="middle" font-weight="600">Llamada 3 · tool</text><text x="260" y="250" fill="#f0f0f0" text-anchor="middle">1 mensaje · max_tokens 600</text></g><g><rect x="540" y="212" width="400" height="50" rx="9" fill="#1f3b57" stroke="#58a6ff" stroke-width="1.6"/><text x="740" y="233" fill="#f0f0f0" text-anchor="middle" font-weight="600">Claude · stop_reason = tool_use</text><text x="740" y="250" fill="#f0f0f0" text-anchor="middle">pide: extraer_correo</text></g><g><rect x="60" y="308" width="400" height="50" rx="9" fill="#2d2d2d" stroke="#9e9e9e" stroke-width="1.6"/><text x="260" y="329" fill="#f0f0f0" text-anchor="middle" font-weight="600">Llamada 4 · tool</text><text x="260" y="346" fill="#f0f0f0" text-anchor="middle">1 mensaje · max_tokens 600</text></g><g><rect x="540" y="308" width="400" height="50" rx="9" fill="#1f3b57" stroke="#58a6ff" stroke-width="1.6"/><text x="740" y="329" fill="#f0f0f0" text-anchor="middle" font-weight="600">Claude · stop_reason = tool_use</text><text x="740" y="346" fill="#f0f0f0" text-anchor="middle">pide: extraer_correo</text></g><g><rect x="60" y="404" width="400" height="50" rx="9" fill="#2d2d2d" stroke="#9e9e9e" stroke-width="1.6"/><text x="260" y="425" fill="#f0f0f0" text-anchor="middle" font-weight="600">Llamada 5 · tool</text><text x="260" y="442" fill="#f0f0f0" text-anchor="middle">1 mensaje · max_tokens 600</text></g><g><rect x="540" y="404" width="400" height="50" rx="9" fill="#1f3b57" stroke="#58a6ff" stroke-width="1.6"/><text x="740" y="425" fill="#f0f0f0" text-anchor="middle" font-weight="600">Claude · stop_reason = tool_use</text><text x="740" y="442" fill="#f0f0f0" text-anchor="middle">pide: extraer_correo</text></g></svg><div style="font-size:12px;color:#c8c8c8;margin-top:8px"><span style="display:inline-flex;align-items:center;gap:5px;margin-right:14px"><span style="width:14px;height:14px;border-radius:4px;background:#1f3b57;border:1.5px solid #58a6ff;display:inline-block"></span>Claude: lo que responde o pide</span><span style="display:inline-flex;align-items:center;gap:5px;margin-right:14px"><span style="width:14px;height:14px;border-radius:4px;background:#2d2d2d;border:1.5px solid #9e9e9e;display:inline-block"></span>Tu código o una tool</span></div><div style="font-size:15.5px;line-height:1.55;color:#f3f3f3;background:#26331f;border-left:4px solid #3fb950;border-radius:6px;padding:10px 14px;margin-top:12px">👉 JSON parseable 5/5 · cumple el schema 5/5</div></div><pre style="font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><code style="font-family:inherit">
+</code></pre>
+<div style="font-family:'Atkinson Hyperlegible Next',Inter,'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;color:#e8e8e8;background:#1b1c18;border:1px solid #444;border-radius:10px;padding:14px 20px;margin:16px 0;max-width:1000px;line-height:1.5"><div style="font-size:18px;font-weight:600">🔍 Lo que se le mandó a Claude</div><div style="font-size:14.5px;color:#c8c8c8;margin:4px 0 8px">Cada llamada lleva el historial completo: la API no recuerda nada entre llamadas. Abre una para ver system, tools y mensajes tal como viajaron.</div><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 1 · tool · 1 mensajes · max_tokens 600</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;tool&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 600,
+  &quot;system&quot;: &quot;&quot;,
+  &quot;tools&quot;: [
+    &quot;extraer_correo&quot;
+  ],
+  &quot;tool_choice&quot;: {
+    &quot;type&quot;: &quot;tool&quot;,
+    &quot;name&quot;: &quot;extraer_correo&quot;
+  },
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Correo: Hola, soy Marta Ruiz. Quiero 2 manteles rojos para el 15 de diciembre. Pago con tarjeta. Gracias!&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 2 · tool · 1 mensajes · max_tokens 600</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;tool&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 600,
+  &quot;system&quot;: &quot;&quot;,
+  &quot;tools&quot;: [
+    &quot;extraer_correo&quot;
+  ],
+  &quot;tool_choice&quot;: {
+    &quot;type&quot;: &quot;tool&quot;,
+    &quot;name&quot;: &quot;extraer_correo&quot;
+  },
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Correo: Buenas, pedido para la empresa Café Luna: 30 tazas de talavera. ¿Facturan? RFC CLU201010AB1.&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 3 · tool · 1 mensajes · max_tokens 600</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;tool&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 600,
+  &quot;system&quot;: &quot;&quot;,
+  &quot;tools&quot;: [
+    &quot;extraer_correo&quot;
+  ],
+  &quot;tool_choice&quot;: {
+    &quot;type&quot;: &quot;tool&quot;,
+    &quot;name&quot;: &quot;extraer_correo&quot;
+  },
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Correo: me pueden mandar algo bonito para regalo? como unos 800 pesos&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 4 · tool · 1 mensajes · max_tokens 600</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;tool&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 600,
+  &quot;system&quot;: &quot;&quot;,
+  &quot;tools&quot;: [
+    &quot;extraer_correo&quot;
+  ],
+  &quot;tool_choice&quot;: {
+    &quot;type&quot;: &quot;tool&quot;,
+    &quot;name&quot;: &quot;extraer_correo&quot;
+  },
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Correo: Necesito cancelar el #12347, ya no lo voy a ocupar.&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details><details style='margin:6px 0'><summary style='cursor:pointer'>Llamada 5 · tool · 1 mensajes · max_tokens 600</summary><pre style='white-space:pre-wrap;background:#121311;border:1px solid #333;border-radius:8px;padding:10px;font-size:13px'>{
+  &quot;etiqueta&quot;: &quot;tool&quot;,
+  &quot;model&quot;: &quot;claude-haiku-5-5&quot;,
+  &quot;max_tokens&quot;: 600,
+  &quot;system&quot;: &quot;&quot;,
+  &quot;tools&quot;: [
+    &quot;extraer_correo&quot;
+  ],
+  &quot;tool_choice&quot;: {
+    &quot;type&quot;: &quot;tool&quot;,
+    &quot;name&quot;: &quot;extraer_correo&quot;
+  },
+  &quot;messages&quot;: [
+    {
+      &quot;role&quot;: &quot;user&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;text&quot;: &quot;Correo: Reclamo: el pedido #12346 llegó incompleto, faltan 4 platos. Quiero que me los manden.&quot;
+        }
+      ]
+    }
+  ]
+}</pre></details></div><div id="ccZoom" title="Tamaño de letra (se recuerda)">
+<button onclick="ccZoom(-1)">A−</button><button onclick="ccZoom(1)">A+</button>
+<button id="ccTemaBtn" onclick="ccTema()" title="Tema claro / oscuro (por defecto, el de tu sistema)" hidden>☀</button></div>
+<style>#ccZoom{position:fixed;top:10px;right:14px;z-index:50;display:flex;gap:4px;font-family:var(--letra,system-ui,sans-serif)}
+#ccZoom button{background:var(--superficie-2,#2d2d2d);color:var(--texto,#f0f0f0);border:1px solid var(--borde,#666);border-radius:7px;
+  padding:4px 10px;font-size:14px;cursor:pointer}
+@media print{#ccZoom{display:none}}</style>
+<script>(function(){
+  if (window.top !== window.self) { document.getElementById('ccZoom').style.display = 'none'; }
+  // Tema: solo en páginas con los colores de tema.py (las corridas HTML son siempre oscuras, como una terminal)
+  var meta = document.querySelector('meta[name="color-scheme"]');
+  var conTema = !!meta && getComputedStyle(document.documentElement).getPropertyValue('--fondo').trim() !== '';
+  function sistema(){ return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+  function guardado(){ try { return localStorage.getItem('ccarf_esquema'); } catch (e) { return null; } }
+  function pintar(){ document.getElementById('ccTemaBtn').textContent = (guardado() || sistema()) === 'dark' ? '☀' : '☾'; }
+  window.ccTema = function(){
+    if (window.top !== window.self) {   // dentro del panel: el tema es del panel completo
+      try { var b = window.top.document.getElementById('tema'); if (b) { b.click(); return; } } catch (e) {}
+    }
+    var destino = (guardado() || sistema()) === 'dark' ? 'light' : 'dark';
+    try { destino === sistema() ? localStorage.removeItem('ccarf_esquema') : localStorage.setItem('ccarf_esquema', destino); } catch (e) {}
+    meta.content = guardado() || 'light dark'; pintar();
+  };
+  if (conTema) { document.getElementById('ccTemaBtn').hidden = false; pintar(); matchMedia('(prefers-color-scheme: dark)').addEventListener('change', pintar); }
+  function leer(){ try { return +(localStorage.getItem('ccarf_escala') || 1); } catch (e) { return 1; } }
+  function guardar(v){ try { localStorage.setItem('ccarf_escala', v); } catch (e) {} }
+  window.ccZoom = function(d){ var v = Math.min(1.6, Math.max(0.8, +(leer() + 0.1 * d).toFixed(2))); guardar(v); document.body.style.zoom = v; };
+  document.body.style.zoom = leer();
+})();</script></body>
+</html>

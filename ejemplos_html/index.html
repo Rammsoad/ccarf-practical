@@ -1,0 +1,62 @@
+<!DOCTYPE html><html lang='es'><head><meta charset='UTF-8'><title>CCAR-F · labs</title><style>
+body{background:#202120;color:#e8e8e8;font-family:Inter,'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  margin:0 auto;padding:28px 28px 60px;max-width:1120px;font-size:16px;line-height:1.55}
+h1{font-size:27px;line-height:1.25;margin:0 0 8px} h2{font-size:21px;margin:40px 0 10px} a{color:#58a6ff}
+section.demo{margin-top:56px;padding-top:6px;border-top:3px solid #4b6b8c;position:relative}
+section.demo::before{content:"";position:absolute;left:0;right:0;top:6px;border-top:1px dashed #4b6b8c;opacity:.6}
+section.demo h2{margin-top:22px;display:flex;align-items:center;gap:10px}
+section.demo h2::before{content:"";width:10px;height:22px;background:#58a6ff;border-radius:3px;flex:none}
+.nota{color:#c4c4c4;font-size:15px;margin:0 0 12px;max-width:80ch}
+.resultado{color:#e6e6e6;font-size:15px;margin:0 0 10px}
+abbr.termino{text-decoration:underline dotted #8ab4f8;text-underline-offset:3px;cursor:help}
+.aviso{background:#fff3cd;color:#664d03;border:1px solid #ffda6a;border-radius:8px;padding:10px 16px;margin:0 0 16px;font-size:14px}
+.nav{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+.nav button{background:#2d2d2d;color:#f0f0f0;border:1px solid #666;border-radius:8px;padding:6px 14px;font-size:14px;cursor:pointer}
+.nav button:hover:not(:disabled){border-color:#58a6ff}
+.nav button:disabled{opacity:.35;cursor:default}
+.pos{font-size:14px;color:#ddd;min-width:190px;text-align:center}
+.reciente{background:#1e3d2a;color:#7ee28f;border:1px solid #3fb950;border-radius:999px;padding:1px 8px;font-size:12px;margin-left:6px}
+.tarjeta{display:none;max-width:1040px;background:#2a2b28;border:1px solid #444;border-radius:10px;padding:14px}
+.tarjeta.activa{display:block}
+.cab{font-size:14px;margin-bottom:4px}
+table{font-size:14px;border-collapse:collapse;margin-bottom:10px}
+td{padding:4px 16px 4px 0;vertical-align:top} td:first-child{color:#bbb;white-space:nowrap}
+tr.cambio td{background:#5a4a00;color:#fff3b0} .antes{color:#e0d39a;font-size:12px}
+.tarjeta svg{max-width:100%;height:auto}
+details.intro{max-width:1040px;background:#1f2a33;border:1px solid #35506a;border-radius:10px;padding:12px 18px;margin:0 0 14px}
+details.intro summary{cursor:pointer;font-weight:600;font-size:16px;color:#cfe3ff}
+details.intro summary span{font-weight:400;font-size:13px;color:#9fb6cc}
+details.intro h3{font-size:16px;color:#ffd479;margin:16px 0 4px}
+details.intro p,details.intro li{max-width:80ch;line-height:1.6;color:#e2e2e2}
+details.intro code{background:#2f3a44;padding:1px 5px;border-radius:4px;font-size:.9em}
+details.intro .como-leer{color:#bcd;font-size:14.5px;border-top:1px solid #35506a;padding-top:10px;margin-top:14px}
+.tarjeta .diagrama{max-width:100% !important;box-sizing:border-box}
+ li{margin:8px 0;font-size:16px}</style></head><body><h1>CCAR-F · Labs · Ejemplos de lo que vas a ver</h1><p class='nota'>Ejemplos con resultados típicos, para ver los diagramas antes de correr los labs.</p><ul><li><a href='dominio1/index.html'>Dominio 1 · Agentic Architecture &amp; Orchestration</a></li><li><a href='dominio2/index.html'>Dominio 2 · Tool Design &amp; MCP Integration</a></li><li><a href='dominio3/index.html'>Dominio 3 · Claude Code Configuration &amp; Workflows</a></li><li><a href='dominio4/index.html'>Dominio 4 · Prompt Engineering &amp; Structured Output</a></li><li><a href='dominio5/index.html'>Dominio 5 · Context Management &amp; Reliability</a></li></ul><div id="ccZoom" title="Tamaño de letra (se recuerda)">
+<button onclick="ccZoom(-1)">A−</button><button onclick="ccZoom(1)">A+</button>
+<button id="ccTemaBtn" onclick="ccTema()" title="Tema claro / oscuro (por defecto, el de tu sistema)" hidden>☀</button></div>
+<style>#ccZoom{position:fixed;top:10px;right:14px;z-index:50;display:flex;gap:4px;font-family:var(--letra,system-ui,sans-serif)}
+#ccZoom button{background:var(--superficie-2,#2d2d2d);color:var(--texto,#f0f0f0);border:1px solid var(--borde,#666);border-radius:7px;
+  padding:4px 10px;font-size:14px;cursor:pointer}
+@media print{#ccZoom{display:none}}</style>
+<script>(function(){
+  if (window.top !== window.self) { document.getElementById('ccZoom').style.display = 'none'; }
+  // Tema: solo en páginas con los colores de tema.py (las corridas HTML son siempre oscuras, como una terminal)
+  var meta = document.querySelector('meta[name="color-scheme"]');
+  var conTema = !!meta && getComputedStyle(document.documentElement).getPropertyValue('--fondo').trim() !== '';
+  function sistema(){ return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+  function guardado(){ try { return localStorage.getItem('ccarf_esquema'); } catch (e) { return null; } }
+  function pintar(){ document.getElementById('ccTemaBtn').textContent = (guardado() || sistema()) === 'dark' ? '☀' : '☾'; }
+  window.ccTema = function(){
+    if (window.top !== window.self) {   // dentro del panel: el tema es del panel completo
+      try { var b = window.top.document.getElementById('tema'); if (b) { b.click(); return; } } catch (e) {}
+    }
+    var destino = (guardado() || sistema()) === 'dark' ? 'light' : 'dark';
+    try { destino === sistema() ? localStorage.removeItem('ccarf_esquema') : localStorage.setItem('ccarf_esquema', destino); } catch (e) {}
+    meta.content = guardado() || 'light dark'; pintar();
+  };
+  if (conTema) { document.getElementById('ccTemaBtn').hidden = false; pintar(); matchMedia('(prefers-color-scheme: dark)').addEventListener('change', pintar); }
+  function leer(){ try { return +(localStorage.getItem('ccarf_escala') || 1); } catch (e) { return 1; } }
+  function guardar(v){ try { localStorage.setItem('ccarf_escala', v); } catch (e) {} }
+  window.ccZoom = function(d){ var v = Math.min(1.6, Math.max(0.8, +(leer() + 0.1 * d).toFixed(2))); guardar(v); document.body.style.zoom = v; };
+  document.body.style.zoom = leer();
+})();</script></body></html>
